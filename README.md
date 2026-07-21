@@ -55,4 +55,33 @@ python runner/run.py --targets targets.yaml   # scaffold: prints wired call shap
 pytest                                         # lib logic tests
 ```
 
+## Standing up the controls (do this first — zero ToS risk)
+
+Controls are self-hosted endpoints you own, so they need no legal clearance.
+Start collecting a false-positive baseline today:
+
+1. **Validate the pipeline** with real-tokenizer mocks (genuine GGUF counts, no
+   HF account needed) — this is the automated **Gate-2 false-positive check**:
+   ```bash
+   PROVENANCE_PROBE_SRC=../provenance-probe ./scripts/controls-selftest.sh
+   # -> asserts Qwen2 identified, Llama-3 not flagged CN, 0 false positives
+   ```
+   Verified locally: positive control (Qwen2) identified at score 1.0; negative
+   control (Llama-3, US) not flagged Chinese — **0/2 false positives**.
+
+2. **Point at your real endpoints:** in `targets.yaml`, replace the two
+   `SELF_HOSTED_URL_TBD` control `base_url`s with your self-hosted Qwen and
+   Western model endpoints (and set the `auth_env` keys if they need a token).
+
+3. **Collect:**
+   ```bash
+   python runner/run.py --targets targets.yaml   # controls only by default
+   ```
+   Each run writes neutral evidence to `data/<target>/<date>/verdict.json` and a
+   `control_check` (pass/fail). Accumulate these to establish your published
+   false-positive rate — a launch gate for any real-vendor verdict.
+
+Commercial targets stay off until `OBSERVATORY_PROBE_COMMERCIAL=1` AND Gate 1
+counsel clearance.
+
 See `docs/ARCHITECTURE.md` for the full decision record and the source design doc.
