@@ -32,7 +32,7 @@ import tempfile
 from datetime import date
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from lib import verdict  # noqa: E402
+from lib import verdict, signing  # noqa: E402
 import advisory  # noqa: E402  (runner/ is on sys.path via __file__ dir)
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -268,6 +268,11 @@ def main() -> int:
             process_target(t, defaults, budget)
         except Exception as e:   # never let one target kill the run
             print(f"[error] {t.get('name','?')}: {e}")
+    # Build the day's evidence manifest (root hash over all records). Signing
+    # runs in CI where an OIDC identity exists; locally it degrades gracefully.
+    mpath = signing.write_manifest(DATA_DIR, date.today().isoformat())
+    sig = signing.sign_manifest(mpath)
+    print(f"[manifest] {mpath} (signed={sig['signed']}: {sig['reason']})")
     return 0
 
 

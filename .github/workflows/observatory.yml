@@ -25,22 +25,27 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     environment: observatory          # environment-scoped secrets live here
+    permissions:
+      contents: write                 # commit data/
+      id-token: write                 # cosign keyless OIDC identity
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install pinned provenance-probe + deps
+      - name: Install provenance-probe + deps
         run: |
-          pip install "provenance-probe==0.4.1"   # pin the engine version
+          pip install "git+https://github.com/lobster-shrimp/provenance-probe.git@main"
           pip install pyyaml
-      - name: Run nightly probes
+      - uses: sigstore/cosign-installer@v3   # cosign for keyless evidence signing
+      - name: Run nightly probes (builds + signs the day's manifest)
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
           STAGING_PAT: ${{ secrets.STAGING_PAT }}
+          COSIGN_YES: "true"
         run: python runner/run.py --targets targets.yaml
-      - name: Commit neutral evidence
+      - name: Commit neutral evidence + signed manifest
         run: |
           git config user.name "observatory-bot"
           git config user.email "observatory-bot@users.noreply.github.com"
