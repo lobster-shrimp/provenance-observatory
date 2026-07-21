@@ -33,6 +33,7 @@ from datetime import date
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from lib import verdict  # noqa: E402
+import advisory  # noqa: E402  (runner/ is on sys.path via __file__ dir)
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 DATA_DIR = os.environ.get("OBSERVATORY_DATA_DIR", os.path.join(ROOT, "data"))
@@ -132,11 +133,12 @@ def run_assess(target: dict, defaults: dict) -> dict:
         raise RuntimeError(last_err)
 
 
-def check_drift(target_name: str, current: dict) -> bool:
+def check_drift(target_name: str, current: dict) -> tuple[bool, list]:
     """monitor raw current vs pinned baseline (both in private staging).
 
     First run seeds the baseline and reports no drift. monitor exits 2 on drift,
-    0 on no-change (engine contract, tested upstream).
+    0 on no-change (engine contract, tested upstream). Returns (drift, changes)
+    where changes is monitor's list of detected field changes (evidence).
     """
     sdir = staging_target_dir(target_name)
     cur_path = os.path.join(sdir, "current.json")
@@ -146,13 +148,19 @@ def check_drift(target_name: str, current: dict) -> bool:
     if not os.path.exists(base_path):
         with open(base_path, "w") as f:      # seed pinned baseline
             json.dump(current, f)
-        return False
+        return (False, [])
+    diff_path = os.path.join(sdir, "monitor.json")
     r = subprocess.run(
-        ["provenance-probe", "monitor", "--baseline", base_path, "--current", cur_path],
+        ["provenance-probe", "monitor", "--baseline", base_path, "--current", cur_path,
+         "--json-out", diff_path],
         capture_output=True, text=True)
     if r.returncode not in (0, 2):
         raise RuntimeError(f"monitor failed ({r.returncode}): {r.stderr[:200]}")
-    return r.returncode == 2
+    changes = []
+    if os.path.exists(diff_path):
+        with open(diff_path) as f:
+            changes = (json.load(f) or {}).get("changes", [])
+    return (r.returncode == 2, changes)
 
 
 def check_control(target: dict, bundle: dict) -> dict | None:
@@ -207,8 +215,10 @@ def process_target(target: dict, defaults: dict, budget: dict) -> None:
         write_no_verdict(name, f"assess failed after retry: {e}")
         return
 
+    advisory.ensure_baseline(name, bundle.get("fingerprint_id", ""))
+    changes: list = []
     try:
-        bundle["_drift_seen"] = check_drift(name, bundle)
+        bundle["_drift_seen"], changes = check_drift(name, bundle)
     except Exception as e:
         print(f"[warn] {name}: drift check skipped: {e}")
         bundle["_drift_seen"] = False
@@ -225,6 +235,18 @@ def process_target(target: dict, defaults: dict, budget: dict) -> None:
     # interpreted tier stays private
     with open(os.path.join(staging_target_dir(name), f"{date.today().isoformat()}.gated.json"), "w") as f:
         json.dump(gated_record, f, indent=2)
+
+    # On drift for a VENDOR target, open/append a draft advisory in staging.
+    # Controls drifting is a control-health signal, not a vendor advisory.
+    if bundle["_drift_seen"] and not target.get("kind", "").startswith("control"):
+        evidence = {
+            "verdict": (gated_record.get("score") or {}),
+            "monitor_changes": changes,
+        }
+        summary = advisory.on_drift(name, bundle.get("fingerprint_id", ""), evidence,
+                                    target_public=target.get("public", False))
+        print(f"  [advisory] {name}: {summary.get('action')} "
+              f"{summary.get('staging_id', '')}".rstrip())
 
     status = "DRIFT" if bundle["_drift_seen"] else "stable"
     ctl = f" control={'PASS' if control['pass'] else 'FAIL'}" if control else ""
