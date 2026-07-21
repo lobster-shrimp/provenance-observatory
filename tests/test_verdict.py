@@ -37,3 +37,20 @@ def test_gated_record_not_publishable_when_target_private():
 def test_gated_record_publishable_when_target_public():
     _, gated = verdict.split(_bundle(), target_public=True)
     assert gated["publishable"] is True
+
+
+def test_public_target_exposes_verdict_block():
+    b = _bundle()
+    b["score"]["jurisdictional_risk"] = {"verdict": "LIKELY"}
+    b["score"]["confidence"] = "high"
+    pub, _ = verdict.split(b, target_public=True)
+    assert pub["verdict"]["provenance"] == "CONFIRMED"   # cleared target -> shown
+    assert pub["verdict"]["jurisdiction"] == "LIKELY"
+    assert pub["verdict"]["confidence"] == "high"
+    # raw interpreted objects still never leak into the public record
+    assert "score" not in pub and "user_warning" not in pub
+
+
+def test_private_target_has_no_verdict_block():
+    pub, _ = verdict.split(_bundle(), target_public=False)
+    assert "verdict" not in pub                          # un-cleared -> withheld

@@ -88,16 +88,36 @@ def _sparkline(records: list[tuple[str, dict]]) -> str:
     return "".join(glyphs)
 
 
-def _interpreted_cells(target: str, kind: str, promoted: dict | None) -> tuple[str, str, str]:
-    """(provenance, jurisdiction, confidence) — withheld unless a promoted
-    advisory exists for this target."""
+def _badge(verdict: str) -> str:
+    """Colour a verdict label by severity for the table."""
+    v = (verdict or "").upper()
+    cls = "v"
+    if v in ("CONFIRMED", "LIKELY"):
+        cls = "v cn"
+    elif v in ("UNLIKELY", "NO EVIDENCE"):
+        cls = "v ok"
+    elif v in ("US", "EU", "CA", "AE"):
+        cls = "v ok"
+    elif v in ("CN",):
+        cls = "v cn"
+    return f'<span class="badge {cls}">{html.escape(verdict or "—")}</span>'
+
+
+def _interpreted_cells(latest: dict, promoted: dict | None) -> tuple[str, str, str]:
+    """(provenance, jurisdiction, confidence).
+
+    Shown when the target is CLEARED (the public record carries a `verdict`
+    block, i.e. public=true) or a promoted advisory exists. Otherwise withheld.
+    """
+    v = latest.get("verdict")
+    if v:
+        conf = html.escape(str(v.get("confidence", "—")).split(" - ")[0])
+        return (_badge(v.get("provenance")), _badge(v.get("jurisdiction")), conf)
     if promoted and promoted.get("verdict"):
-        v = promoted["verdict"]
-        prov = html.escape(str((v.get("provenance_risk") or {}).get("verdict", "—")))
-        juris = html.escape(str((v.get("jurisdictional_risk") or {}).get("verdict", "—")))
-        conf = html.escape(str((v.get("provenance_risk") or {}).get("confidence", "—")))
-        return (f'<span class="badge v">{prov}</span>',
-                f'<span class="badge v">{juris}</span>', conf)
+        pv = promoted["verdict"]
+        return (_badge((pv.get("provenance_risk") or {}).get("verdict")),
+                _badge((pv.get("jurisdictional_risk") or {}).get("verdict")),
+                html.escape(str((pv.get("provenance_risk") or {}).get("confidence", "—"))))
     return ('<span class="withheld">withheld</span>',
             '<span class="withheld">withheld</span>', "—")
 
@@ -108,7 +128,7 @@ def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None) ->
     kind = (tgt.get("kind") if isinstance(tgt, dict) else "") or ""
     model = html.escape(str(tgt.get("model", "") if isinstance(tgt, dict) else ""))
     fp = html.escape((latest.get("fingerprint_id") or "")[:12])
-    prov, juris, conf = _interpreted_cells(target, kind, promoted)
+    prov, juris, conf = _interpreted_cells(latest, promoted)
 
     ctl = latest.get("control_check")
     ctl_html = ""
@@ -143,6 +163,7 @@ def _advisories_rail(promoted: dict[str, dict]) -> str:
 
 
 def render(records: dict, promoted: dict, *, now_iso: str) -> str:
+    probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
     n_targets = len(records)
     n_drift = sum(1 for recs in records.values() if recs and recs[-1][1].get("drift_seen"))
     rows = "\n".join(_row(t, recs, promoted.get(t)) for t, recs in sorted(records.items()))
@@ -156,6 +177,10 @@ def render(records: dict, promoted: dict, *, now_iso: str) -> str:
   body {{ margin:0; background:var(--bg); color:var(--ink);
     font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }}
   .wrap {{ max-width:1200px; margin:0 auto; padding:32px 24px; }}
+  .topnav {{ display:flex; gap:14px; font-size:12px; text-transform:uppercase;
+    letter-spacing:.08em; margin:0 0 14px; border-bottom:1px solid var(--line); padding-bottom:8px; }}
+  .topnav .active {{ color:var(--ink); font-weight:700; }}
+  .topnav a {{ color:var(--accent); text-decoration:none; }}
   header h1 {{ font-size:20px; letter-spacing:.14em; margin:0 0 4px; }}
   header p {{ color:var(--muted); margin:0 0 20px; }}
   .note {{ border:1px solid var(--line); border-left:3px solid var(--accent);
@@ -170,6 +195,8 @@ def render(records: dict, promoted: dict, *, now_iso: str) -> str:
   .mono {{ font-variant-ligatures:none; }} .small {{ font-size:12px; color:#4b5563; }}
   .withheld {{ color:var(--muted); font-style:italic; }}
   .badge {{ border:1px solid var(--line); border-radius:3px; padding:1px 6px; font-size:12px; }}
+  .badge.cn {{ border-color:#f0c0c0; background:#fdf2f2; color:#b42318; }}
+  .badge.ok {{ border-color:#bfe3c7; background:#f3faf4; color:#0a7d33; }}
   .ctl {{ font-size:11px; margin-top:3px; }} .ctl.pass {{ color:#0a7d33; }} .ctl.fail {{ color:#b42318; }}
   .spark {{ letter-spacing:2px; }} .sp-ok {{ color:#0a7d33; }} .sp-drift {{ color:#b42318; }} .sp-none {{ color:#cbd5e1; }}
   aside h2 {{ font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }}
@@ -179,6 +206,10 @@ def render(records: dict, promoted: dict, *, now_iso: str) -> str:
     color:var(--muted); font-size:12px; display:flex; gap:20px; flex-wrap:wrap; }}
 </style></head><body><div class="wrap">
 <header>
+  <div class="topnav">
+    <span class="active">Observatory</span>
+    <a href="{probe_url}">Live probe tool &rarr;</a>
+  </div>
   <h1>PROVENANCE OBSERVATORY</h1>
   <p>Independent, continuous, evidence-backed monitoring of LLM model provenance and jurisdiction.</p>
 </header>

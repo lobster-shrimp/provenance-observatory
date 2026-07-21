@@ -62,6 +62,98 @@ targets:
     authorized: false
     notes: "Together ToS explicitly bans benchmarking — highest legal risk."
 
+  - name: fireworks-neutral-endpoint
+    kind: aggregator
+    base_url: "https://api.fireworks.ai/inference/v1"
+    model: "MODEL_ID_TBD"
+    api_style: openai
+    auth_env: "FIREWORKS_API_KEY"
+    public: false
+    authorized: false
+    notes: "Neutral aggregator — jurisdiction resolves, provenance open. Watch for CN models."
+
+  - name: deepinfra-neutral-endpoint
+    kind: aggregator
+    base_url: "https://api.deepinfra.com/v1/openai"
+    model: "MODEL_ID_TBD"
+    api_style: openai
+    auth_env: "DEEPINFRA_API_KEY"
+    public: false
+    authorized: false
+    notes: "Neutral aggregator; hosts many open weights incl. CN families."
+
+  # --- First-party frontier APIs (US) — low-risk negative-monitoring refs ----
+  # Verdicts here are non-adverse ("serves a US model"), but still gated until
+  # Gate 1 confirms the publishing posture. Useful as always-should-be-US refs.
+  - name: openai-frontier
+    kind: first-party
+    base_url: "https://api.openai.com/v1"
+    model: "gpt-4o-mini"
+    api_style: openai
+    auth_env: "OPENAI_API_KEY"
+    public: false
+    authorized: false
+    notes: "US reference. Tokenizer o200k is in the reference set (clean fingerprint)."
+
+  - name: anthropic-frontier
+    kind: first-party
+    base_url: "https://api.anthropic.com/v1"
+    chat_path: "/messages"
+    model: "claude-3-5-haiku-20241022"
+    api_style: anthropic
+    auth_env: "ANTHROPIC_API_KEY"
+    public: false
+    authorized: false
+    notes: "US reference. Tokenizer not published — expect behavioral/network signal only."
+
+  # --- Known CN-direct endpoints — positive references / the actual mission ---
+  # These are the family the observatory exists to track. Probing/publishing
+  # about them is exactly what Gate 1 must clear (see tos-notes.md).
+  - name: deepseek-direct
+    kind: cn-direct
+    base_url: "https://api.deepseek.com/v1"
+    model: "deepseek-chat"
+    api_style: openai
+    auth_env: "DEEPSEEK_API_KEY"
+    public: false
+    authorized: false
+    notes: "PRC-domiciled operator; DeepSeek tokenizer in reference. Expect CONFIRMED CN."
+
+  - name: moonshot-direct
+    kind: cn-direct
+    base_url: "https://api.moonshot.cn/v1"
+    model: "moonshot-v1-8k"
+    api_style: openai
+    auth_env: "MOONSHOT_API_KEY"
+    public: false
+    authorized: false
+    notes: "PRC operator (.cn); Moonshot/Kimi tokenizer in reference."
+
+  # --- Web-app / platform tool (template adapter) ---------------------------
+  # The chat.z.ai case: a GLM backend that asserts a Google Gemini persona. The
+  # deception layer is the primary signal. Fill request_template + cookie_env
+  # from a captured browser request before enabling.
+  - name: chat-z-ai-webapp
+    kind: webapp
+    base_url: "https://chat.z.ai"
+    chat_path: "/api/paas/v4/chat/completions"
+    models_path: "/api/paas/v4/models"
+    api_style: template
+    cookie_env: "ZAI_COOKIE"
+    request_template:
+      model: "glm-4.6"
+      messages:
+        - {role: user, content: "__PROMPT__"}
+      max_tokens: "__MAX_TOKENS__"
+      temperature: "__TEMPERATURE__"
+    response_text_path: "choices.0.message.content"
+    response_prompt_tokens_path: "usage.prompt_tokens"
+    response_model_path: "model"
+    confront_as: "Zhipu GLM"
+    public: false
+    authorized: false
+    notes: "Web app; GLM-behind-Gemini-persona. Deception layer is the signal."
+
 # Monthly spend ceiling across all targets (U2). Runner aborts to a
 # no-verdict{budget-exceeded} artifact if a run would breach it.
 budget:

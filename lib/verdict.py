@@ -41,6 +41,18 @@ def split(bundle: dict, *, target_public: bool) -> tuple[dict, dict]:
     # of WHAT changed is not.
     public_record["drift_seen"] = bool(bundle.get("_drift_seen"))
 
+    # For a CLEARED target (public=true: our own controls, or a vendor a lawyer
+    # has signed off on), the interpreted verdict IS publishable, so surface a
+    # compact provenance/jurisdiction/confidence block in the public record. For
+    # an un-cleared target this stays out (the site shows "withheld").
+    if target_public and isinstance(bundle.get("score"), dict):
+        s = bundle["score"]
+        public_record["verdict"] = {
+            "provenance": (s.get("provenance_risk") or {}).get("verdict"),
+            "jurisdiction": (s.get("jurisdictional_risk") or {}).get("verdict"),
+            "confidence": s.get("confidence"),
+        }
+
     gated_record = {"schema_version": SCHEMA_VERSION}
     for k in _INTERPRETED_KEYS:
         if k in bundle:

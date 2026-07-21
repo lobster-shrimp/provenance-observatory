@@ -51,6 +51,19 @@ def test_promoted_advisory_shows_verdict(tmp_path):
     assert "CONFIRMED" in doc and "LIKELY" in doc
 
 
+def test_cleared_target_shows_verdict_columns(tmp_path):
+    data = tmp_path / "data"
+    _write_verdict(str(data), "control-qwen-known-answer", "control-positive",
+                   {"fingerprint_id": "fpc", "drift_seen": False,
+                    "verdict": {"provenance": "LIKELY", "jurisdiction": "UNLIKELY",
+                                "confidence": "high"}})
+    out = build.build(str(data), str(tmp_path / "out"), now_iso="2026-07-21T12:00:00")
+    doc = open(out).read()
+    # verdict badges rendered for the cleared target (not withheld)
+    assert '<span class="badge' in doc
+    assert "LIKELY" in doc and "UNLIKELY" in doc and "high" in doc
+
+
 def test_control_check_rendered(tmp_path):
     data = tmp_path / "data"
     _write_verdict(str(data), "control-qwen-known-answer", "control-positive",
