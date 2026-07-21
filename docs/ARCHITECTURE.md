@@ -39,4 +39,6 @@ privacy forces it.
 3. Runner: wire `assess` call, path mapping, retry/no-verdict, spend guard.
 4. Drift → advisory pipeline (staging repo, dedup, promotion).
 5. Pages site (Variant C), neutral-only until gated.
-6. Negative control + FP rate; probe randomization; signing.
+6. Negative control + FP rate (**DONE** — controls self-test, 0/2 FP);
+   evidence signing (**DONE** — manifest + cosign/Rekor); probe randomization
+   (**DONE** — engine `--variant-seed`, wired via `OBSERVATORY_VARIANT_SEED`).

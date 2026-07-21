@@ -119,6 +119,12 @@ def run_assess(target: dict, defaults: dict) -> dict:
                "--no-behavioral", "--no-deception", "--offline"]
         if "latency" in (defaults.get("layers") or []):
             cmd += ["--latency", "--latency-n", str(DEFAULT_LATENCY_N)]
+        # Probe randomization (evasion hardening): rotate the exact probe bytes.
+        # The engine reference the workflow installs must be built for the same
+        # seed, so rotating means rebuilding the reference at that seed too.
+        seed = os.environ.get("OBSERVATORY_VARIANT_SEED", "0")
+        if seed not in ("", "0"):
+            cmd += ["--variant-seed", seed]
         last_err = ""
         for attempt in (1, 2):
             r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)

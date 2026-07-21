@@ -5,6 +5,21 @@ LLM API endpoint — and whether it is Chinese-origin or PRC-jurisdiction. Built
 on [provenance-probe](https://github.com/lobster-shrimp/provenance-probe) as a
 black-box CLI dependency.
 
+## In plain terms
+
+AI vendors can quietly change which model answers your API calls — swapping in a
+cheaper model, rerouting to someone else's servers, or reselling a Chinese-made
+model under a Western name — and you would normally never know. The
+`provenance-probe` engine can fingerprint an endpoint and tell what is really
+running it. This project runs that check **every night, in public, and keeps the
+receipts**: it publishes the raw measurements as an append-only, signed log
+(like a public tamper-proof ledger), and when it spots that an endpoint has
+changed, it opens a numbered advisory — but only *after* privately notifying the
+operator and giving them time to respond. The goal is a citable public record
+that compliance and procurement teams can point to, not a rumor mill: verdicts
+come with confidence levels and a measured error rate, and nothing accusatory
+about a named company is published until a lawyer has cleared it.
+
 > **Status: SCAFFOLD — not live.** No public accusatory verdict ships until the
 > launch gates below pass. This repo currently wires the structure and the
 > load-bearing design decisions; the sections marked TODO in the code are the
@@ -83,5 +98,13 @@ Start collecting a false-positive baseline today:
 
 Commercial targets stay off until `OBSERVATORY_PROBE_COMMERCIAL=1` AND Gate 1
 counsel clearance.
+
+### Probe randomization (optional hardening)
+
+Because the probe corpus is public, set `OBSERVATORY_VARIANT_SEED=N` to rotate
+the exact bytes sent on the wire (defeats exact-string special-casing by a
+monitored vendor). The engine reference must be built for the same seed
+(`build-reference --variant-seed N`), so rotating means rebuilding the reference
+the workflow installs. Seed 0 (default) is the canonical corpus.
 
 See `docs/ARCHITECTURE.md` for the full decision record and the source design doc.
