@@ -47,5 +47,29 @@ jobs:
           git add data/
           git diff --cached --quiet || git commit -m "data: nightly probe $(date -u +%F)"
           git push
-      # TODO: a build-and-deploy Pages job that renders site/ from data/,
-      # publishing ONLY neutral evidence until Gate 1 clears interpreted verdicts.
+
+  # Render the Variant C site from data/ and deploy to Pages. Publishes ONLY
+  # neutral evidence; interpreted verdicts render "withheld" until a promoted
+  # advisory exists (site/build.py enforces this).
+  pages:
+    needs: probe
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Render site
+        run: python site/build.py --data data --out site/dist
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+      - id: deploy
+        uses: actions/deploy-pages@v4
