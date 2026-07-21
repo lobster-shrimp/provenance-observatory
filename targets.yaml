@@ -22,6 +22,8 @@ targets:
     kind: control-positive
     base_url: "SELF_HOSTED_URL_TBD"    # you own this; a known Qwen endpoint
     model: "qwen2.5"
+    api_style: openai
+    auth_env: "CONTROL_QWEN_KEY"       # env var holding the key (may be unset for local)
     expect_family: "Qwen2/Qwen2.5"     # must match at 20/20 (open-air replay)
     public: true
     authorized: true
@@ -30,25 +32,34 @@ targets:
     kind: control-negative
     base_url: "SELF_HOSTED_URL_TBD"    # you own this; a known Western model
     model: "llama-3.1"
+    api_style: openai
+    auth_env: "CONTROL_WESTERN_KEY"
     expect_not_origin: "CN"            # must come back NOT-Chinese (FP gate)
     public: true
     authorized: true
 
   # --- Commercial aggregators (U1) — WITHHELD until Gate 1 counsel clears ---
+  # Commercial targets are only probed when OBSERVATORY_PROBE_COMMERCIAL=1 AND
+  # authorized=true. Default runs probe CONTROLS ONLY — no named vendor is
+  # touched before Gate 1 counsel clears it.
   - name: openrouter-neutral-endpoint
     kind: aggregator
     base_url: "https://openrouter.ai/api/v1"
     model: "MODEL_ID_TBD"
+    api_style: openai
+    auth_env: "OPENROUTER_API_KEY"
     public: false                      # blocked on Gate 1 legal sign-off
-    authorized: true
+    authorized: false                  # flip only after counsel clears; needs commercial gate too
     notes: "OpenRouter bans red-teaming w/o approval; behavioral stays off."
 
   - name: together-neutral-endpoint
     kind: aggregator
     base_url: "https://api.together.xyz/v1"
     model: "MODEL_ID_TBD"
+    api_style: openai
+    auth_env: "TOGETHER_API_KEY"
     public: false                      # blocked on Gate 1; Together bans benchmarking
-    authorized: true
+    authorized: false
     notes: "Together ToS explicitly bans benchmarking — highest legal risk."
 
 # Monthly spend ceiling across all targets (U2). Runner aborts to a
