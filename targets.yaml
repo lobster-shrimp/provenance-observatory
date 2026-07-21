@@ -1,0 +1,57 @@
+# Provenance Observatory — monitored targets
+#
+# Decisions encoded here (see docs/ARCHITECTURE.md):
+#   U1: first public targets are OpenRouter + Together, behavioral layer OFF.
+#       Both stay `public: false` until Gate 1 (legal) clears named-vendor
+#       verdicts — see the counsel questions in the provenance-probe repo's
+#       docs/tos-notes.md. Controls carry zero ToS risk and prove the pipeline.
+#   Behavioral (red-teaming) probes are OFF on every commercial target.
+#
+# `public` gates whether an interpreted verdict for this target may be
+# promoted to the public feed. Neutral evidence is always logged; the
+# interpreted verdict is withheld while public=false (two-tier publication).
+
+defaults:
+  layers: [tokenizer, wire, latency]   # behavioral deliberately excluded
+  behavioral: false
+  per_run_probe_cap: 200               # U2 spend guard, per target per run
+
+targets:
+  # --- Controls (zero ToS risk; these ARE the Gate 2 false-positive gate) ---
+  - name: control-qwen-known-answer
+    kind: control-positive
+    base_url: "SELF_HOSTED_URL_TBD"    # you own this; a known Qwen endpoint
+    model: "qwen2.5"
+    expect_family: "Qwen2/Qwen2.5"     # must match at 20/20 (open-air replay)
+    public: true
+    authorized: true
+
+  - name: control-western-negative
+    kind: control-negative
+    base_url: "SELF_HOSTED_URL_TBD"    # you own this; a known Western model
+    model: "llama-3.1"
+    expect_not_origin: "CN"            # must come back NOT-Chinese (FP gate)
+    public: true
+    authorized: true
+
+  # --- Commercial aggregators (U1) — WITHHELD until Gate 1 counsel clears ---
+  - name: openrouter-neutral-endpoint
+    kind: aggregator
+    base_url: "https://openrouter.ai/api/v1"
+    model: "MODEL_ID_TBD"
+    public: false                      # blocked on Gate 1 legal sign-off
+    authorized: true
+    notes: "OpenRouter bans red-teaming w/o approval; behavioral stays off."
+
+  - name: together-neutral-endpoint
+    kind: aggregator
+    base_url: "https://api.together.xyz/v1"
+    model: "MODEL_ID_TBD"
+    public: false                      # blocked on Gate 1; Together bans benchmarking
+    authorized: true
+    notes: "Together ToS explicitly bans benchmarking — highest legal risk."
+
+# Monthly spend ceiling across all targets (U2). Runner aborts to a
+# no-verdict{budget-exceeded} artifact if a run would breach it.
+budget:
+  monthly_ceiling_usd: 50
