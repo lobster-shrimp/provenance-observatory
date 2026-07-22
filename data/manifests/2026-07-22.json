@@ -2,8 +2,8 @@
   "schema_version": "0.1.0",
   "date": "2026-07-22",
   "entries": {
-    "control-qwen-known-answer/2026-07-22/verdict.json": "ed59c8f3aa4d23845d4bb1142495f9d8f8cb1f16accd5d136f60045e41ca14ec",
-    "control-western-negative/2026-07-22/verdict.json": "32e9e0520409722b3bfb609e6958920f9ad4b19996cf1449e414cda78bee4868"
+    "control-deepseek-positive/2026-07-22/verdict.json": "c3ee4bb5a361266a5cc103a1ce4e05c7c47fc6da03623649bcf98c5025062d0a",
+    "control-openai-negative/2026-07-22/verdict.json": "050d7c6bf94f7172b1a4a44145b0ecbc273d5eea3f90e2ad347d12d44793fec2"
   },
-  "manifest_root": "eca2cc5e1d0fd271b21197c13653c4606502891ee57bd995f3755cf9c3008b3f"
+  "manifest_root": "0616a4e66b0f378ea4208f3d221fc7d64abeceecdf6cdf4d17f42ac4dc7afd5d"
 }

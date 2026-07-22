@@ -17,26 +17,30 @@ defaults:
   per_run_probe_cap: 200               # U2 spend guard, per target per run
 
 targets:
-  # --- Controls (zero ToS risk; these ARE the Gate 2 false-positive gate) ---
-  - name: control-qwen-known-answer
+  # --- Live controls (real endpoints, own authorized accounts) --------------
+  # Positive: a known-CN model that must fingerprint to a CN family.
+  # Negative: a known-US model that must NOT be flagged Chinese.
+  # Together they are the continuous false-positive/true-positive gate. Keys
+  # come from the environment (locally: ~/.zshrc; in CI: Actions secrets).
+  - name: control-deepseek-positive
     kind: control-positive
-    base_url: "SELF_HOSTED_URL_TBD"    # you own this; a known Qwen endpoint
-    model: "qwen2.5"
+    base_url: "https://api.deepseek.com/v1"
+    model: "deepseek-chat"
     api_style: openai
-    auth_env: "CONTROL_QWEN_KEY"       # env var holding the key (may be unset for local)
-    expect_family: "Qwen2/Qwen2.5"     # must match at 20/20 (open-air replay)
+    auth_env: "DEEPSEEK_API_KEY"
+    expect_family: "DeepSeek-V3"       # must match a DeepSeek family (CN)
     public: true
-    authorized: true
+    authorized: true                   # own paid account
 
-  - name: control-western-negative
+  - name: control-openai-negative
     kind: control-negative
-    base_url: "SELF_HOSTED_URL_TBD"    # you own this; a known Western model
-    model: "llama-3.1"
+    base_url: "https://api.openai.com/v1"
+    model: "gpt-4o-mini"
     api_style: openai
-    auth_env: "CONTROL_WESTERN_KEY"
+    auth_env: "OPENAI_API_KEY"
     expect_not_origin: "CN"            # must come back NOT-Chinese (FP gate)
     public: true
-    authorized: true
+    authorized: true                   # own paid account
 
   # --- Commercial aggregators (U1) — WITHHELD until Gate 1 counsel clears ---
   # Commercial targets are only probed when OBSERVATORY_PROBE_COMMERCIAL=1 AND
