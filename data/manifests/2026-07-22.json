@@ -1,0 +1,9 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-07-22",
+  "entries": {
+    "control-qwen-known-answer/2026-07-22/verdict.json": "ed59c8f3aa4d23845d4bb1142495f9d8f8cb1f16accd5d136f60045e41ca14ec",
+    "control-western-negative/2026-07-22/verdict.json": "32e9e0520409722b3bfb609e6958920f9ad4b19996cf1449e414cda78bee4868"
+  },
+  "manifest_root": "eca2cc5e1d0fd271b21197c13653c4606502891ee57bd995f3755cf9c3008b3f"
+}
