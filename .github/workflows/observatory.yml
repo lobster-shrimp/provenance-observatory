@@ -40,6 +40,8 @@ jobs:
       - uses: sigstore/cosign-installer@v3   # cosign for keyless evidence signing
       - name: Run nightly probes (builds + signs the day's manifest)
         env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}   # live CN positive control
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}       # live US negative control
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
           STAGING_PAT: ${{ secrets.STAGING_PAT }}
