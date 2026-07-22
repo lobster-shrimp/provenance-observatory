@@ -50,6 +50,30 @@ cite in ATO packages and procurement memos.
 3. **Evidence signing** — cosign/Rekor over manifests before claiming CT
    properties publicly.
 
+## Relationship to provenance-probe
+
+This repo does **not** contain the fingerprinting logic — that lives in
+[**provenance-probe**](https://github.com/lobster-shrimp/provenance-probe), the
+engine + CLI + local web UI. The Observatory consumes it as a **black-box CLI
+dependency** (`assess`, `monitor`'s exit-2 drift contract, `fingerprint_id`) and
+adds the things a *continuous public* service needs: scheduling, a signed
+append-only evidence log, the two-tier publication gate, numbered advisories,
+and the site.
+
+| | provenance-probe | provenance-observatory (this repo) |
+|---|---|---|
+| Role | Engine + CLI + local web UI | GitHub-native monitoring service |
+| Use | Point-in-time assessment of any authorized endpoint / web app | Nightly monitoring of a curated watch list |
+| Output | Console + JSON/HTML report | Signed evidence log + public Variant C site + advisories |
+
+Which layers carry the signal here: the engine's tokenizer, network, wire, and
+behavioral/deception layers all run per target; provenance verdicts are only
+published for cleared targets (see the two-tier gate). For the engine's own
+docs — the layer breakdown, the live fingerprint corpus, the provider
+jurisdiction corpus, and the Gate-1 legal materials — see the provenance-probe
+README and its `docs/`. The two local UIs cross-link (this site has a "Live
+probe tool →" nav link; the probe UI has an "Observatory →" link).
+
 ## Layout
 
 | Path | Role |
