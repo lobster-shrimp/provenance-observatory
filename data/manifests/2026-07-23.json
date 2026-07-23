@@ -1,0 +1,9 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-07-23",
+  "entries": {
+    "control-deepseek-positive/2026-07-23/verdict.json": "583fef3b4eb556d36392f29a1e52fd15d0cf69e9c2571089d33bc6ff8f28e3d1",
+    "control-openai-negative/2026-07-23/verdict.json": "b8b0502c075852b717de41454ac9c0204d019b388710884fbabdd651c3124902"
+  },
+  "manifest_root": "fdb8ccbd66cf0ab11b46fae4fb56bceb6246319a94f1b61b8f9a9e607160a344"
+}

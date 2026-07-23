@@ -1,0 +1,260 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {
+      "cjk_dense": 65,
+      "cjk_mixed": 37,
+      "jp_kana": 54,
+      "ko_hangul": 37,
+      "ws_runs": 83,
+      "tabs_deep": 60,
+      "digits_long": 188,
+      "punct_repeat": 21,
+      "emoji_zwj": 267,
+      "rare_unicode": 405,
+      "diacritics": 174,
+      "arabic_hebrew": 47,
+      "cyrillic": 35,
+      "code_json": 150,
+      "code_regex": 248,
+      "url_paths": 185,
+      "base64ish": 184,
+      "md_table": 114,
+      "mixed_script_cjk_code": 109,
+      "newline_storm": 15
+    },
+    "errors": {},
+    "meta": {
+      "echoed_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    "usable": true
+  },
+  "headers": {
+    "status": 200,
+    "server": "elb",
+    "echoed_model": "deepseek-v4-flash",
+    "vendor_headers": [
+      {
+        "header": "x-ds-trace-id",
+        "implies": "DeepSeek",
+        "value": "c5979cf45926763d4efcc06222fa124e"
+      },
+      {
+        "header": "x-amz-cf-id",
+        "implies": "AWS CloudFront",
+        "value": "VgdK7-77nXhDtVe9tlqXRTwMYEdiah2kYp3gVSurmLs3HNNUJgWTVQ=="
+      }
+    ],
+    "header_names": [
+      "access-control-allow-credentials",
+      "connection",
+      "content-encoding",
+      "content-type",
+      "date",
+      "server",
+      "strict-transport-security",
+      "transfer-encoding",
+      "vary",
+      "via",
+      "x-amz-cf-id",
+      "x-amz-cf-pop",
+      "x-cache",
+      "x-content-type-options",
+      "x-ds-trace-id"
+    ],
+    "header_shape_hash": "583c320b41223716"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Invalid temperature value, the valid range of temperature is [0, 2]\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Failed to deserialize the JSON body into the target type: max_tokens: invalid value: integer `-5`, expected u32 at line 1 column 92\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "bad_model",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"The supported API model names are deepseek-v4-pro or deepseek-v4-flash, but you passed __nonexistent_model_probe__.\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "bad_role",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Failed to deserialize the JSON body into the target type: messages[0].role: unknown variant `wizard`, expected one of `system`, `user`, `assistant`, `tool`, `latest_reminder` at line 1 column 57\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Stop string array too long: 64\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 200,
+        "schema": {
+          "choices": [
+            {
+              "finish_reason": "str",
+              "index": "int",
+              "logprobs": "NoneType",
+              "message": {
+                "content": "...",
+                "role": "..."
+              }
+            }
+          ],
+          "created": "int",
+          "id": "str",
+          "model": "str",
+          "object": "str",
+          "system_fingerprint": "str",
+          "usage": {
+            "completion_tokens": "int",
+            "prompt_cache_hit_tokens": "int",
+            "prompt_cache_miss_tokens": "int",
+            "prompt_tokens": "int",
+            "prompt_tokens_details": {
+              "cached_tokens": "int"
+            },
+            "total_tokens": "int"
+          }
+        },
+        "excerpt": "{\"id\":\"efdbf883-a17b-4cb9-95ac-7178bce2795c\",\"object\":\"chat.completion\",\"created\":1784786982,\"model\":\"deepseek-v4-flash\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hello\"},\"logprobs\":null,\"finish_reason\":\"length\"}],\"usage\":{\"prompt_tokens\":5,\"completion_tokens\":1,\"total_tokens\":6"
+      }
+    ],
+    "error_signature": "a72fbaf046b64367"
+  },
+  "streaming": {
+    "chunk_count": 23,
+    "chunk_fields": [
+      "__DONE_sentinel__",
+      "choices",
+      "created",
+      "id",
+      "model",
+      "object",
+      "system_fingerprint",
+      "usage"
+    ],
+    "final_usage_chunk": true,
+    "finish_reason": "stop",
+    "ttft_s": 0.4124
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.3506,
+      "median": 0.3383,
+      "p10": 0.3243,
+      "p90": 0.39,
+      "stdev": 0.0259
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.9531,
+      "median": 0.9713,
+      "p10": 0.8276,
+      "p90": 1.0689,
+      "stdev": 0.0951
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.0709,
+      "median": 0.0688,
+      "p10": 0.0627,
+      "p90": 0.0822,
+      "stdev": 0.0079
+    }
+  },
+  "network": {
+    "host": "api.deepseek.com",
+    "addresses": [
+      {
+        "ip": "3.173.21.63",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      }
+    ],
+    "findings": [
+      {
+        "type": "prc_endpoint",
+        "severity": "critical",
+        "detail": "Hostname matches known PRC-operated inference endpoint: DeepSeek"
+      }
+    ],
+    "jurisdiction": "PRC",
+    "operator": "DeepSeek",
+    "confidence": 0.99
+  },
+  "fingerprint_id": "3ee15d57fc11a90a50e3de16",
+  "timestamp": "2026-07-23T06:09:39+00:00",
+  "target": {
+    "name": "control-deepseek-positive",
+    "base_url": "https://api.deepseek.com/v1",
+    "model": "deepseek-chat",
+    "api_style": "openai"
+  },
+  "drift_seen": false,
+  "verdict": {
+    "provenance": "CONFIRMED",
+    "jurisdiction": "CONFIRMED",
+    "confidence": "high"
+  },
+  "control_check": {
+    "kind": "control-positive",
+    "top_model": "DeepSeek-V3",
+    "top_score": 1.0,
+    "top_origin": "CN",
+    "expected_family": "DeepSeek-V3",
+    "pass": true
+  }
+}
