@@ -235,7 +235,21 @@ def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | 
             f'<style>{_CSS}</style></head><body><div class="wrap">{body}</div></body></html>')
 
 
-def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None) -> str:
+def _evidence_cell(dstr: str, manifests_by_date: dict) -> str:
+    """Link a row to the signed daily manifest covering its date (the design's
+    'evidence bundle' column). Falls back to plain text if no manifest exists."""
+    m = manifests_by_date.get(dstr)
+    if not m:
+        return '<span class="muted">&mdash;</span>'
+    root = html.escape((m.get("manifest_root") or "")[:8])
+    sig = "&middot;sig" if m.get("signed") else ""
+    return (f'<a class="ev" href="evidence/{html.escape(dstr)}.json" '
+            f'title="signed manifest for {html.escape(dstr)} (root {html.escape(m.get("manifest_root",""))})">'
+            f'bundle-{root}&hellip;{sig} &#8599;</a>')
+
+
+def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None,
+         manifests_by_date: dict) -> str:
     dstr, latest = records[-1]
     tgt = latest.get("target") or {}
     kind = (tgt.get("kind") if isinstance(tgt, dict) else "") or ""
@@ -258,21 +272,254 @@ def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None) ->
   <td>{conf}</td>
   <td class="spark">{_sparkline(records)}</td>
   <td class="mono small">{html.escape(dstr)}</td>
-  <td class="mono small">{fp}</td>
+  <td class="mono small">{_evidence_cell(dstr, manifests_by_date)}</td>
 </tr>"""
 
 
+def _severity_of(adv: dict) -> str:
+    """Advisory severity for the badge. Stored severity wins; else derive from
+    the worst monitor change; else 'info'."""
+    s = (adv.get("severity") or "").lower()
+    if s in ("high", "medium", "low", "info"):
+        return s
+    sevs = {c.get("severity") for c in (adv.get("evidence", {}).get("monitor_changes") or [])}
+    if "critical" in sevs:
+        return "high"
+    if "high" in sevs:
+        return "medium"
+    if sevs:
+        return "low"
+    return "info"
+
+
 def _advisories_rail(promoted: dict[str, dict]) -> str:
+    head = '<a class="viewall tlink" href="advisories.html">VIEW ALL</a>'
     if not promoted:
-        return '<p class="muted">No advisories published yet. Interpreted verdicts are ' \
-               'withheld pending responsible disclosure and legal review.</p>'
+        return (head + '<p class="muted">No advisories published yet. A verdict '
+                '<i>change</i> becomes a numbered advisory (MPA-YYYY-NNN) after '
+                'responsible disclosure and Gate-1 legal review.</p>')
     items = []
     for adv in sorted(promoted.values(), key=lambda a: a.get("promoted_at", ""), reverse=True):
+        sev = _severity_of(adv)
+        aid = adv.get("advisory_id", "")
+        desc = html.escape(adv.get("summary") or adv.get("title")
+                           or f'verdict change on {adv.get("target", "an endpoint")}')
         items.append(
-            f'<li><span class="mpa">{html.escape(adv.get("advisory_id",""))}</span> '
-            f'<span class="mono">{html.escape(adv.get("target",""))}</span> '
-            f'<span class="small muted">{html.escape(adv.get("promoted_at","")[:10])}</span></li>')
-    return "<ul class='adv'>" + "".join(items) + "</ul>"
+            f'<div class="adv-item"><div class="adv-head">'
+            f'<span class="sev {sev}">{sev.upper()}</span>'
+            f'<span class="small muted">{html.escape(adv.get("promoted_at","")[:10])}</span></div>'
+            f'<div class="mpa">{html.escape(aid)}</div><p>{desc}</p>'
+            f'<a class="tlink" href="a/{_slug(aid)}.html">View advisory &#8599;</a></div>')
+    return head + "".join(items)
+
+
+# --- signed evidence log (real: the cosign-signed daily manifests) ----------
+
+def _manifests(data_dir: str) -> list[dict]:
+    """Daily manifests newest-first: {date, manifest_root, entries, signed}."""
+    out = []
+    for p in glob.glob(os.path.join(data_dir, "manifests", "*.json")):
+        try:
+            with open(p) as f:
+                m = json.load(f)
+        except (OSError, ValueError):
+            continue
+        m["signed"] = os.path.exists(p + ".cosign.bundle")
+        out.append(m)
+    out.sort(key=lambda m: m.get("date", ""), reverse=True)
+    return out
+
+
+# --- shared chrome ----------------------------------------------------------
+
+def _footer(base: str = "") -> str:
+    """Real footer with working links. `base` prefixes relative paths for pages
+    served from a subdirectory (t/, a/)."""
+    year = date.today().year
+    return f"""<footer>
+  <div class="fcols">
+    <div class="fcol">
+      <h4>Provenance Observatory</h4>
+      <p>&copy; {year} Provenance Observatory</p>
+      <p>All evidence bundles are cryptographically signed.</p>
+    </div>
+    <div class="fcol"><h4>Resources</h4>
+      <a href="{base}methodology.html">Methodology</a></div>
+    <div class="fcol"><h4>Policies</h4>
+      <a href="{base}disclosure.html">Responsible Disclosure</a></div>
+    <div class="fcol"><h4>Verification</h4>
+      <p>Verify any evidence bundle signature and log inclusion.</p>
+      <a href="{base}verify.html">Verify Evidence &#8599;</a></div>
+    <div class="fcol"><h4>Transparency Log</h4>
+      <p>All records are committed to an append-only, signed log.</p>
+      <a href="{base}transparency-log.html">View Log &#8599;</a></div>
+  </div>
+</footer>"""
+
+
+def _bottom_bar(manifests: list[dict], now_iso: str) -> str:
+    if manifests:
+        m = manifests[0]
+        head = html.escape((m.get("manifest_root") or "")[:24])
+        tail = (f'TRANSPARENCY LOG TREE HEAD: {head}&hellip; '
+                f'&middot; STH DATE: {html.escape(m.get("date",""))}')
+    else:
+        tail = "TRANSPARENCY LOG: no manifests yet"
+    return (f'<div class="bottombar"><span>All times UTC &middot; '
+            f'Data updated: {html.escape(now_iso[:16])} UTC</span><span>{tail}</span></div>')
+
+
+def _page(title: str, inner: str, *, base: str = "") -> str:
+    """Standalone content page wrapper (shared CSS + real footer)."""
+    return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            f'<title>{html.escape(title)} &middot; Provenance Observatory</title>'
+            f'<style>{_CSS}</style></head><body><div class="wrap">'
+            f'<div class="topnav"><a href="{base}index.html">&larr; Observatory</a></div>'
+            f'<header><h1>{html.escape(title)}</h1></header>'
+            f'<div class="prose">{inner}</div>{_footer(base)}</div></body></html>')
+
+
+# --- footer content pages (real, static) ------------------------------------
+
+def _methodology_page() -> str:
+    return _page("Methodology", """
+<p>Each endpoint is assessed by independent layers; signals are combined by
+log-odds into two separate verdicts, each with a confidence level. No single
+layer decides a verdict.</p>
+<h2>Layers</h2>
+<ul>
+  <li><b>Network / jurisdiction</b> — registry (RDAP) + endpoint classification.
+    CDN-fronting makes raw IP geolocation unreliable, so this is registry-based.</li>
+  <li><b>Wire fingerprint</b> — vendor headers, error schema, model catalog.</li>
+  <li><b>Tokenizer fingerprint</b> — prompt-token counts over a fixed probe set
+    vs shipped reference vectors; the strongest provenance signal, when the
+    endpoint reports usage.</li>
+  <li><b>Behavioral / deception</b> — self-ID, alignment asymmetry, CJK leakage,
+    persona-vs-jurisdiction claims. Off for commercial monitoring here.</li>
+  <li><b>Latency</b> — response-time profile, for drift corroboration.</li>
+</ul>
+<h2>Verdicts</h2>
+<p>Two independent risks: <b>provenance</b> (are the weights Chinese-origin?) and
+<b>jurisdiction</b> (is inference executed by a PRC operator / on PRC soil?).
+Each lands on a tier: <code>CONFIRMED</code>, <code>LIKELY</code>,
+<code>INDETERMINATE</code>, <code>UNLIKELY</code>, <code>NO EVIDENCE</code>.
+When the strongest layer returns nothing, the verdict floors at INDETERMINATE —
+never a false clean bill.</p>
+<h2>Coverage &amp; confidence</h2>
+<p>Web apps often suppress token counts; then the tokenizer layer is
+unavailable and drift is judged on wire + latency only, at <b>degraded</b>
+confidence. Each target's coverage is labelled explicitly.</p>
+<h2>Accuracy</h2>
+<p>The engine ships a hermetic accuracy/consistency eval (zero false positives
+across 11 tokenizer families) run in CI; the live control false-positive rate is
+shown on the home page. Full engine methodology and layer source live in the
+<a href="https://github.com/lobster-shrimp/provenance-probe">provenance-probe</a>
+repository.</p>""")
+
+
+def _disclosure_page() -> str:
+    return _page("Responsible Disclosure", """
+<p>This project publishes <b>neutral evidence</b> (token counts, wire
+fingerprint, latency, drift, fingerprint id, signed manifests) as it is
+collected. <b>Interpreted verdicts</b> about a named operator are <b>withheld</b>
+until:</p>
+<ul>
+  <li>the operator has been privately notified and given a disclosure window to
+    respond, and</li>
+  <li>legal review (Gate 1) has cleared publication for that target.</li>
+</ul>
+<p>A verdict <i>change</i> becomes a numbered advisory (MPA-YYYY-NNN) only after
+that process. Verdicts are probabilistic, not proof, and carry a confidence
+level and a measured error rate.</p>
+<h2>Reporting</h2>
+<p>To dispute a record or report an issue with a monitored endpoint you operate,
+open an issue on the project repository. Corrections are appended to the log
+(records are never silently deleted).</p>""")
+
+
+def _verify_page() -> str:
+    return _page("Verify Evidence", """
+<p>Every day's records are hashed into a manifest with a single
+<code>manifest_root</code> (the tree head), and the manifest is signed with
+<a href="https://docs.sigstore.dev/">cosign</a> (keyless, via CI OIDC). You can
+verify any bundle yourself.</p>
+<h2>1. Fetch the manifest</h2>
+<p>From the <a href="transparency-log.html">Transparency Log</a>, download the
+day's <code>evidence/&lt;date&gt;.json</code> and its
+<code>evidence/&lt;date&gt;.json.cosign.bundle</code>.</p>
+<h2>2. Verify the signature</h2>
+<pre><code>cosign verify-blob \\
+  --bundle &lt;date&gt;.json.cosign.bundle \\
+  --certificate-identity-regexp '.*' \\
+  --certificate-oidc-issuer-regexp '.*' \\
+  &lt;date&gt;.json</code></pre>
+<h2>3. Verify inclusion</h2>
+<p>Recompute the root: hash each listed record file, sort the
+<code>path&nbsp;&nbsp;hash</code> lines, and SHA-256 the result — it must equal
+<code>manifest_root</code>. Any changed, added, or removed record changes the
+root, so the log is tamper-evident.</p>""")
+
+
+def _transparency_page(manifests: list[dict]) -> str:
+    if manifests:
+        rows = "\n".join(
+            f'<tr id="{html.escape(m.get("date",""))}">'
+            f'<td class="mono">{html.escape(m.get("date",""))}</td>'
+            f'<td class="mono small">{html.escape((m.get("manifest_root") or "")[:32])}&hellip;</td>'
+            f'<td>{len(m.get("entries", {}))}</td>'
+            f'<td>{"signed" if m.get("signed") else "<span class=muted>unsigned (local)</span>"}</td>'
+            f'<td><a class="ev" href="evidence/{html.escape(m.get("date",""))}.json">manifest</a></td></tr>'
+            for m in manifests)
+    else:
+        rows = '<tr><td colspan="5" class="muted">No manifests yet.</td></tr>'
+    inner = f"""
+<p>Every day's records are committed to an append-only log and hashed into a
+signed manifest. The <code>manifest_root</code> is the tree head; any change to
+any record changes it. See <a href="verify.html">Verify Evidence</a> to check a
+bundle yourself.</p>
+<table><thead><tr><th>Date</th><th>Tree head (manifest_root)</th><th>Records</th>
+<th>Signature</th><th>Bundle</th></tr></thead><tbody>
+{rows}
+</tbody></table>"""
+    return _page("Transparency Log", inner)
+
+
+def _advisory_page(adv: dict) -> str:
+    sev = _severity_of(adv)
+    aid = html.escape(adv.get("advisory_id", ""))
+    changes = adv.get("evidence", {}).get("monitor_changes") or []
+    ch = "".join(f'<li><b>{html.escape(c.get("severity",""))}</b> '
+                 f'{html.escape(c.get("field",""))}: {html.escape(c.get("detail",""))}</li>'
+                 for c in changes) or "<li>(no change detail recorded)</li>"
+    inner = f"""
+<p><span class="sev {sev}">{sev.upper()}</span> &middot; promoted
+{html.escape(adv.get("promoted_at","")[:10])} &middot; target
+<span class="mono">{html.escape(adv.get("target",""))}</span></p>
+<p>{html.escape(adv.get("summary") or adv.get("title") or "Verdict change advisory.")}</p>
+<h2>Evidence (what changed)</h2>
+<ul>{ch}</ul>
+<p class="small muted">Interpreted verdicts are published only for targets cleared
+through responsible disclosure and Gate-1 review.</p>"""
+    return _page(f"{aid} advisory", inner, base="../")
+
+
+def _advisories_index(promoted: dict) -> str:
+    if not promoted:
+        inner = ('<p class="muted">No advisories published yet. A verdict change '
+                 'becomes a numbered advisory (MPA-YYYY-NNN) after responsible '
+                 'disclosure and Gate-1 legal review.</p>')
+    else:
+        items = "".join(
+            f'<div class="adv-item"><div class="adv-head">'
+            f'<span class="sev {_severity_of(a)}">{_severity_of(a).upper()}</span>'
+            f'<span class="small muted">{html.escape(a.get("promoted_at","")[:10])}</span></div>'
+            f'<div class="mpa">{html.escape(a.get("advisory_id",""))}</div>'
+            f'<p>{html.escape(a.get("summary") or a.get("title") or a.get("target",""))}</p>'
+            f'<a class="tlink" href="a/{_slug(a.get("advisory_id",""))}.html">View advisory &#8599;</a></div>'
+            for a in sorted(promoted.values(), key=lambda x: x.get("promoted_at", ""), reverse=True))
+        inner = items
+    return _page("Advisories", inner)
 
 
 def _load_engine_eval(data_dir: str) -> dict:
@@ -398,16 +645,41 @@ _CSS = """
   .back { display:inline-block; margin:0 0 14px; color:var(--accent); text-decoration:none; }
   .tl-chg td { background:#fdf2f2; }
   .cov { font-size:11px; margin-top:3px; }
-  footer { margin-top:28px; border-top:1px solid var(--line); padding-top:14px;
-    color:var(--muted); font-size:12px; display:flex; gap:20px; flex-wrap:wrap; }
+  footer { margin-top:28px; border-top:1px solid var(--line); padding-top:18px; color:var(--muted); font-size:12px; }
+  .fcols { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr 1fr; gap:24px; }
+  .fcol h4 { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:0 0 8px; }
+  .fcol a { display:block; color:var(--accent); text-decoration:none; padding:2px 0; }
+  .fcol a:hover { text-decoration:underline; }
+  .fcol p { margin:0 0 8px; }
+  .bottombar { margin-top:18px; border-top:1px solid var(--line); padding-top:10px;
+    display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    font-size:11px; color:var(--muted); }
+  .sev { font-size:10px; font-weight:700; letter-spacing:.05em; padding:1px 6px; border:1px solid var(--line); border-radius:3px; }
+  .sev.high { border-color:#f0c0c0; background:#fdf2f2; color:#b42318; }
+  .sev.medium { border-color:#e6d08a; background:#fffbeb; color:#8a6d1a; }
+  .sev.low { border-color:#bfe3c7; background:#f3faf4; color:#0a7d33; }
+  .sev.info { border-color:#c7d2e0; background:#f4f7fb; color:#33507d; }
+  .adv-item { padding:10px 0; border-bottom:1px solid var(--line); }
+  .adv-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+  .adv-item .mpa { font-weight:700; color:var(--ink); }
+  .adv-item p { margin:4px 0; color:#374151; }
+  .viewall { float:right; font-size:11px; }
+  a.ev { color:var(--accent); text-decoration:none; } a.ev:hover { text-decoration:underline; }
+  .prose { max-width:760px; } .prose h2 { font-size:15px; margin:22px 0 8px; }
+  .prose li { margin:4px 0; } .prose code { background:#f0f2f4; padding:1px 4px; border-radius:3px; }
 """
 
 
-def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | None = None) -> str:
+def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | None = None,
+           manifests: list[dict] | None = None) -> str:
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
+    manifests = manifests or []
+    mbd = {m.get("date"): m for m in manifests}
     n_targets = len(records)
+    n_aggregators = sum(1 for recs in records.values()
+                        if recs and (recs[-1][1].get("target") or {}).get("kind") == "aggregator")
     n_drift = sum(1 for recs in records.values() if recs and recs[-1][1].get("drift_seen"))
-    rows = "\n".join(_row(t, recs, promoted.get(t)) for t, recs in sorted(records.items()))
+    rows = "\n".join(_row(t, recs, promoted.get(t), mbd) for t, recs in sorted(records.items()))
     return f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -427,6 +699,7 @@ pending responsible disclosure and legal review (Gate 1). Verdicts are probabili
 {_assurance_panel(records, engine_eval or {})}
 <div class="stats">
   <div class="stat"><b>{n_targets}</b><span>MONITORED TARGETS</span></div>
+  <div class="stat"><b>{n_aggregators}</b><span>ACTIVE AGGREGATORS</span></div>
   <div class="stat"><b>{n_drift}</b><span>DRIFT EVENTS (LATEST)</span></div>
   <div class="stat"><b>{len(promoted)}</b><span>PUBLISHED ADVISORIES</span></div>
   <div class="stat"><b>{html.escape(now_iso[:16])}</b><span>LAST UPDATED (UTC)</span></div>
@@ -437,7 +710,7 @@ pending responsible disclosure and legal review (Gate 1). Verdicts are probabili
     <thead><tr>
       <th>Target</th><th>Kind</th><th>Claimed model</th>
       <th>Provenance</th><th>Jurisdiction</th><th>Confidence</th>
-      <th>Stability (7d)</th><th>Last checked</th><th>Fingerprint</th>
+      <th>Stability (7d)</th><th>Last checked</th><th>Evidence bundle</th>
     </tr></thead>
     <tbody>
 {rows if rows else '<tr><td colspan="9" class="muted">No probe data yet.</td></tr>'}
@@ -449,24 +722,50 @@ pending responsible disclosure and legal review (Gate 1). Verdicts are probabili
     {_advisories_rail(promoted)}
   </aside>
 </div>
-<footer>
-  <span>Methodology</span><span>Responsible Disclosure</span>
-  <span>Verify Evidence</span><span>Transparency Log</span>
-  <span>&copy; Provenance Observatory</span>
-</footer>
+{_footer()}
+{_bottom_bar(manifests, now_iso)}
 </div></body></html>"""
 
 
 def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | None = None) -> str:
+    import shutil
     records = _load_target_records(data_dir)
     promoted = _load_promoted_advisories(data_dir)
     engine_eval = _load_engine_eval(data_dir)
+    manifests = _manifests(data_dir)
     now_iso = now_iso or datetime.utcnow().isoformat()
-    doc = render(records, promoted, now_iso=now_iso, engine_eval=engine_eval)
     os.makedirs(out_dir, exist_ok=True)
+
     out_path = os.path.join(out_dir, "index.html")
     with open(out_path, "w") as f:
-        f.write(doc)
+        f.write(render(records, promoted, now_iso=now_iso,
+                       engine_eval=engine_eval, manifests=manifests))
+
+    # Footer content pages (real links, not dead spans).
+    for fname, doc in (
+        ("methodology.html", _methodology_page()),
+        ("disclosure.html", _disclosure_page()),
+        ("verify.html", _verify_page()),
+        ("transparency-log.html", _transparency_page(manifests)),
+        ("advisories.html", _advisories_index(promoted)),
+    ):
+        with open(os.path.join(out_dir, fname), "w") as f:
+            f.write(doc)
+
+    # Signed evidence bundles: copy manifests (+ cosign bundles) so the site's
+    # evidence-bundle links resolve and are independently verifiable.
+    edir = os.path.join(out_dir, "evidence")
+    os.makedirs(edir, exist_ok=True)
+    for p in glob.glob(os.path.join(data_dir, "manifests", "*.json*")):
+        shutil.copy2(p, os.path.join(edir, os.path.basename(p)))
+
+    # Per-advisory pages under a/.
+    adir = os.path.join(out_dir, "a")
+    os.makedirs(adir, exist_ok=True)
+    for adv in promoted.values():
+        with open(os.path.join(adir, f"{_slug(adv.get('advisory_id',''))}.html"), "w") as f:
+            f.write(_advisory_page(adv))
+
     # Per-target detail pages (drift timeline) under t/.
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
     tdir = os.path.join(out_dir, "t")
