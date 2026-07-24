@@ -24,6 +24,7 @@ import glob
 import html
 import json
 import os
+import re
 from datetime import date, datetime, timedelta
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -122,6 +123,71 @@ def _interpreted_cells(latest: dict, promoted: dict | None) -> tuple[str, str, s
             '<span class="withheld">withheld</span>', "—")
 
 
+def _slug(target: str) -> str:
+    """Filesystem/URL-safe per-target page name."""
+    return re.sub(r"[^a-z0-9._-]", "_", (target or "target").lower())
+
+
+def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | None,
+                 *, now_iso: str, probe_url: str) -> str:
+    """Full drift timeline for one target: every dated run, fingerprint changes,
+    control status, tokenizer coverage, and interpreted verdict (withheld unless
+    cleared/promoted). The per-target drill-down the index table links to."""
+    tgt = (records[-1][1].get("target") or {}) if records else {}
+    kind = html.escape(str(tgt.get("kind", "") if isinstance(tgt, dict) else ""))
+
+    # Mark fingerprint changes in ascending order, then show newest-first.
+    flagged, prev = [], None
+    for dstr, rec in records:
+        fp = rec.get("fingerprint_id", "")
+        flagged.append((dstr, rec, prev is not None and fp != prev))
+        prev = fp
+    n_changes = sum(1 for _, _, c in flagged if c)
+
+    trows = []
+    for dstr, rec, changed in reversed(flagged):
+        fp = html.escape((rec.get("fingerprint_id") or "")[:14]) or "&mdash;"
+        cc = rec.get("control_check")
+        ctl = ("&mdash;" if not cc else
+               f'<span class="ctl {"pass" if cc.get("pass") else "fail"}">'
+               f'{"PASS" if cc.get("pass") else "FAIL"}</span>')
+        usable = (rec.get("tokenizer") or {}).get("usable")
+        tok = "yes" if usable else ('<span class="muted">suppressed</span>'
+                                    if usable is not None else "&mdash;")
+        prov, _juris, _conf = _interpreted_cells(rec, promoted)
+        mark = ('<span class="sp-drift">&#9670; changed</span>' if changed
+                else '<span class="sp-ok">&#9642; stable</span>')
+        trows.append(f'<tr class="{"tl-chg" if changed else ""}">'
+                     f'<td class="mono small">{html.escape(dstr)}</td>'
+                     f'<td class="mono">{fp}</td><td>{mark}</td>'
+                     f'<td>{ctl}</td><td>{tok}</td><td>{prov}</td></tr>')
+
+    adv = promoted or {}
+    adv_html = ("" if not adv else
+                f'<div class="note"><b>Advisory {html.escape(adv.get("advisory_id", ""))}</b> '
+                f'promoted {html.escape(adv.get("promoted_at", "")[:10])}</div>')
+
+    body = f"""<div class="topnav"><a href="../index.html">&larr; Observatory</a>
+    <a href="{probe_url}">Live probe tool &rarr;</a></div>
+<header><h1>{html.escape(target)}</h1>
+  <p>{kind or "target"} &middot; {len(records)} run(s) in the hot window &middot;
+     {n_changes} fingerprint change(s)</p></header>
+{adv_html}
+<table>
+  <thead><tr><th>Date</th><th>Fingerprint</th><th>Change</th><th>Control</th>
+    <th>Tokenizer</th><th>Provenance</th></tr></thead>
+  <tbody>
+{chr(10).join(trows) if trows else '<tr><td colspan="6" class="muted">No runs yet.</td></tr>'}
+  </tbody>
+</table>
+<footer><span>Neutral evidence, append-only. Interpreted verdicts withheld until
+  Gate 1 clears the target.</span><span>Updated {html.escape(now_iso[:16])} UTC</span></footer>"""
+    return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            f'<title>{html.escape(target)} &middot; Provenance Observatory</title>'
+            f'<style>{_CSS}</style></head><body><div class="wrap">{body}</div></body></html>')
+
+
 def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None) -> str:
     dstr, latest = records[-1]
     tgt = latest.get("target") or {}
@@ -137,7 +203,7 @@ def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None) ->
         ctl_html = f'<div class="ctl {cls}">control: {"PASS" if ctl.get("pass") else "FAIL"}</div>'
 
     return f"""<tr>
-  <td class="mono">{html.escape(target)}{ctl_html}</td>
+  <td class="mono"><a class="tlink" href="t/{_slug(target)}.html">{html.escape(target)}</a>{ctl_html}</td>
   <td>{html.escape(kind)}</td>
   <td class="mono">{model or "&mdash;"}</td>
   <td>{prov}</td>
@@ -243,6 +309,53 @@ def _assurance_panel(records: dict, engine_eval: dict) -> str:
 </div>"""
 
 
+_CSS = """
+  :root { --ink:#1a1a1a; --muted:#6b7280; --line:#e5e7eb; --bg:#fbfbfa; --accent:#0b7285; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  .wrap { max-width:1200px; margin:0 auto; padding:32px 24px; }
+  .topnav { display:flex; gap:14px; font-size:12px; text-transform:uppercase;
+    letter-spacing:.08em; margin:0 0 14px; border-bottom:1px solid var(--line); padding-bottom:8px; }
+  .topnav .active { color:var(--ink); font-weight:700; }
+  .topnav a { color:var(--accent); text-decoration:none; }
+  header h1 { font-size:20px; letter-spacing:.14em; margin:0 0 4px; }
+  header p { color:var(--muted); margin:0 0 20px; }
+  .note { border:1px solid var(--line); border-left:3px solid var(--accent);
+    background:#fff; padding:10px 14px; margin:0 0 20px; color:#374151; }
+  .stats { display:flex; gap:32px; border:1px solid var(--line); background:#fff;
+    padding:14px 18px; margin-bottom:20px; }
+  .stat b { display:block; font-size:20px; } .stat span { color:var(--muted); font-size:12px; }
+  .layout { display:grid; grid-template-columns:1fr 260px; gap:24px; align-items:start; }
+  table { width:100%; border-collapse:collapse; background:#fff; }
+  th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+  .mono { font-variant-ligatures:none; } .small { font-size:12px; color:#4b5563; }
+  .withheld { color:var(--muted); font-style:italic; }
+  .badge { border:1px solid var(--line); border-radius:3px; padding:1px 6px; font-size:12px; }
+  .badge.cn { border-color:#f0c0c0; background:#fdf2f2; color:#b42318; }
+  .badge.ok { border-color:#bfe3c7; background:#f3faf4; color:#0a7d33; }
+  .badge.warn { border-color:#e6d08a; background:#fffbeb; color:#8a6d1a; }
+  .ctl { font-size:11px; margin-top:3px; } .ctl.pass { color:#0a7d33; } .ctl.fail { color:#b42318; }
+  .spark { letter-spacing:2px; } .sp-ok { color:#0a7d33; } .sp-drift { color:#b42318; } .sp-none { color:#cbd5e1; }
+  aside h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+  ul.adv { list-style:none; padding:0; margin:0; } ul.adv li { padding:6px 0; border-bottom:1px solid var(--line); }
+  .mpa { color:var(--accent); } .muted { color:var(--muted); }
+  .assurance { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line);
+    background:#fff; margin:0 0 20px; }
+  .assurance .acol { padding:14px 18px; }
+  .assurance .acol + .acol { border-left:1px solid var(--line); }
+  .assurance h3 { font-size:11px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--muted); margin:0 0 8px; }
+  a.tlink { color:var(--accent); text-decoration:none; } a.tlink:hover { text-decoration:underline; }
+  .back { display:inline-block; margin:0 0 14px; color:var(--accent); text-decoration:none; }
+  .tl-chg td { background:#fdf2f2; }
+  .cov { font-size:11px; margin-top:3px; }
+  footer { margin-top:28px; border-top:1px solid var(--line); padding-top:14px;
+    color:var(--muted); font-size:12px; display:flex; gap:20px; flex-wrap:wrap; }
+"""
+
+
 def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | None = None) -> str:
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
     n_targets = len(records)
@@ -252,46 +365,7 @@ def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | N
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Provenance Observatory</title>
-<style>
-  :root {{ --ink:#1a1a1a; --muted:#6b7280; --line:#e5e7eb; --bg:#fbfbfa; --accent:#0b7285; }}
-  * {{ box-sizing:border-box; }}
-  body {{ margin:0; background:var(--bg); color:var(--ink);
-    font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }}
-  .wrap {{ max-width:1200px; margin:0 auto; padding:32px 24px; }}
-  .topnav {{ display:flex; gap:14px; font-size:12px; text-transform:uppercase;
-    letter-spacing:.08em; margin:0 0 14px; border-bottom:1px solid var(--line); padding-bottom:8px; }}
-  .topnav .active {{ color:var(--ink); font-weight:700; }}
-  .topnav a {{ color:var(--accent); text-decoration:none; }}
-  header h1 {{ font-size:20px; letter-spacing:.14em; margin:0 0 4px; }}
-  header p {{ color:var(--muted); margin:0 0 20px; }}
-  .note {{ border:1px solid var(--line); border-left:3px solid var(--accent);
-    background:#fff; padding:10px 14px; margin:0 0 20px; color:#374151; }}
-  .stats {{ display:flex; gap:32px; border:1px solid var(--line); background:#fff;
-    padding:14px 18px; margin-bottom:20px; }}
-  .stat b {{ display:block; font-size:20px; }} .stat span {{ color:var(--muted); font-size:12px; }}
-  .layout {{ display:grid; grid-template-columns:1fr 260px; gap:24px; align-items:start; }}
-  table {{ width:100%; border-collapse:collapse; background:#fff; }}
-  th,td {{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }}
-  th {{ font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }}
-  .mono {{ font-variant-ligatures:none; }} .small {{ font-size:12px; color:#4b5563; }}
-  .withheld {{ color:var(--muted); font-style:italic; }}
-  .badge {{ border:1px solid var(--line); border-radius:3px; padding:1px 6px; font-size:12px; }}
-  .badge.cn {{ border-color:#f0c0c0; background:#fdf2f2; color:#b42318; }}
-  .badge.ok {{ border-color:#bfe3c7; background:#f3faf4; color:#0a7d33; }}
-  .ctl {{ font-size:11px; margin-top:3px; }} .ctl.pass {{ color:#0a7d33; }} .ctl.fail {{ color:#b42318; }}
-  .spark {{ letter-spacing:2px; }} .sp-ok {{ color:#0a7d33; }} .sp-drift {{ color:#b42318; }} .sp-none {{ color:#cbd5e1; }}
-  aside h2 {{ font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }}
-  ul.adv {{ list-style:none; padding:0; margin:0; }} ul.adv li {{ padding:6px 0; border-bottom:1px solid var(--line); }}
-  .mpa {{ color:var(--accent); }} .muted {{ color:var(--muted); }}
-  .assurance {{ display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line);
-    background:#fff; margin:0 0 20px; }}
-  .assurance .acol {{ padding:14px 18px; }}
-  .assurance .acol + .acol {{ border-left:1px solid var(--line); }}
-  .assurance h3 {{ font-size:11px; text-transform:uppercase; letter-spacing:.08em;
-    color:var(--muted); margin:0 0 8px; }}
-  footer {{ margin-top:28px; border-top:1px solid var(--line); padding-top:14px;
-    color:var(--muted); font-size:12px; display:flex; gap:20px; flex-wrap:wrap; }}
-</style></head><body><div class="wrap">
+<style>{_CSS}</style></head><body><div class="wrap">
 <header>
   <div class="topnav">
     <span class="active">Observatory</span>
@@ -346,6 +420,15 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     out_path = os.path.join(out_dir, "index.html")
     with open(out_path, "w") as f:
         f.write(doc)
+    # Per-target detail pages (drift timeline) under t/.
+    probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
+    tdir = os.path.join(out_dir, "t")
+    os.makedirs(tdir, exist_ok=True)
+    for target, recs in records.items():
+        page = _detail_page(target, recs, promoted.get(target),
+                            now_iso=now_iso, probe_url=probe_url)
+        with open(os.path.join(tdir, f"{_slug(target)}.html"), "w") as f:
+            f.write(page)
     return out_path
 
 
