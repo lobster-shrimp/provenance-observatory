@@ -113,3 +113,49 @@ def test_assurance_panel_degrades_without_engine_eval():
 
 def test_engine_eval_absent_is_empty(tmp_path):
     assert build._load_engine_eval(str(tmp_path)) == {}
+
+
+# --- Per-target detail pages + drift timeline -------------------------------
+
+def test_slug_is_url_safe():
+    assert build._slug("control-openai-negative") == "control-openai-negative"
+    assert build._slug("Weird/Name Co.") == "weird_name_co."
+
+
+def test_detail_page_marks_fingerprint_change():
+    records = [
+        ("2026-07-20", {"fingerprint_id": "aaa", "target": {"kind": "aggregator"},
+                        "tokenizer": {"usable": True}}),
+        ("2026-07-21", {"fingerprint_id": "aaa", "target": {"kind": "aggregator"},
+                        "tokenizer": {"usable": True}}),
+        ("2026-07-22", {"fingerprint_id": "bbb", "target": {"kind": "aggregator"},
+                        "tokenizer": {"usable": False}}),  # swap + usage suppressed
+    ]
+    html_out = build._detail_page("t1", records, None,
+                                  now_iso="2026-07-24T00:00", probe_url="http://x")
+    assert "3 run(s)" in html_out and "1 fingerprint change(s)" in html_out
+    assert "changed" in html_out and "stable" in html_out
+    assert "suppressed" in html_out               # tokenizer coverage shown
+    assert "&larr; Observatory" in html_out       # back link
+
+
+def test_detail_page_withholds_interpreted_for_ungated_target():
+    records = [("2026-07-22", {"fingerprint_id": "x", "target": {"kind": "cn-direct"},
+                               "tokenizer": {"usable": True}})]
+    html_out = build._detail_page("deepseek-direct", records, None,
+                                  now_iso="2026-07-24T00:00", probe_url="http://x")
+    assert "withheld" in html_out                 # Gate-1: no leaked verdict
+
+
+def test_build_writes_per_target_pages(tmp_path):
+    data = tmp_path / "data"
+    _write_verdict(str(data), "control-openai-negative", "control-negative",
+                   {"fingerprint_id": "fp1", "drift_seen": False,
+                    "control_check": {"kind": "control-negative", "pass": True}})
+    out = tmp_path / "out"
+    build.build(str(data), str(out), now_iso="2026-07-24T00:00")
+    page = out / "t" / "control-openai-negative.html"
+    assert page.exists()
+    assert "control-openai-negative" in page.read_text()
+    # index links to it
+    assert "t/control-openai-negative.html" in (out / "index.html").read_text()
