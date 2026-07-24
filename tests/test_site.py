@@ -305,3 +305,42 @@ def test_api_url_is_configurable(tmp_path, monkeypatch):
     idx = (out / "index.html").read_text()
     assert "https://obs.example.org/api/docs" in idx                # nav link
     assert 'API="https://obs.example.org"' in idx                   # injected into JS
+
+
+# --- P3: content pages + Rekor transparency surfacing -----------------------
+
+def test_content_pages_generated_and_linked(tmp_path):
+    data = tmp_path / "data"
+    _write_verdict(str(data), "t1", "aggregator", {"fingerprint_id": "fp"})
+    out = tmp_path / "out"
+    build.build(str(data), str(out), now_iso="2026-07-24T00:00:00")
+    for p in ("how-it-works.html", "faq.html", "data-dictionary.html"):
+        assert (out / p).exists(), p
+    idx = (out / "index.html").read_text()
+    for href in ("how-it-works.html", "faq.html", "data-dictionary.html"):
+        assert f'href="{href}"' in idx                       # footer Resources links
+    assert "API Documentation" in idx
+
+
+def test_rekor_index_parsed_and_surfaced():
+    # real committed bundle carries a Rekor logIndex; it must be parsed + shown
+    import sys as _sys
+    _sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    from lib import records
+    ms = records.load_manifests(os.path.join(os.path.dirname(__file__), "..", "data"))
+    signed = [m for m in ms if m.get("signed")]
+    assert signed and any(isinstance(m.get("rekor_log_index"), int) for m in signed)
+    tp = build._transparency_page(ms)
+    assert "Rekor #" in tp and "search.sigstore.dev" in tp
+
+
+def test_rekor_index_none_when_unsigned(tmp_path):
+    import sys as _sys
+    _sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    from lib import records
+    md = tmp_path / "data" / "manifests"
+    md.mkdir(parents=True)
+    (md / "2026-07-24.json").write_text(json.dumps(
+        {"date": "2026-07-24", "entries": {}, "manifest_root": "r"}))
+    ms = records.load_manifests(str(tmp_path / "data"))
+    assert ms[0]["signed"] is False and ms[0]["rekor_log_index"] is None

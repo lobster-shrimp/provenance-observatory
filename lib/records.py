@@ -47,8 +47,25 @@ def load_promoted_advisories(data_dir: str) -> dict[str, dict]:
     return latest
 
 
+def _rekor_index(bundle_path: str) -> int | None:
+    """Pull the Rekor transparency-log index out of a cosign bundle, if present.
+
+    cosign keyless signing records the manifest in Rekor (the Sigstore
+    transparency log); the inclusion proof rides in <manifest>.cosign.bundle at
+    rekorBundle.Payload.logIndex. That log index IS our transparency-log proof —
+    no separate Trillian needed.
+    """
+    try:
+        with open(bundle_path) as f:
+            b = json.load(f)
+        return (((b.get("rekorBundle") or {}).get("Payload") or {}).get("logIndex"))
+    except (OSError, ValueError, AttributeError):
+        return None
+
+
 def load_manifests(data_dir: str) -> list[dict]:
-    """Daily signed manifests newest-first: {date, manifest_root, entries, signed}."""
+    """Daily signed manifests newest-first: {date, manifest_root, entries, signed,
+    rekor_log_index}."""
     out = []
     for p in glob.glob(os.path.join(data_dir, "manifests", "*.json")):
         try:
@@ -56,7 +73,9 @@ def load_manifests(data_dir: str) -> list[dict]:
                 m = json.load(f)
         except (OSError, ValueError):
             continue
-        m["signed"] = os.path.exists(p + ".cosign.bundle")
+        bundle = p + ".cosign.bundle"
+        m["signed"] = os.path.exists(bundle)
+        m["rekor_log_index"] = _rekor_index(bundle) if m["signed"] else None
         out.append(m)
     out.sort(key=lambda m: m.get("date", ""), reverse=True)
     return out

@@ -305,9 +305,11 @@ def _advisories_rail(promoted: dict[str, dict]) -> str:
 
 # --- shared chrome ----------------------------------------------------------
 
-def _footer(base: str = "") -> str:
+def _footer(base: str = "", api_url: str = "") -> str:
     """Real footer with working links. `base` prefixes relative paths for pages
-    served from a subdirectory (t/, a/)."""
+    served from a subdirectory (t/, a/). `api_url` defaults to the configured
+    OBSERVATORY_API_URL so footer API links match the nav."""
+    api_url = api_url or os.environ.get("OBSERVATORY_API_URL", "http://127.0.0.1:8000")
     year = date.today().year
     return f"""<footer>
   <div class="fcols">
@@ -317,7 +319,11 @@ def _footer(base: str = "") -> str:
       <p>All evidence bundles are cryptographically signed.</p>
     </div>
     <div class="fcol"><h4>Resources</h4>
-      <a href="{base}methodology.html">Methodology</a></div>
+      <a href="{base}methodology.html">Methodology</a>
+      <a href="{base}how-it-works.html">How It Works</a>
+      <a href="{base}faq.html">FAQ</a>
+      <a href="{base}data-dictionary.html">Data Dictionary</a>
+      <a href="{api_url}/api/docs">API Documentation</a></div>
     <div class="fcol"><h4>Policies</h4>
       <a href="{base}disclosure.html">Responsible Disclosure</a></div>
     <div class="fcol"><h4>Verification</h4>
@@ -441,7 +447,7 @@ def _transparency_page(manifests: list[dict]) -> str:
             f'<td class="mono">{html.escape(m.get("date",""))}</td>'
             f'<td class="mono small">{html.escape((m.get("manifest_root") or "")[:32])}&hellip;</td>'
             f'<td>{len(m.get("entries", {}))}</td>'
-            f'<td>{"signed" if m.get("signed") else "<span class=muted>unsigned (local)</span>"}</td>'
+            f'<td>{_rekor_cell(m)}</td>'
             f'<td><a class="ev" href="evidence/{html.escape(m.get("date",""))}.json">manifest</a></td></tr>'
             for m in manifests)
     else:
@@ -449,13 +455,27 @@ def _transparency_page(manifests: list[dict]) -> str:
     inner = f"""
 <p>Every day's records are committed to an append-only log and hashed into a
 signed manifest. The <code>manifest_root</code> is the tree head; any change to
-any record changes it. See <a href="verify.html">Verify Evidence</a> to check a
-bundle yourself.</p>
+any record changes it. Each signed manifest is also recorded in
+<a href="https://www.sigstore.dev/">Rekor</a>, Sigstore's public append-only
+transparency log — that Rekor entry is the independent inclusion proof (no
+separate log server needed). See <a href="verify.html">Verify Evidence</a> to
+check a bundle yourself.</p>
 <table><thead><tr><th>Date</th><th>Tree head (manifest_root)</th><th>Records</th>
-<th>Signature</th><th>Bundle</th></tr></thead><tbody>
+<th>Rekor entry</th><th>Bundle</th></tr></thead><tbody>
 {rows}
 </tbody></table>"""
     return _page("Transparency Log", inner)
+
+
+def _rekor_cell(m: dict) -> str:
+    """Link to the manifest's Rekor transparency-log entry when we have its index."""
+    idx = m.get("rekor_log_index")
+    if idx is not None:
+        u = f"https://search.sigstore.dev/?logIndex={html.escape(str(idx))}"
+        return f'<a class="ev" href="{u}">Rekor #{html.escape(str(idx))} &#8599;</a>'
+    if m.get("signed"):
+        return '<span class="small">signed (proof in bundle)</span>'
+    return '<span class="muted">unsigned (local)</span>'
 
 
 def _advisory_page(adv: dict) -> str:
@@ -515,6 +535,83 @@ disclosure and legal review.</p>
 <p>The fingerprinting engine is
 <a href="https://github.com/lobster-shrimp/provenance-probe">provenance-probe</a>;
 this service consumes it as a black-box CLI. Both are open source and forkable.</p>""")
+
+
+def _how_it_works_page() -> str:
+    return _page("How It Works", """
+<p>One nightly pipeline turns a watch list into signed, citable evidence.</p>
+<h2>The pipeline</h2>
+<ul>
+  <li><b>Probe.</b> For each target, the <a href="https://github.com/lobster-shrimp/provenance-probe">provenance-probe</a>
+    engine runs layered black-box checks (tokenizer, wire, network, latency).</li>
+  <li><b>Score.</b> Signals combine by log-odds into two verdicts — provenance
+    and jurisdiction — each with a confidence level.</li>
+  <li><b>Sign.</b> The day's records are hashed into a manifest and signed with
+    cosign keyless; the signature is recorded in Rekor (public transparency log).</li>
+  <li><b>Commit.</b> The signed evidence is appended to git — the source of
+    truth this site and API read.</li>
+  <li><b>Detect drift.</b> Each run is diffed against a pinned baseline; a
+    changed fingerprint opens a numbered advisory (after disclosure + review).</li>
+</ul>
+<h2>Two-tier publication</h2>
+<p>Neutral evidence (token counts, wire fingerprint, latency, drift,
+fingerprint id, signed manifests) is published as collected. Interpreted
+verdicts about a named operator are withheld until responsible disclosure and
+legal review clear the target. See <a href="methodology.html">Methodology</a>
+and <a href="disclosure.html">Responsible Disclosure</a>.</p>""")
+
+
+def _faq_page() -> str:
+    return _page("FAQ", """
+<h2>What's the difference between provenance and jurisdiction?</h2>
+<p><b>Provenance</b> = are the model weights Chinese-origin, wherever they run.
+<b>Jurisdiction</b> = is inference executed by a PRC-domiciled operator / on PRC
+soil. They are scored independently; a US-hosted Chinese-origin model trips
+provenance but not jurisdiction.</p>
+<h2>Why are some verdicts "withheld"?</h2>
+<p>Interpreted verdicts about a named operator publish only after responsible
+disclosure and legal review. Until then the neutral evidence is still shown.</p>
+<h2>Are these verdicts proof?</h2>
+<p>No. They are probabilistic, carry a confidence level and a measured error
+rate, and can be independently verified from the signed evidence.</p>
+<h2>What is "degraded" coverage?</h2>
+<p>When an endpoint suppresses token counts the strongest signal (tokenizer) is
+unavailable, so drift is judged on wire + latency only, at lower confidence.
+It's labelled per target so you know.</p>
+<h2>Can I verify the evidence myself?</h2>
+<p>Yes — see <a href="verify.html">Verify Evidence</a>. Every manifest is
+cosign-signed and recorded in Rekor.</p>
+<h2>How do I consume this programmatically?</h2>
+<p>Use the <a href="feed.xml">RSS feed</a> or the JSON API (see the API link in
+the nav). Fields are documented in the <a href="data-dictionary.html">Data
+Dictionary</a>.</p>""")
+
+
+def _data_dictionary_page() -> str:
+    return _page("Data Dictionary", """
+<p>Field reference for the published records and the JSON API.</p>
+<h2>Verdict record / <code>/api/verdicts</code> item</h2>
+<ul>
+  <li><code>target</code> — endpoint identifier on the watch list.</li>
+  <li><code>kind</code> — control-positive/-negative, aggregator, first-party, cn-direct, webapp.</li>
+  <li><code>claimed_model</code> — the model id the endpoint advertises.</li>
+  <li><code>provenance</code> / <code>jurisdiction</code> — verdict tier
+    (CONFIRMED, LIKELY, INDETERMINATE, UNLIKELY, NO EVIDENCE) or null.</li>
+  <li><code>confidence</code> — low / moderate / high.</li>
+  <li><code>withheld</code> — true when the interpreted verdict is not yet cleared.</li>
+  <li><code>drift_seen</code> — fingerprint changed vs the pinned baseline.</li>
+  <li><code>coverage</code> — <code>{layers, degraded}</code>; degraded = token counts suppressed.</li>
+  <li><code>fingerprint_id</code> — stable backend identity (overhead-invariant).</li>
+  <li><code>last_checked</code> — date of the latest run.</li>
+  <li><code>evidence</code> — <code>{date, manifest_root, signed}</code> for the day's signed bundle.</li>
+</ul>
+<h2>Manifest / <code>/api/manifests</code> item</h2>
+<ul>
+  <li><code>date</code>, <code>entries</code> (path -> sha256), <code>manifest_root</code> (tree head).</li>
+  <li><code>signed</code> — a cosign bundle exists.</li>
+  <li><code>rekor_log_index</code> — the Rekor transparency-log entry index (inclusion proof).</li>
+</ul>
+<p>Verdict tiers and layers are described in <a href="methodology.html">Methodology</a>.</p>""")
 
 
 def _load_engine_eval(data_dir: str) -> dict:
@@ -840,6 +937,9 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
         ("transparency-log.html", _transparency_page(manifests)),
         ("advisories.html", _advisories_index(promoted)),
         ("about.html", _about_page()),
+        ("how-it-works.html", _how_it_works_page()),
+        ("faq.html", _faq_page()),
+        ("data-dictionary.html", _data_dictionary_page()),
     ):
         with open(os.path.join(out_dir, fname), "w") as f:
             f.write(doc)
