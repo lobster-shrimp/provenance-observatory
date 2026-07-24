@@ -124,3 +124,36 @@ def test_manifests_and_feed_and_docs():
     minidom.parseString(feed.content)                       # valid XML
     assert client.get("/api/openapi.json").status_code == 200
     assert client.get("/", follow_redirects=False).status_code in (307, 302)
+
+
+# --- P4: rate limiting + SSE stream -----------------------------------------
+
+def test_rate_limit_returns_429(monkeypatch):
+    app_module._hits.clear()
+    monkeypatch.setattr(app_module, "RATE_LIMIT", 2)
+    try:
+        assert client.get("/api/status").status_code == 200
+        assert client.get("/api/status").status_code == 200
+        assert client.get("/api/status").status_code == 429      # 3rd over the limit
+    finally:
+        app_module._hits.clear()
+
+
+def test_docs_exempt_from_rate_limit(monkeypatch):
+    app_module._hits.clear()
+    monkeypatch.setattr(app_module, "RATE_LIMIT", 1)
+    try:
+        for _ in range(3):
+            assert client.get("/api/openapi.json").status_code == 200   # never 429
+    finally:
+        app_module._hits.clear()
+
+
+def test_sse_stream_emits_status_event():
+    app_module._hits.clear()
+    # ?once=1 keeps the stream finite so the test can't hang on the interval loop
+    r = client.get("/api/stream?once=1")
+    assert r.status_code == 200
+    assert r.headers["content-type"].startswith("text/event-stream")
+    assert "event: status" in r.text and "data:" in r.text
+    app_module._hits.clear()

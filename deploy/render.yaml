@@ -1,0 +1,14 @@
+# Render.com blueprint for the Observatory API. In Render: New → Blueprint,
+# point at this repo. Auto-deploys on push (fresh nightly data ships on deploy).
+services:
+  - type: web
+    name: provenance-observatory-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/status
+    plan: free
+    envVars:
+      - key: OBSERVATORY_RATE_LIMIT
+        value: "120"
+      - key: OBSERVATORY_RATE_WINDOW
+        value: "60"
