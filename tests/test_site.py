@@ -31,9 +31,13 @@ def test_renders_neutral_and_withholds_interpreted(tmp_path):
     # an evidence-bundle link in its place — the approved design)
     detail = os.path.join(os.path.dirname(outp), "t", "openrouter-neutral-endpoint.html")
     assert "abc123def456"[:12] in open(detail).read()
-    # interpreted verdict withheld (no promoted advisory)
+    # interpreted verdict withheld (no promoted advisory): the row carries no
+    # verdict (empty data-prov) and shows "withheld", never a CONFIRMED badge.
+    # ("CONFIRMED" now legitimately appears once as a filter dropdown option.)
     assert "withheld" in doc
-    assert "CONFIRMED" not in doc
+    assert 'data-prov=""' in doc
+    assert 'data-prov="CONFIRMED"' not in doc
+    assert '<span class="badge cn">CONFIRMED' not in doc
 
 
 def test_promoted_advisory_shows_verdict(tmp_path):
@@ -248,3 +252,56 @@ def test_advisory_severity_and_pages():
     assert "MPA-2026-001" in page and "HIGH" in page
     rail = build._advisories_rail({"x": adv})
     assert "VIEW ALL" in rail and "View advisory" in rail and "MPA-2026-001" in rail
+
+
+# --- P2: interactive frontend (nav, controls, client-side filter data) ------
+
+def test_nav_and_controls_present(tmp_path):
+    data = tmp_path / "data"
+    _write_verdict(str(data), "some-aggregator", "aggregator",
+                   {"fingerprint_id": "fp", "drift_seen": True, "tokenizer": {"usable": True}})
+    out = tmp_path / "out"
+    build.build(str(data), str(out), now_iso="2026-07-24T00:00:00")
+    idx = (out / "index.html").read_text()
+    assert 'class="nav"' in idx and 'id="stbadge"' in idx           # STATUS badge
+    assert 'href="about.html"' in idx and 'href="feed.xml"' in idx  # ABOUT + RSS
+    assert "/api/docs" in idx                                       # API link
+    assert 'class="controls"' in idx and 'id="q"' in idx            # SEARCH + filters
+    assert 'id="vtable"' in idx and 'id="viewmore"' in idx          # table + VIEW MORE
+    assert "<script>" in idx                                        # enhancement JS
+
+
+def test_rows_carry_filter_data_attributes(tmp_path):
+    data = tmp_path / "data"
+    _write_verdict(str(data), "some-aggregator", "aggregator",
+                   {"fingerprint_id": "fp", "drift_seen": True, "tokenizer": {"usable": True},
+                    "verdict": {"provenance": "CONFIRMED", "jurisdiction": "CN", "confidence": "high"}})
+    out = tmp_path / "out"
+    build.build(str(data), str(out), now_iso="2026-07-24T00:00:00")
+    idx = (out / "index.html").read_text()
+    assert 'data-target="some-aggregator"' in idx
+    assert 'data-kind="aggregator"' in idx
+    assert 'data-prov="CONFIRMED"' in idx and 'data-juris="CN"' in idx
+    assert 'data-drift="1"' in idx
+
+
+def test_static_feed_and_about_generated(tmp_path):
+    data = tmp_path / "data"
+    _write_verdict(str(data), "t1", "aggregator", {"fingerprint_id": "fp", "drift_seen": True})
+    out = tmp_path / "out"
+    build.build(str(data), str(out), now_iso="2026-07-24T00:00:00")
+    assert (out / "feed.xml").exists() and (out / "about.html").exists()
+    from xml.dom import minidom
+    minidom.parseString((out / "feed.xml").read_text())             # valid RSS
+    assert "Drift: t1" in (out / "feed.xml").read_text()
+
+
+def test_api_url_is_configurable(tmp_path, monkeypatch):
+    monkeypatch.setenv("OBSERVATORY_API_URL", "https://obs.example.org")
+    data = tmp_path / "data"
+    _write_verdict(str(data), "t1", "aggregator", {"fingerprint_id": "fp"})
+    out = tmp_path / "out"
+    build.build(str(data), str(out), now_iso="2026-07-24T00:00:00")
+    idx = (out / "index.html").read_text()
+    assert "https://obs.example.org/api/docs" in idx                # nav link
+    assert 'API="https://obs.example.org"' in idx                   # injected into JS

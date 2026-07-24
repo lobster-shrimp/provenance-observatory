@@ -31,6 +31,7 @@ from datetime import date, datetime, timedelta
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 sys.path.insert(0, ROOT)
 from lib import records as _records  # noqa: E402 — canonical data readers (shared with api/)
+from lib import feed as _feed  # noqa: E402 — shared RSS builder (shared with api/)
 
 DATA_DIR = os.environ.get("OBSERVATORY_DATA_DIR", os.path.join(ROOT, "data"))
 OUT_DIR = os.environ.get("OBSERVATORY_SITE_OUT", os.path.join(ROOT, "site", "dist"))
@@ -236,13 +237,23 @@ def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None,
     fp = html.escape((latest.get("fingerprint_id") or "")[:12])
     prov, juris, conf = _interpreted_cells(latest, promoted)
 
+    # Raw values for client-side filtering (data-* attributes). Withheld rows
+    # carry empty prov/juris so a provenance filter simply won't match them.
+    v = latest.get("verdict") or {}
+    pv = (promoted or {}).get("verdict") or {}
+    raw_prov = v.get("provenance") or (pv.get("provenance_risk") or {}).get("verdict") or ""
+    raw_juris = v.get("jurisdiction") or (pv.get("jurisdictional_risk") or {}).get("verdict") or ""
+    drift = "1" if latest.get("drift_seen") else "0"
+
     ctl = latest.get("control_check")
     ctl_html = ""
     if ctl:
         cls = "pass" if ctl.get("pass") else "fail"
         ctl_html = f'<div class="ctl {cls}">control: {"PASS" if ctl.get("pass") else "FAIL"}</div>'
 
-    return f"""<tr>
+    return f"""<tr data-target="{html.escape(target)}" data-kind="{html.escape(kind)}" \
+data-model="{model}" data-prov="{html.escape(raw_prov)}" data-juris="{html.escape(raw_juris)}" \
+data-drift="{drift}">
   <td class="mono"><a class="tlink" href="t/{_slug(target)}.html">{html.escape(target)}</a>{ctl_html}{_coverage_badge(latest)}</td>
   <td>{html.escape(kind)}</td>
   <td class="mono">{model or "&mdash;"}</td>
@@ -484,6 +495,28 @@ def _advisories_index(promoted: dict) -> str:
     return _page("Advisories", inner)
 
 
+def _about_page() -> str:
+    return _page("About", """
+<p>The Provenance Observatory is independent, continuous, evidence-backed
+monitoring of what actually serves a given LLM API endpoint — and whether that
+model is Chinese-origin or under PRC jurisdiction.</p>
+<p>Every night it probes a curated watch list, commits the raw measurements to
+an append-only, cryptographically signed log, and opens a numbered advisory when
+an endpoint's fingerprint changes. It publishes neutral evidence as collected;
+interpreted verdicts about a named operator appear only after responsible
+disclosure and legal review.</p>
+<h2>Use it</h2>
+<ul>
+  <li><a href="index.html">Live verdict table</a> — search, filter, drill into any target.</li>
+  <li><a href="methodology.html">Methodology</a> — how the layers and scoring work.</li>
+  <li><a href="transparency-log.html">Transparency Log</a> + <a href="verify.html">Verify Evidence</a> — check any signed bundle yourself.</li>
+  <li><a href="feed.xml">RSS</a> — advisories and drift events.</li>
+</ul>
+<p>The fingerprinting engine is
+<a href="https://github.com/lobster-shrimp/provenance-probe">provenance-probe</a>;
+this service consumes it as a black-box CLI. Both are open source and forkable.</p>""")
+
+
 def _load_engine_eval(data_dir: str) -> dict:
     """Engine accuracy/consistency eval summary, if the engine published one.
 
@@ -629,12 +662,108 @@ _CSS = """
   a.ev { color:var(--accent); text-decoration:none; } a.ev:hover { text-decoration:underline; }
   .prose { max-width:760px; } .prose h2 { font-size:15px; margin:22px 0 8px; }
   .prose li { margin:4px 0; } .prose code { background:#f0f2f4; padding:1px 4px; border-radius:3px; }
+  .nav { display:flex; align-items:center; gap:18px; font-size:12px; text-transform:uppercase;
+    letter-spacing:.08em; margin:0 0 14px; border-bottom:1px solid var(--line); padding-bottom:8px; }
+  .nav .brand { font-weight:700; letter-spacing:.12em; margin-right:auto; }
+  .nav a { color:var(--accent); text-decoration:none; }
+  .stbadge { display:inline-flex; align-items:center; gap:6px; }
+  .stdot { width:8px; height:8px; border-radius:50%; background:#9aa3af; display:inline-block; }
+  .stdot.ok { background:#0a7d33; } .stdot.warn { background:#8a6d1a; }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0 0 12px; }
+  .controls input, .controls select { font:13px ui-monospace,monospace; padding:6px 9px;
+    border:1px solid var(--line); border-radius:6px; background:#fff; }
+  .controls input#q { flex:1; min-width:180px; }
+  #count { color:var(--muted); font-size:12px; }
+  tr.hidden { display:none; }
+  #viewmore { margin:12px 0; text-align:center; }
+  #viewmore button { font:12px ui-monospace,monospace; padding:8px 16px; border:1px solid var(--line);
+    border-radius:6px; background:#fff; color:var(--accent); cursor:pointer; }
+  .noscript-note { display:none; }
 """
+
+
+def _nav(api_url: str, probe_url: str) -> str:
+    """Top nav matching the design: STATUS badge, SEARCH, ABOUT, API, RSS."""
+    return (f'<div class="nav"><span class="brand">PROVENANCE OBSERVATORY</span>'
+            f'<span class="stbadge" id="stbadge"><span class="stdot"></span>'
+            f'<span class="txt">nightly</span></span>'
+            f'<a href="#" onclick="var e=document.getElementById(\'q\');if(e)e.focus();return false">Search</a>'
+            f'<a href="about.html">About</a>'
+            f'<a href="{html.escape(api_url)}/api/docs">API</a>'
+            f'<a href="feed.xml">RSS</a>'
+            f'<a href="{html.escape(probe_url)}">Live probe tool &rarr;</a></div>')
+
+
+def _controls() -> str:
+    """Client-side search + filter + count. Enhances the rendered table; the
+    table works fully without JS (this is progressive enhancement)."""
+    return ('<div class="controls">'
+            '<input id="q" type="search" placeholder="Search target or model…" aria-label="Search">'
+            '<select id="f-kind"><option value="">all kinds</option></select>'
+            '<select id="f-prov"><option value="">any provenance</option>'
+            '<option>CONFIRMED</option><option>LIKELY</option><option>INDETERMINATE</option>'
+            '<option>UNLIKELY</option><option>NO EVIDENCE</option></select>'
+            '<select id="f-juris"><option value="">any jurisdiction</option></select>'
+            '<select id="f-drift"><option value="">all</option>'
+            '<option value="drift">drift only</option></select>'
+            '<span id="count"></span></div>')
+
+
+# Progressive-enhancement script. Plain string (not an f-string) so its braces
+# are literal; __API_URL__ / __PAGE_SIZE__ are filled at render time. Operates
+# on the already-rendered rows, so search/filter/paginate work even if the API
+# is offline; the status badge upgrades from 'nightly' to 'operational' only if
+# the API answers.
+_APP_JS = r"""
+(function(){
+  var API="__API_URL__", PAGE=__PAGE_SIZE__;
+  var rows=[].slice.call(document.querySelectorAll('#vtable tbody tr[data-target]'));
+  if(rows.length){
+    var q=document.getElementById('q'), fk=document.getElementById('f-kind'),
+        fp=document.getElementById('f-prov'), fj=document.getElementById('f-juris'),
+        fd=document.getElementById('f-drift'), cnt=document.getElementById('count'),
+        vm=document.getElementById('viewmore'), vmb=vm?vm.querySelector('button'):null;
+    var shown=PAGE;
+    function uniq(a){var s={};rows.forEach(function(r){var v=r.getAttribute(a);if(v)s[v]=1;});return Object.keys(s).sort();}
+    function fill(sel,vals){if(!sel)return;vals.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});}
+    fill(fk,uniq('data-kind')); fill(fj,uniq('data-juris'));
+    function match(r){
+      var s=(q&&q.value||'').toLowerCase();
+      if(s && (r.getAttribute('data-target')+' '+r.getAttribute('data-model')).toLowerCase().indexOf(s)<0) return false;
+      if(fk&&fk.value && r.getAttribute('data-kind')!==fk.value) return false;
+      if(fp&&fp.value && r.getAttribute('data-prov')!==fp.value) return false;
+      if(fj&&fj.value && r.getAttribute('data-juris')!==fj.value) return false;
+      if(fd&&fd.value==='drift' && r.getAttribute('data-drift')!=='1') return false;
+      return true;
+    }
+    function apply(){
+      var f=rows.filter(match), i=0;
+      rows.forEach(function(r){r.classList.add('hidden');});
+      f.forEach(function(r){ if(i<shown) r.classList.remove('hidden'); i++; });
+      if(cnt) cnt.textContent=f.length+' target'+(f.length===1?'':'s')+(f.length>shown?(' (showing '+shown+')'):'');
+      if(vm) vm.style.display=(f.length>shown)?'block':'none';
+    }
+    [q,fk,fp,fj,fd].forEach(function(el){if(el)el.addEventListener('input',function(){shown=PAGE;apply();});});
+    if(vmb) vmb.addEventListener('click',function(){shown+=PAGE;apply();});
+    apply();
+  }
+  var badge=document.getElementById('stbadge');
+  if(badge && API){
+    fetch(API.replace(/\/$/,'')+'/api/status').then(function(r){return r.json();}).then(function(s){
+      if(s&&s.ok){badge.querySelector('.stdot').className='stdot ok';badge.querySelector('.txt').textContent='operational';}
+    }).catch(function(){});
+  }
+})();
+"""
+
+PAGE_SIZE = 25
 
 
 def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | None = None,
            manifests: list[dict] | None = None) -> str:
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
+    api_url = os.environ.get("OBSERVATORY_API_URL", "http://127.0.0.1:8000")
+    app_js = _APP_JS.replace("__API_URL__", api_url).replace("__PAGE_SIZE__", str(PAGE_SIZE))
     manifests = manifests or []
     mbd = {m.get("date"): m for m in manifests}
     n_targets = len(records)
@@ -647,11 +776,8 @@ def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | N
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Provenance Observatory</title>
 <style>{_CSS}</style></head><body><div class="wrap">
+{_nav(api_url, probe_url)}
 <header>
-  <div class="topnav">
-    <span class="active">Observatory</span>
-    <a href="{probe_url}">Live probe tool &rarr;</a>
-  </div>
   <h1>PROVENANCE OBSERVATORY</h1>
   <p>Independent, continuous, evidence-backed monitoring of LLM model provenance and jurisdiction.</p>
 </header>
@@ -668,7 +794,8 @@ pending responsible disclosure and legal review (Gate 1). Verdicts are probabili
 </div>
 <div class="layout">
   <main>
-  <table>
+  {_controls()}
+  <table id="vtable">
     <thead><tr>
       <th>Target</th><th>Kind</th><th>Claimed model</th>
       <th>Provenance</th><th>Jurisdiction</th><th>Confidence</th>
@@ -678,6 +805,7 @@ pending responsible disclosure and legal review (Gate 1). Verdicts are probabili
 {rows if rows else '<tr><td colspan="9" class="muted">No probe data yet.</td></tr>'}
     </tbody>
   </table>
+  <div id="viewmore" style="display:none"><button type="button">View more</button></div>
   </main>
   <aside>
     <h2>Advisories</h2>
@@ -686,6 +814,7 @@ pending responsible disclosure and legal review (Gate 1). Verdicts are probabili
 </div>
 {_footer()}
 {_bottom_bar(manifests, now_iso)}
+<script>{app_js}</script>
 </div></body></html>"""
 
 
@@ -703,16 +832,24 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
         f.write(render(records, promoted, now_iso=now_iso,
                        engine_eval=engine_eval, manifests=manifests))
 
-    # Footer content pages (real links, not dead spans).
+    # Footer + nav content pages (real links, not dead spans).
     for fname, doc in (
         ("methodology.html", _methodology_page()),
         ("disclosure.html", _disclosure_page()),
         ("verify.html", _verify_page()),
         ("transparency-log.html", _transparency_page(manifests)),
         ("advisories.html", _advisories_index(promoted)),
+        ("about.html", _about_page()),
     ):
         with open(os.path.join(out_dir, fname), "w") as f:
             f.write(doc)
+
+    # Static RSS feed (shared builder) so the RSS nav works without the API up.
+    drift_items = [{"target": t, "last_checked": recs[-1][0]}
+                   for t, recs in records.items() if recs and recs[-1][1].get("drift_seen")]
+    entries = _feed.entries_from(list(promoted.values()), drift_items)
+    with open(os.path.join(out_dir, "feed.xml"), "w") as f:
+        f.write(_feed.build_rss(entries))
 
     # Signed evidence bundles: copy manifests (+ cosign bundles) so the site's
     # evidence-bundle links resolve and are independently verifiable.
