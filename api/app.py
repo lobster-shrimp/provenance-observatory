@@ -8,12 +8,15 @@ host come with deployment (plan phase P4); locally it's open and open-CORS so
 the static site's JS can fetch it.
 """
 from __future__ import annotations
-import html
-from xml.sax.saxutils import escape as xml_escape
+import os
+import sys
 
 from fastapi import FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from lib import feed as _feed  # noqa: E402
 
 from .store import Store
 
@@ -98,26 +101,6 @@ def search(q: str = Query("", description="match target name / model / kind")):
 
 @app.get("/api/feed.xml", tags=["meta"])
 def feed():
-    """RSS 2.0 feed of advisories + latest drift events."""
-    items = []
-    for a in store.advisories():
-        items.append((f"{a.get('advisory_id','advisory')}: {a.get('target','')}",
-                      a.get("summary") or a.get("title") or "Verdict change advisory.",
-                      a.get("promoted_at", "")))
-    for it in store.verdicts(drift=True, limit=20)["items"]:
-        items.append((f"Drift: {it['target']}",
-                      f"Fingerprint changed; last checked {it['last_checked']}.",
-                      it["last_checked"]))
-    body = "".join(
-        f"<item><title>{xml_escape(t)}</title>"
-        f"<description>{xml_escape(d)}</description>"
-        f"<pubDate>{xml_escape(str(p))}</pubDate>"
-        f"<guid isPermaLink=\"false\">{xml_escape(t + str(p))}</guid></item>"
-        for t, d, p in items)
-    xml = ('<?xml version="1.0" encoding="UTF-8"?>'
-           '<rss version="2.0"><channel>'
-           '<title>Provenance Observatory</title>'
-           '<description>LLM provenance/jurisdiction advisories and drift.</description>'
-           '<link>https://github.com/lobster-shrimp/provenance-observatory</link>'
-           f'{body}</channel></rss>')
-    return Response(content=xml, media_type="application/rss+xml")
+    """RSS 2.0 feed of advisories + latest drift events (shared builder)."""
+    entries = _feed.entries_from(store.advisories(), store.verdicts(drift=True, limit=20)["items"])
+    return Response(content=_feed.build_rss(entries), media_type="application/rss+xml")
