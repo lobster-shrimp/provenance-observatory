@@ -1,0 +1,24 @@
+# Fly.io config for the Observatory API. Run once: `fly launch --copy-config
+# --no-deploy` (pick your app name), then `fly deploy`. See api/DEPLOY.md.
+app = "provenance-observatory-api"   # change to your app name
+primary_region = "iad"
+
+[build]
+  dockerfile = "../Dockerfile"
+
+[env]
+  OBSERVATORY_RATE_LIMIT = "120"
+  OBSERVATORY_RATE_WINDOW = "60"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/api/status"
+    interval = "30s"
+    timeout = "5s"
