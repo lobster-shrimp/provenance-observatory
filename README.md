@@ -78,7 +78,7 @@ probe tool →" nav link; the probe UI has an "Observatory →" link).
 
 | Path | Role |
 |------|------|
-| `targets.yaml` | Monitored targets; `public` gate + spend budget (U1/U2) |
+| `targets.yaml` | Monitored targets; `public` gate + spend budget (U1/U2). Add one → [`docs/adding-targets.md`](docs/adding-targets.md) |
 | `runner/run.py` | Nightly runner — shells out to provenance-probe CLI (T7) |
 | `runner/advisory.py` | Drift → draft advisory in private staging → promotion |
 | `lib/verdict.py` | Two-tier split: neutral vs interpreted (T5) |
@@ -93,6 +93,9 @@ pip install "provenance-probe==0.4.1" pyyaml pytest
 python runner/run.py --targets targets.yaml   # scaffold: prints wired call shapes
 pytest                                         # lib logic tests
 ```
+
+**Adding a monitored target** (API or web app), the gating fields, secrets, and
+the neutral-only / Gate-1 posture: [`docs/adding-targets.md`](docs/adding-targets.md).
 
 ## Standing up the controls (do this first — zero ToS risk)
 
