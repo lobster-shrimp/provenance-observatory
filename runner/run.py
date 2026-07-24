@@ -90,6 +90,17 @@ def est_probe_count(defaults: dict) -> int:
     return n
 
 
+# Web-app / platform adapter fields (api_style: template). These must be passed
+# through to the engine or a web-app target can't be probed (it would fall back
+# to an OpenAI-shaped request the app doesn't accept). Each is a valid
+# provenance_probe Target field, so the engine builds it via Target(**cfg).
+_WEBAPP_FIELDS = (
+    "chat_path", "models_path", "cookie_env", "request_template",
+    "response_text_path", "response_prompt_tokens_path", "response_model_path",
+    "stream_mode", "stream_delta_path",
+)
+
+
 def write_probe_config(target: dict, cfg_path: str) -> None:
     """Map a targets.yaml entry to a provenance-probe Target config JSON."""
     t = {
@@ -101,6 +112,12 @@ def write_probe_config(target: dict, cfg_path: str) -> None:
     }
     if target.get("auth_env"):
         t["auth_value_env"] = target["auth_env"]
+    # Pass web-app template fields through when present (empty/None dropped so
+    # non-webapp targets keep the engine's defaults).
+    for k in _WEBAPP_FIELDS:
+        v = target.get(k)
+        if v not in (None, "", {}):
+            t[k] = v
     with open(cfg_path, "w") as f:
         json.dump([t], f)
 
