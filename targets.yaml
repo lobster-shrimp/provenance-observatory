@@ -134,9 +134,24 @@ targets:
     notes: "PRC operator (.cn); Moonshot/Kimi tokenizer in reference."
 
   # --- Web-app / platform tool (template adapter) ---------------------------
-  # The chat.z.ai case: a GLM backend that asserts a Google Gemini persona. The
-  # deception layer is the primary signal. Fill request_template + cookie_env
-  # from a captured browser request before enabling.
+  # chat.z.ai: a GLM backend that asserts a Google Gemini persona.
+  #
+  # NIGHTLY SCOPE (what the observatory runs): NEUTRAL drift monitoring only —
+  # tokenizer + wire + latency. The deception layer (the persona-mismatch signal)
+  # stays OFF here like every commercial target (U1, ToS/abuse risk); run that
+  # point-in-time from the engine's local UI/CLI with authorization, not in the
+  # public nightly. Web apps usually suppress usage.prompt_tokens, so expect
+  # DEGRADED coverage (drift via wire+latency only) — surfaced as such on the site.
+  #
+  # TO ACTIVATE (all three are operator-provided; do not commit any of them):
+  #   1. Capture a real chat request from the browser (DevTools → Network) and
+  #      replace request_template + the paths below with the true shape.
+  #   2. Provide the session cookie as env ZAI_COOKIE (locally: ~/.zshrc; in CI:
+  #      an Actions secret ZAI_COOKIE — set it yourself, never paste it here).
+  #   3. Only with written authorization to probe the service, set
+  #      authorized: true AND run with OBSERVATORY_PROBE_COMMERCIAL=1.
+  # Stays public: false regardless — no interpreted named-vendor verdict ships
+  # until Gate 1 counsel clears it (verdict withheld; neutral evidence only).
   - name: chat-z-ai-webapp
     kind: webapp
     base_url: "https://chat.z.ai"
@@ -154,9 +169,9 @@ targets:
     response_prompt_tokens_path: "usage.prompt_tokens"
     response_model_path: "model"
     confront_as: "Zhipu GLM"
-    public: false
-    authorized: false
-    notes: "Web app; GLM-behind-Gemini-persona. Deception layer is the signal."
+    public: false          # Gate 1: verdict withheld, neutral evidence only
+    authorized: false      # flip only with written authorization to probe it
+    notes: "GLM-behind-Gemini-persona web app. Nightly = neutral drift watch (deception OFF); expect degraded coverage if usage is suppressed."
 
 # Monthly spend ceiling across all targets (U2). Runner aborts to a
 # no-verdict{budget-exceeded} artifact if a run would breach it.
