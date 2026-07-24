@@ -1,0 +1,263 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {
+      "cjk_dense": 93,
+      "cjk_mixed": 42,
+      "jp_kana": 64,
+      "ko_hangul": 36,
+      "ws_runs": 86,
+      "tabs_deep": 36,
+      "digits_long": 191,
+      "punct_repeat": 21,
+      "emoji_zwj": 278,
+      "rare_unicode": 443,
+      "diacritics": 176,
+      "arabic_hebrew": 45,
+      "cyrillic": 33,
+      "code_json": 148,
+      "code_regex": 235,
+      "url_paths": 178,
+      "base64ish": 181,
+      "md_table": 121,
+      "mixed_script_cjk_code": 112,
+      "newline_storm": 18
+    },
+    "errors": {},
+    "meta": {
+      "echoed_models": [
+        "gpt-4o-mini-2024-07-18"
+      ]
+    },
+    "usable": true
+  },
+  "headers": {
+    "status": 200,
+    "server": "cloudflare",
+    "echoed_model": "gpt-4o-mini-2024-07-18",
+    "vendor_headers": [
+      {
+        "header": "openai-organization",
+        "implies": "OpenAI",
+        "value": "aoi-togk3l"
+      },
+      {
+        "header": "openai-processing-ms",
+        "implies": "OpenAI",
+        "value": "588"
+      },
+      {
+        "header": "x-request-id",
+        "implies": "generic",
+        "value": "req_ea976f3a904d42bf804351cd30129af7"
+      }
+    ],
+    "header_names": [
+      "access-control-expose-headers",
+      "alt-svc",
+      "cf-cache-status",
+      "cf-ray",
+      "connection",
+      "content-encoding",
+      "content-type",
+      "date",
+      "openai-organization",
+      "openai-processing-ms",
+      "openai-project",
+      "openai-version",
+      "server",
+      "set-cookie",
+      "strict-transport-security",
+      "transfer-encoding",
+      "x-content-type-options",
+      "x-openai-proxy-wasm",
+      "x-ratelimit-limit-requests",
+      "x-ratelimit-limit-tokens",
+      "x-ratelimit-remaining-requests",
+      "x-ratelimit-remaining-tokens",
+      "x-ratelimit-reset-requests",
+      "x-ratelimit-reset-tokens",
+      "x-request-id"
+    ],
+    "header_shape_hash": "fb9825d82a2b3903"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n  \"error\": {\n    \"message\": \"Invalid 'temperature': decimal above maximum value. Expected a value <= 2, but got 99999 instead.\",\n    \"type\": \"invalid_request_error\",\n    \"param\": \"temperature\",\n    \"code\": \"decimal_above_max_value\"\n  }\n}"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n  \"error\": {\n    \"message\": \"Invalid 'max_tokens': integer below minimum value. Expected a value >= 1, but got -5 instead.\",\n    \"type\": \"invalid_request_error\",\n    \"param\": \"max_tokens\",\n    \"code\": \"integer_below_min_value\"\n  }\n}"
+      },
+      {
+        "probe": "bad_model",
+        "status": 404,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n    \"error\": {\n        \"message\": \"The model `__nonexistent_model_probe__` does not exist or you do not have access to it.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
+      },
+      {
+        "probe": "bad_role",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n  \"error\": {\n    \"message\": \"Invalid value: 'wizard'. Supported values are: 'system', 'assistant', 'user', 'function', 'tool', and 'developer'.\",\n    \"type\": \"invalid_request_error\",\n    \"param\": \"messages[0].role\",\n    \"code\": \"invalid_value\"\n  }\n}"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n  \"error\": {\n    \"message\": \"Invalid 'stop': array too long. Expected an array with maximum length 4, but got an array with length 64 instead.\",\n    \"type\": \"invalid_request_error\",\n    \"param\": \"stop\",\n    \"code\": \"array_above_max_length\"\n  }\n}"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "NoneType",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n  \"error\": {\n    \"message\": \"Unrecognized request argument supplied: __probe_unknown_field__\",\n    \"type\": \"invalid_request_error\",\n    \"param\": null,\n    \"code\": null\n  }\n}"
+      }
+    ],
+    "error_signature": "4b97f8b2bb79eb50"
+  },
+  "streaming": {
+    "chunk_count": 39,
+    "chunk_fields": [
+      "__DONE_sentinel__",
+      "choices",
+      "created",
+      "id",
+      "model",
+      "obfuscation",
+      "object",
+      "service_tier",
+      "system_fingerprint"
+    ],
+    "final_usage_chunk": false,
+    "finish_reason": "stop",
+    "ttft_s": 0.7314
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.3852,
+      "median": 0.3576,
+      "p10": 0.2709,
+      "p90": 0.3999,
+      "stdev": 0.1242
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.5601,
+      "median": 0.5243,
+      "p10": 0.4405,
+      "p90": 0.7013,
+      "stdev": 0.1398
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.0373,
+      "median": 0.035,
+      "p10": 0.0294,
+      "p90": 0.0468,
+      "stdev": 0.0093
+    }
+  },
+  "network": {
+    "host": "api.openai.com",
+    "addresses": [
+      {
+        "ip": "162.159.140.245",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      },
+      {
+        "ip": "172.66.0.243",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      }
+    ],
+    "findings": [
+      {
+        "type": "first_party",
+        "severity": "info",
+        "detail": "OpenAI is a first-party US model developer serving its own weights; jurisdiction non-PRC. Verify the served model with the tokenizer/behavioral layers (a first-party can still reroute)."
+      }
+    ],
+    "jurisdiction": "non-PRC-firstparty",
+    "operator": "OpenAI",
+    "confidence": 0.85
+  },
+  "fingerprint_id": "39653e9acf08cc7e839b4a8d",
+  "timestamp": "2026-07-24T06:04:16+00:00",
+  "target": {
+    "name": "control-openai-negative",
+    "base_url": "https://api.openai.com/v1",
+    "model": "gpt-4o-mini",
+    "api_style": "openai"
+  },
+  "drift_seen": false,
+  "verdict": {
+    "provenance": "NO EVIDENCE",
+    "jurisdiction": "UNLIKELY",
+    "confidence": "high"
+  },
+  "control_check": {
+    "kind": "control-negative",
+    "top_model": "OpenAI-o200k",
+    "top_score": 1.0,
+    "top_origin": "US",
+    "expect_not_origin": "CN",
+    "pass": true
+  }
+}
