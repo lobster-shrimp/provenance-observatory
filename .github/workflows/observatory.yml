@@ -47,6 +47,8 @@ jobs:
           STAGING_PAT: ${{ secrets.STAGING_PAT }}
           COSIGN_YES: "true"
         run: python runner/run.py --targets targets.yaml
+      - name: Refresh engine eval summary (assurance badge auto-tracks the engine)
+        run: bash scripts/refresh-engine-eval.sh
       - name: Commit neutral evidence + signed manifest
         run: |
           git config user.name "observatory-bot"
