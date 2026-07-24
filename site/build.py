@@ -162,7 +162,88 @@ def _advisories_rail(promoted: dict[str, dict]) -> str:
     return "<ul class='adv'>" + "".join(items) + "</ul>"
 
 
-def render(records: dict, promoted: dict, *, now_iso: str) -> str:
+def _load_engine_eval(data_dir: str) -> dict:
+    """Engine accuracy/consistency eval summary, if the engine published one.
+
+    Written by provenance-probe's eval (eval/run_eval.py --json, summarised).
+    Absent is fine — the panel degrades gracefully.
+    """
+    path = os.path.join(data_dir, "engine_eval.json")
+    if os.path.exists(path):
+        try:
+            with open(path) as f:
+                return json.load(f)
+        except (OSError, ValueError):
+            return {}
+    return {}
+
+
+def _control_accuracy(records: dict) -> dict:
+    """Live false-positive/true-positive tally from the controls' latest runs.
+
+    control-negative failing = a false positive (US model flagged Chinese) — the
+    continuous FP gate. control-positive passing = a known-CN model caught.
+    """
+    neg_total = neg_pass = pos_total = pos_pass = 0
+    for recs in records.values():
+        if not recs:
+            continue
+        cc = recs[-1][1].get("control_check")
+        if not cc:
+            continue
+        if cc.get("kind") == "control-negative":
+            neg_total += 1
+            neg_pass += 1 if cc.get("pass") else 0
+        elif cc.get("kind") == "control-positive":
+            pos_total += 1
+            pos_pass += 1 if cc.get("pass") else 0
+    return {"neg_total": neg_total, "neg_pass": neg_pass,
+            "fp": neg_total - neg_pass, "pos_total": pos_total, "pos_pass": pos_pass}
+
+
+def _assurance_panel(records: dict, engine_eval: dict) -> str:
+    """Two-column assurance panel: live control accuracy + engine hermetic eval."""
+    ca = _control_accuracy(records)
+    if ca["neg_total"] or ca["pos_total"]:
+        cls = "ok" if ca["fp"] == 0 else "cn"
+        live = (f'<b class="badge {cls}">{ca["fp"]} false positive'
+                f'{"" if ca["fp"] == 1 else "s"}</b> '
+                f'<span class="small">{ca["neg_pass"]}/{ca["neg_total"]} negative '
+                f'controls clean · {ca["pos_pass"]}/{ca["pos_total"]} positive controls caught</span>')
+    else:
+        live = '<span class="muted">no control runs yet</span>'
+
+    if engine_eval:
+        m = engine_eval.get("matrix", {})
+        fp = m.get("FP", "?")
+        cls = "ok" if (fp == 0 and engine_eval.get("passed")) else "cn"
+        eng = (f'<b class="badge {cls}">{fp} false positive'
+               f'{"" if fp == 1 else "s"}</b> '
+               f'<span class="small">{engine_eval.get("vocab_families_exercised", "?")} of '
+               f'{engine_eval.get("reference_families_total", "?")} reference families '
+               f'exercised · gate {"PASS" if engine_eval.get("passed") else "FAIL"}</span>'
+               f'<div class="small muted">engine {html.escape(str(engine_eval.get("engine_commit", "")))}'
+               f' · {html.escape(str(engine_eval.get("generated", "")))}</div>')
+    else:
+        eng = '<span class="muted">engine eval summary not published yet</span>'
+
+    return f"""<div class="assurance">
+  <div class="acol">
+    <h3>Live control accuracy</h3>
+    <div>{live}</div>
+    <div class="small muted">Own authorized endpoints (DeepSeek+, OpenAI&minus;), rechecked each run.
+      The continuous false-positive gate before any real-vendor verdict publishes.</div>
+  </div>
+  <div class="acol">
+    <h3>Engine eval (hermetic)</h3>
+    <div>{eng}</div>
+    <div class="small muted">Consistency/regression gate in the engine's CI over open-weights
+      tokenizers. Not a live-endpoint accuracy claim.</div>
+  </div>
+</div>"""
+
+
+def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | None = None) -> str:
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
     n_targets = len(records)
     n_drift = sum(1 for recs in records.values() if recs and recs[-1][1].get("drift_seen"))
@@ -202,6 +283,12 @@ def render(records: dict, promoted: dict, *, now_iso: str) -> str:
   aside h2 {{ font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }}
   ul.adv {{ list-style:none; padding:0; margin:0; }} ul.adv li {{ padding:6px 0; border-bottom:1px solid var(--line); }}
   .mpa {{ color:var(--accent); }} .muted {{ color:var(--muted); }}
+  .assurance {{ display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line);
+    background:#fff; margin:0 0 20px; }}
+  .assurance .acol {{ padding:14px 18px; }}
+  .assurance .acol + .acol {{ border-left:1px solid var(--line); }}
+  .assurance h3 {{ font-size:11px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--muted); margin:0 0 8px; }}
   footer {{ margin-top:28px; border-top:1px solid var(--line); padding-top:14px;
     color:var(--muted); font-size:12px; display:flex; gap:20px; flex-wrap:wrap; }}
 </style></head><body><div class="wrap">
@@ -216,6 +303,7 @@ def render(records: dict, promoted: dict, *, now_iso: str) -> str:
 <div class="note">Neutral evidence (token counts, wire fingerprint, latency, drift) is published as
 collected, in an append-only log. Interpreted verdicts about named operators are <b>withheld</b>
 pending responsible disclosure and legal review (Gate 1). Verdicts are probabilistic, not proof.</div>
+{_assurance_panel(records, engine_eval or {})}
 <div class="stats">
   <div class="stat"><b>{n_targets}</b><span>MONITORED TARGETS</span></div>
   <div class="stat"><b>{n_drift}</b><span>DRIFT EVENTS (LATEST)</span></div>
@@ -251,8 +339,9 @@ pending responsible disclosure and legal review (Gate 1). Verdicts are probabili
 def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | None = None) -> str:
     records = _load_target_records(data_dir)
     promoted = _load_promoted_advisories(data_dir)
+    engine_eval = _load_engine_eval(data_dir)
     now_iso = now_iso or datetime.utcnow().isoformat()
-    doc = render(records, promoted, now_iso=now_iso)
+    doc = render(records, promoted, now_iso=now_iso, engine_eval=engine_eval)
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "index.html")
     with open(out_path, "w") as f:

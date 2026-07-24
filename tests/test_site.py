@@ -78,3 +78,38 @@ def test_empty_data_renders_placeholder(tmp_path):
     out = build.build(str(tmp_path / "data"), str(tmp_path / "out"), now_iso="2026-07-21T12:00:00")
     doc = open(out).read()
     assert "No probe data yet" in doc
+
+
+# --- Assurance panel: live control accuracy + engine eval badge -------------
+
+def test_control_accuracy_counts_fp_and_tp():
+    records = {
+        "neg": [("2026-07-24", {"control_check": {"kind": "control-negative", "pass": True}})],
+        "pos": [("2026-07-24", {"control_check": {"kind": "control-positive", "pass": True}})],
+        "neg2": [("2026-07-24", {"control_check": {"kind": "control-negative", "pass": False}})],
+    }
+    ca = build._control_accuracy(records)
+    assert ca["neg_total"] == 2 and ca["neg_pass"] == 1 and ca["fp"] == 1
+    assert ca["pos_total"] == 1 and ca["pos_pass"] == 1
+
+
+def test_assurance_panel_shows_engine_eval_and_live_controls():
+    records = {"pos": [("2026-07-24", {"control_check": {"kind": "control-positive", "pass": True}})]}
+    engine_eval = {"passed": True, "matrix": {"FP": 0, "TP": 5, "TN": 11, "FN": 0},
+                   "vocab_families_exercised": 11, "reference_families_total": 25,
+                   "engine_commit": "abc1234", "generated": "2026-07-24"}
+    html = build._assurance_panel(records, engine_eval)
+    assert "Live control accuracy" in html and "Engine eval (hermetic)" in html
+    assert "0 false positives" in html
+    assert "11 of 25 reference families" in html
+    assert "gate PASS" in html
+
+
+def test_assurance_panel_degrades_without_engine_eval():
+    html = build._assurance_panel({}, {})
+    assert "engine eval summary not published yet" in html
+    assert "no control runs yet" in html
+
+
+def test_engine_eval_absent_is_empty(tmp_path):
+    assert build._load_engine_eval(str(tmp_path)) == {}
