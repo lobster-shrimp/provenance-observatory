@@ -25,45 +25,24 @@ import html
 import json
 import os
 import re
+import sys
 from datetime import date, datetime, timedelta
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
+sys.path.insert(0, ROOT)
+from lib import records as _records  # noqa: E402 — canonical data readers (shared with api/)
+
 DATA_DIR = os.environ.get("OBSERVATORY_DATA_DIR", os.path.join(ROOT, "data"))
 OUT_DIR = os.environ.get("OBSERVATORY_SITE_OUT", os.path.join(ROOT, "site", "dist"))
-HOT_WINDOW_DAYS = 90
+HOT_WINDOW_DAYS = _records.HOT_WINDOW_DAYS
 SPARK_DAYS = 7
 
-
-def _load_target_records(data_dir: str) -> dict[str, list[tuple[str, dict]]]:
-    """target -> [(date_str, record)] sorted ascending, hot window only."""
-    cutoff = date.today() - timedelta(days=HOT_WINDOW_DAYS)
-    out: dict[str, list[tuple[str, dict]]] = {}
-    for verdict_path in glob.glob(os.path.join(data_dir, "*", "*", "verdict.json")):
-        parts = verdict_path.split(os.sep)
-        target, dstr = parts[-3], parts[-2]
-        try:
-            if date.fromisoformat(dstr) < cutoff:
-                continue
-        except ValueError:
-            continue
-        with open(verdict_path) as f:
-            rec = json.load(f)
-        out.setdefault(target, []).append((dstr, rec))
-    for recs in out.values():
-        recs.sort(key=lambda x: x[0])
-    return out
+# Reader functions live once in lib/records.py; keep the internal names as aliases.
+_load_target_records = _records.load_target_records
+_load_promoted_advisories = _records.load_promoted_advisories
+_manifests = _records.load_manifests
 
 
-def _load_promoted_advisories(data_dir: str) -> dict[str, dict]:
-    """target -> latest promoted public advisory record, if any."""
-    latest: dict[str, dict] = {}
-    for p in glob.glob(os.path.join(data_dir, "advisories", "*.json")):
-        with open(p) as f:
-            adv = json.load(f)
-        t = adv.get("target")
-        if t and (t not in latest or adv.get("promoted_at", "") > latest[t].get("promoted_at", "")):
-            latest[t] = adv
-    return latest
 
 
 def _sparkline(records: list[tuple[str, dict]]) -> str:
@@ -311,23 +290,6 @@ def _advisories_rail(promoted: dict[str, dict]) -> str:
             f'<div class="mpa">{html.escape(aid)}</div><p>{desc}</p>'
             f'<a class="tlink" href="a/{_slug(aid)}.html">View advisory &#8599;</a></div>')
     return head + "".join(items)
-
-
-# --- signed evidence log (real: the cosign-signed daily manifests) ----------
-
-def _manifests(data_dir: str) -> list[dict]:
-    """Daily manifests newest-first: {date, manifest_root, entries, signed}."""
-    out = []
-    for p in glob.glob(os.path.join(data_dir, "manifests", "*.json")):
-        try:
-            with open(p) as f:
-                m = json.load(f)
-        except (OSError, ValueError):
-            continue
-        m["signed"] = os.path.exists(p + ".cosign.bundle")
-        out.append(m)
-    out.sort(key=lambda m: m.get("date", ""), reverse=True)
-    return out
 
 
 # --- shared chrome ----------------------------------------------------------

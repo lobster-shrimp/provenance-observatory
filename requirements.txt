@@ -1,2 +1,6 @@
 provenance-probe==0.4.1
 pyyaml>=6.0
+# Live JSON API (api/). uvicorn to serve; httpx pulled in for TestClient.
+fastapi>=0.110
+uvicorn>=0.29
+httpx>=0.27
