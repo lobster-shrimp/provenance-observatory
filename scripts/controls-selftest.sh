@@ -23,13 +23,27 @@ PP_SRC="${PROVENANCE_PROBE_SRC:-git+https://github.com/lobster-shrimp/provenance
 python3 -m venv "$WORK/venv"
 "$WORK/venv/bin/pip" -q install "$PP_SRC" gguf tokenizers pyyaml flask >/dev/null
 
+# The blind control mock now lives in the ENGINE (eval/mock.py) — one shared
+# implementation across both repos (DRY). It uses the correct per-family
+# pre-tokenizer regex, byte-identical to the engine's reference builder. It is
+# not packaged, so reach it via a source checkout: a local PROVENANCE_PROBE_SRC
+# if given, else a shallow clone.
+if [ -d "${PROVENANCE_PROBE_SRC:-}" ]; then
+  ENGINE_SRC="$PROVENANCE_PROBE_SRC"
+else
+  git clone --depth 1 https://github.com/lobster-shrimp/provenance-probe.git "$WORK/engine" >/dev/null 2>&1
+  ENGINE_SRC="$WORK/engine"
+fi
+MOCK="$ENGINE_SRC/eval/mock.py"
+[ -f "$MOCK" ] || { echo "ERROR: engine mock not found at $MOCK"; exit 2; }
+
 echo "[2/5] fetch real vocabs"
 curl -fsS -o "$VOCABS/qwen2.gguf"     "$BASE/ggml-vocab-qwen2.gguf"
 curl -fsS -o "$VOCABS/llama-bpe.gguf" "$BASE/ggml-vocab-llama-bpe.gguf"
 
-echo "[3/5] start control endpoints"
-"$WORK/venv/bin/python" "$HERE/real_control_mock.py" "$VOCABS/qwen2.gguf"     8902 "northstar-secure-1" >/dev/null 2>&1 &
-POS=$!; "$WORK/venv/bin/python" "$HERE/real_control_mock.py" "$VOCABS/llama-bpe.gguf" 8903 "acme-west-safe-1"  >/dev/null 2>&1 &
+echo "[3/5] start control endpoints (engine eval/mock.py, per-family regex)"
+"$WORK/venv/bin/python" "$MOCK" "$VOCABS/qwen2.gguf"     8902 "northstar-secure-1" qwen2     >/dev/null 2>&1 &
+POS=$!; "$WORK/venv/bin/python" "$MOCK" "$VOCABS/llama-bpe.gguf" 8903 "acme-west-safe-1"  llama-bpe >/dev/null 2>&1 &
 NEG=$!
 trap 'kill $POS $NEG 2>/dev/null || true; rm -rf "$WORK"' EXIT
 sleep 3
