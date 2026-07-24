@@ -159,3 +159,29 @@ def test_build_writes_per_target_pages(tmp_path):
     assert "control-openai-negative" in page.read_text()
     # index links to it
     assert "t/control-openai-negative.html" in (out / "index.html").read_text()
+
+
+# --- Coverage / degradation indicator ---------------------------------------
+
+def test_coverage_full_vs_degraded():
+    full = {"tokenizer": {"usable": True}, "headers": {"status": 200},
+            "latency": {"p50": 1.0}, "network": {"addresses": ["1.2.3.4"]}}
+    c = build._coverage(full)
+    assert c["tokenizer_usable"] and not c["degraded"]
+    assert set(c["layers"]) == {"network", "wire", "tokenizer", "latency"}
+
+    degraded = {"tokenizer": {"usable": False}, "headers": {"status": 200}, "latency": {"p50": 1.0}}
+    d = build._coverage(degraded)
+    assert d["degraded"] is True and "tokenizer" not in d["layers"]
+
+
+def test_coverage_badge_variants():
+    assert "degraded" in build._coverage_badge({"tokenizer": {"usable": False}, "headers": {}})
+    assert "full signal" in build._coverage_badge({"tokenizer": {"usable": True}})
+    assert build._coverage_badge({"headers": {}}) == ""     # unknown -> silent
+
+
+def test_coverage_note_warns_on_suppressed_usage():
+    note = build._coverage_note({"tokenizer": {"usable": False}, "headers": {}, "latency": {}})
+    assert "degraded coverage" in note
+    assert "wire + latency only" in note

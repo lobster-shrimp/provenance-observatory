@@ -123,6 +123,52 @@ def _interpreted_cells(latest: dict, promoted: dict | None) -> tuple[str, str, s
             '<span class="withheld">withheld</span>', "—")
 
 
+def _coverage(rec: dict) -> dict:
+    """Which evidence layers returned data, and whether the run is degraded.
+
+    The strongest provenance signal is the tokenizer fingerprint, which needs
+    the endpoint to report usage.prompt_tokens. Web apps and some APIs suppress
+    that, leaving only wire + latency — real drift is still detectable but at
+    LOWER confidence. This makes that explicit instead of silent.
+    """
+    tok = rec.get("tokenizer") or {}
+    usable = tok.get("usable")
+    layers = []
+    if rec.get("network"):
+        layers.append("network")
+    if rec.get("headers") or rec.get("errors"):
+        layers.append("wire")
+    if usable:
+        layers.append("tokenizer")
+    if rec.get("latency"):
+        layers.append("latency")
+    return {"layers": layers, "tokenizer_usable": bool(usable),
+            "degraded": usable is False, "unknown": usable is None}
+
+
+def _coverage_badge(rec: dict) -> str:
+    """Compact coverage indicator for the index target cell."""
+    c = _coverage(rec)
+    if c["degraded"]:
+        return ('<div class="cov"><span class="badge warn">degraded</span> '
+                'no token counts &middot; drift via wire+latency only</div>')
+    if c["tokenizer_usable"]:
+        return '<div class="cov muted">full signal &middot; tokenizer ✓</div>'
+    return ""
+
+
+def _coverage_note(rec: dict) -> str:
+    """Detail-page coverage summary: layers present + degradation warning."""
+    c = _coverage(rec)
+    layers = ", ".join(c["layers"]) or "none"
+    if c["degraded"]:
+        return (f'<div class="note"><span class="badge warn">degraded coverage</span> '
+                f'latest run reported no token counts (usage suppressed). Layers present: '
+                f'{layers}. Fingerprint and drift detection rely on wire + latency only — '
+                f'lower confidence than a tokenizer match.</div>')
+    return f'<div class="note">Coverage (latest run): {layers}.</div>'
+
+
 def _slug(target: str) -> str:
     """Filesystem/URL-safe per-target page name."""
     return re.sub(r"[^a-z0-9._-]", "_", (target or "target").lower())
@@ -172,6 +218,7 @@ def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | 
 <header><h1>{html.escape(target)}</h1>
   <p>{kind or "target"} &middot; {len(records)} run(s) in the hot window &middot;
      {n_changes} fingerprint change(s)</p></header>
+{_coverage_note(records[-1][1]) if records else ""}
 {adv_html}
 <table>
   <thead><tr><th>Date</th><th>Fingerprint</th><th>Change</th><th>Control</th>
@@ -203,7 +250,7 @@ def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None) ->
         ctl_html = f'<div class="ctl {cls}">control: {"PASS" if ctl.get("pass") else "FAIL"}</div>'
 
     return f"""<tr>
-  <td class="mono"><a class="tlink" href="t/{_slug(target)}.html">{html.escape(target)}</a>{ctl_html}</td>
+  <td class="mono"><a class="tlink" href="t/{_slug(target)}.html">{html.escape(target)}</a>{ctl_html}{_coverage_badge(latest)}</td>
   <td>{html.escape(kind)}</td>
   <td class="mono">{model or "&mdash;"}</td>
   <td>{prov}</td>
