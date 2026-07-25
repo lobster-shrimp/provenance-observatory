@@ -40,6 +40,29 @@ def test_renders_neutral_and_withholds_interpreted(tmp_path):
     assert '<span class="badge cn">CONFIRMED' not in doc
 
 
+def _write_agent(data_dir, target, rec):
+    d = os.path.join(data_dir, "agents", target, date.today().isoformat())
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, "verdict.json"), "w") as f:
+        json.dump(rec, f)
+
+
+def test_agent_panel_gates_verdict_on_public(tmp_path):
+    data = tmp_path / "data"
+    base = {"kind": "agent", "endpoint": "api.vendor.com",
+            "verdict": {"label": "CONFIRMED", "provenance_verdict": "CONFIRMED",
+                        "jurisdiction_verdict": "CONFIRMED"},
+            "steps": [{"echoed_model": "vendor-x", "provenance": "CONFIRMED",
+                       "jurisdiction": "CONFIRMED", "jurisdiction_basis": "PRC"}]}
+    _write_agent(str(data), "agent-withheld", dict(base))                 # no public flag
+    _write_agent(str(data), "agent-cleared", {**base, "public": True})    # cleared
+    doc = open(build.build(str(data), str(tmp_path / "out"), now_iso="2026-07-21T12:00:00")).read()
+    assert "Agent &amp; platform assessments" in doc
+    assert "agent-withheld" in doc and "VERDICT WITHHELD" in doc          # gated: no verdict badge
+    assert "agent-cleared" in doc                                        # cleared: model row shown
+    assert "vendor-x" in doc
+
+
 def test_promoted_advisory_shows_verdict(tmp_path):
     data = tmp_path / "data"
     _write_verdict(str(data), "openrouter-neutral-endpoint", "aggregator",

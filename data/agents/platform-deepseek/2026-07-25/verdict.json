@@ -1,0 +1,64 @@
+{
+  "authorized": true,
+  "captured_at": "2026-07-25T19:45:00Z",
+  "endpoint": "api.deepseek.com",
+  "engine": "provenance-probe==0.9.0",
+  "kind": "agent",
+  "note": "All 2 chat models probed for deepseek (cap 5); one step per model.",
+  "observation": [
+    "active-probe"
+  ],
+  "public": true,
+  "schema_version": "0.1.0",
+  "steps": [
+    {
+      "degraded": false,
+      "echoed_model": "deepseek-v4-flash",
+      "host": "https://api.deepseek.com/v1",
+      "index": 0,
+      "jurisdiction": "CONFIRMED",
+      "jurisdiction_basis": "PRC",
+      "kind": "model",
+      "name": "deepseek-v4-flash",
+      "parent_id": null,
+      "provenance": "CONFIRMED",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "deepseek-v4-pro",
+      "host": "https://api.deepseek.com/v1",
+      "index": 1,
+      "jurisdiction": "CONFIRMED",
+      "jurisdiction_basis": "PRC",
+      "kind": "model",
+      "name": "deepseek-v4-pro",
+      "parent_id": null,
+      "provenance": "CONFIRMED",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    }
+  ],
+  "target": "platform-deepseek",
+  "verdict": {
+    "alert": true,
+    "jurisdiction_verdict": "CONFIRMED",
+    "label": "CONFIRMED",
+    "model_switches": [
+      {
+        "at_step": 1,
+        "from": "deepseek-v4-flash",
+        "reason": "echoed_model",
+        "to": "deepseek-v4-pro"
+      }
+    ],
+    "ordering_incomplete": false,
+    "provenance_verdict": "CONFIRMED",
+    "steps": 2,
+    "switch_detected": true,
+    "worst_step_verdict": "CONFIRMED"
+  }
+}

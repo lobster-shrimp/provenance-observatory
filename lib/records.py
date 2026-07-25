@@ -35,6 +35,28 @@ def load_target_records(data_dir: str) -> dict[str, list[tuple[str, dict]]]:
     return out
 
 
+def load_agent_records(data_dir: str) -> dict[str, list[tuple[str, dict]]]:
+    """agent target -> [(date_str, record)] for the agent flight-recorder evidence
+    under data/agents/<target>/<date>/verdict.json (one level deeper than endpoint
+    records). Hot window only."""
+    cutoff = date.today() - timedelta(days=HOT_WINDOW_DAYS)
+    out: dict[str, list[tuple[str, dict]]] = {}
+    for verdict_path in glob.glob(os.path.join(data_dir, "agents", "*", "*", "verdict.json")):
+        parts = verdict_path.split(os.sep)
+        target, dstr = parts[-3], parts[-2]
+        try:
+            if date.fromisoformat(dstr) < cutoff:
+                continue
+        except ValueError:
+            continue
+        with open(verdict_path) as f:
+            rec = json.load(f)
+        out.setdefault(target, []).append((dstr, rec))
+    for recs in out.values():
+        recs.sort(key=lambda x: x[0])
+    return out
+
+
 def load_promoted_advisories(data_dir: str) -> dict[str, dict]:
     """target -> latest promoted public advisory record, if any."""
     latest: dict[str, dict] = {}

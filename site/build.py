@@ -831,6 +831,12 @@ _CSS = """
   .badge.cn { border-color:#f0c0c0; background:#fdf2f2; color:#b42318; }
   .badge.ok { border-color:#bfe3c7; background:#f3faf4; color:#0a7d33; }
   .badge.warn { border-color:#e6d08a; background:#fffbeb; color:#8a6d1a; }
+  .agents { margin:22px 0; } .agents h2 { font-size:15px; margin:0 0 4px; }
+  .agent-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; margin-top:10px; }
+  .agent-card { border:1px solid var(--line); border-radius:6px; background:#fff; padding:12px 14px; }
+  .agent-head { margin-bottom:4px; } .agent-tbl { width:100%; border-collapse:collapse; margin-top:6px; }
+  .agent-tbl th { text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:#888; padding:2px 4px; }
+  .agent-tbl td { padding:3px 4px; border-top:1px solid var(--line); }
   .ctl { font-size:11px; margin-top:3px; } .ctl.pass { color:#0a7d33; } .ctl.fail { color:#b42318; }
   .spark { letter-spacing:2px; } .sp-ok { color:#0a7d33; } .sp-drift { color:#b42318; } .sp-none { color:#cbd5e1; }
   aside h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
@@ -1035,8 +1041,57 @@ _APP_JS = r"""
 PAGE_SIZE = 25
 
 
+def _agent_panel(agent_records: dict) -> str:
+    """Agent flight-recorder assessments: per platform/agent, a per-model board of
+    provenance + jurisdiction. Neutral evidence + verdict tiers for the authorized
+    probes captured under data/agents/."""
+    if not agent_records:
+        return ""
+    cards = []
+    for target, recs in sorted(agent_records.items()):
+        _, rec = recs[-1]                      # latest run in the hot window
+        v = rec.get("verdict") or {}
+        steps = rec.get("steps") or []
+        endpoint = html.escape(rec.get("endpoint") or "")
+        note = html.escape(rec.get("note") or "")
+        # Two-tier gate (same as the endpoint table): interpreted verdicts about a
+        # named target are withheld unless the record is cleared `public: true`.
+        # Neutral evidence (which models were probed) is shown either way.
+        published = bool(rec.get("public"))
+        if published:
+            head_verdict = f' &middot; {_badge(v.get("label"))} <span class="small muted">worst of {len(steps)} model(s)</span>'
+            srows = "".join(
+                f'<tr><td class="mono small">{html.escape(s.get("echoed_model")) or "&mdash;"}</td>'
+                f'<td>{_badge(s.get("provenance"))}</td>'
+                f'<td>{_badge(s.get("jurisdiction"))}'
+                + (f' <span class="small muted">{html.escape(s.get("jurisdiction_basis") or "")}</span>'
+                   if s.get("jurisdiction_basis") else "")
+                + "</td></tr>"
+                for s in steps)
+            table = (f'<table class="agent-tbl"><thead><tr><th>Model</th><th>Provenance</th>'
+                     f'<th>Jurisdiction</th></tr></thead><tbody>{srows}</tbody></table>')
+        else:
+            head_verdict = ' &middot; <span class="badge warn">VERDICT WITHHELD</span>'
+            models = ", ".join(html.escape(s.get("echoed_model") or "?") for s in steps) or "&mdash;"
+            table = (f'<p class="small">{len(steps)} model(s) probed &middot; '
+                     f'<span class="mono small muted">{models}</span></p>'
+                     f'<p class="small muted">Interpreted verdicts withheld pending '
+                     f'responsible disclosure and Gate-1 legal review.</p>')
+        cards.append(
+            f'<div class="agent-card"><div class="agent-head">'
+            f'<b class="mono">{html.escape(target)}</b> <span class="small muted">{endpoint}</span>'
+            f'{head_verdict}</div>'
+            f'<p class="small muted">{note}</p>{table}</div>')
+    return (f'<section class="agents"><h2>Agent &amp; platform assessments</h2>'
+            f'<p class="muted small">Each platform\'s advertised models, active-probed. '
+            f'Provenance is the model\'s weight origin; jurisdiction is who runs it '
+            f'(PRC-soil vs PRC-operator vs non-PRC). {len(agent_records)} target(s).</p>'
+            f'<div class="agent-grid">{"".join(cards)}</div></section>')
+
+
 def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | None = None,
-           manifests: list[dict] | None = None, transcripts: dict | None = None) -> str:
+           manifests: list[dict] | None = None, transcripts: dict | None = None,
+           agent_records: dict | None = None) -> str:
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
     api_url = os.environ.get("OBSERVATORY_API_URL", "http://127.0.0.1:8000")
     app_js = _APP_JS.replace("__API_URL__", api_url).replace("__PAGE_SIZE__", str(PAGE_SIZE))
@@ -1072,6 +1127,7 @@ pending responsible disclosure and legal review (Gate 1). Verdicts are probabili
   <div class="stat"><b>{html.escape(now_iso[:16])}</b><span>LAST UPDATED (UTC)</span></div>
 </div>
 {_model_switch_panel(transcripts)}
+{_agent_panel(agent_records or {})}
 <div class="layout">
   <main>
   {_controls()}
@@ -1105,13 +1161,14 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     engine_eval = _load_engine_eval(data_dir)
     manifests = _manifests(data_dir)
     transcripts = _load_transcripts(data_dir)
+    agent_records = _records.load_agent_records(data_dir)
     now_iso = now_iso or datetime.utcnow().isoformat()
     os.makedirs(out_dir, exist_ok=True)
 
     out_path = os.path.join(out_dir, "index.html")
     with open(out_path, "w") as f:
         f.write(render(records, promoted, now_iso=now_iso, engine_eval=engine_eval,
-                       manifests=manifests, transcripts=transcripts))
+                       manifests=manifests, transcripts=transcripts, agent_records=agent_records))
 
     # Footer + nav content pages (real links, not dead spans).
     for fname, doc in (

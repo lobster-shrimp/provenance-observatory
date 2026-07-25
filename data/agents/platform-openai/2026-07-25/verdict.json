@@ -1,0 +1,127 @@
+{
+  "authorized": true,
+  "captured_at": "2026-07-25T19:45:00Z",
+  "endpoint": "api.openai.com",
+  "engine": "provenance-probe==0.9.0",
+  "kind": "agent",
+  "note": "All 5 chat models probed for openai (cap 5); one step per model.",
+  "observation": [
+    "active-probe"
+  ],
+  "public": true,
+  "schema_version": "0.1.0",
+  "steps": [
+    {
+      "degraded": false,
+      "echoed_model": "gpt-3.5-turbo",
+      "host": "https://api.openai.com/v1",
+      "index": 0,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "gpt-3.5-turbo",
+      "parent_id": null,
+      "provenance": "NO EVIDENCE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "gpt-3.5-turbo-16k",
+      "host": "https://api.openai.com/v1",
+      "index": 1,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "gpt-3.5-turbo-16k",
+      "parent_id": null,
+      "provenance": "NO EVIDENCE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "gpt-4-0613",
+      "host": "https://api.openai.com/v1",
+      "index": 2,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "gpt-4-0613",
+      "parent_id": null,
+      "provenance": "NO EVIDENCE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "gpt-4",
+      "host": "https://api.openai.com/v1",
+      "index": 3,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "gpt-4",
+      "parent_id": null,
+      "provenance": "NO EVIDENCE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "gpt-3.5-turbo-1106",
+      "host": "https://api.openai.com/v1",
+      "index": 4,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "gpt-3.5-turbo-1106",
+      "parent_id": null,
+      "provenance": "NO EVIDENCE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    }
+  ],
+  "target": "platform-openai",
+  "verdict": {
+    "alert": true,
+    "jurisdiction_verdict": "UNLIKELY",
+    "label": "UNLIKELY",
+    "model_switches": [
+      {
+        "at_step": 1,
+        "from": "gpt-3.5-turbo",
+        "reason": "echoed_model",
+        "to": "gpt-3.5-turbo-16k"
+      },
+      {
+        "at_step": 2,
+        "from": "gpt-3.5-turbo-16k",
+        "reason": "echoed_model",
+        "to": "gpt-4-0613"
+      },
+      {
+        "at_step": 3,
+        "from": "gpt-4-0613",
+        "reason": "echoed_model",
+        "to": "gpt-4"
+      },
+      {
+        "at_step": 4,
+        "from": "gpt-4",
+        "reason": "echoed_model",
+        "to": "gpt-3.5-turbo-1106"
+      }
+    ],
+    "ordering_incomplete": false,
+    "provenance_verdict": "NO EVIDENCE",
+    "steps": 5,
+    "switch_detected": true,
+    "worst_step_verdict": "UNLIKELY"
+  }
+}
