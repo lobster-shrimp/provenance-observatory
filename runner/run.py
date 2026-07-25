@@ -83,10 +83,12 @@ def should_probe(target: dict) -> tuple[bool, str]:
     return (True, "")
 
 
-def est_probe_count(defaults: dict) -> int:
+def est_probe_count(defaults: dict, target: dict | None = None) -> int:
     n = EST_TOKENIZER + EST_WIRE
     if "latency" in (defaults.get("layers") or []):
         n += DEFAULT_LATENCY_N
+    if (target or {}).get("session_boundary", defaults.get("session_boundary", False)):
+        n += 2 * (EST_TOKENIZER + EST_WIRE) + SESSION_GAP   # start + end snapshots + gap
     return n
 
 
@@ -218,6 +220,31 @@ def write_no_verdict(name: str, reason: str) -> None:
     print(f"[no-verdict] {name}: {reason}")
 
 
+SESSION_GAP = int(os.environ.get("OBSERVATORY_SESSION_GAP", "8"))
+
+
+def session_boundary_enabled(target: dict, defaults: dict) -> bool:
+    """Opt-in per target (or default): the boundary check costs extra probes, so
+    it's off unless `session_boundary: true` is set on the target or defaults."""
+    return bool(target.get("session_boundary", defaults.get("session_boundary", False)))
+
+
+def run_session_boundary(target: dict) -> dict:
+    """Shell out to `provenance-probe session` (black-box CLI). Detects a swap
+    WITHIN one session. Returns the boundary-check JSON."""
+    with tempfile.TemporaryDirectory() as tmp:
+        cfg = os.path.join(tmp, "cfg.json")
+        write_probe_config(target, cfg)
+        out = os.path.join(tmp, "s.json")
+        cmd = ["provenance-probe", "session", "--config", cfg,
+               "--gap-probes", str(SESSION_GAP), "--out", out, "--i-am-authorized"]
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+        if r.returncode not in (0, 2):   # 2 = switch detected (like monitor)
+            raise RuntimeError((r.stderr or r.stdout or "session failed").strip()[:200])
+        with open(out) as f:
+            return json.load(f)
+
+
 def process_target(target: dict, defaults: dict, budget: dict) -> None:
     name = target["name"]
     ok, why = should_probe(target)
@@ -228,8 +255,9 @@ def process_target(target: dict, defaults: dict, budget: dict) -> None:
         print(f"[skip] {name}: today's artifact exists")
         return
     cap = target.get("per_run_probe_cap", defaults.get("per_run_probe_cap", 200))
-    if est_probe_count(defaults) > cap:
-        write_no_verdict(name, f"per-run probe cap exceeded ({est_probe_count(defaults)}>{cap})")
+    est = est_probe_count(defaults, target)
+    if est > cap:
+        write_no_verdict(name, f"per-run probe cap exceeded ({est}>{cap})")
         return
 
     try:
@@ -251,6 +279,21 @@ def process_target(target: dict, defaults: dict, budget: dict) -> None:
     if control is not None:
         public_record["control_check"] = control   # neutral: about our own endpoint
 
+    # Session-boundary check (P2): did the served model swap WITHIN one session?
+    # The start/end fingerprints are neutral evidence; a swap opens an advisory.
+    sb_switched = False
+    if session_boundary_enabled(target, defaults):
+        try:
+            sb = run_session_boundary(target)
+            sb_switched = bool(sb["boundary_switch"])
+            public_record["session_boundary"] = {
+                "start_fingerprint": sb["start_fingerprint"][:24],
+                "end_fingerprint": sb["end_fingerprint"][:24],
+                "switched": sb_switched, "confidence": sb["confidence"],
+                "gap_probes": sb.get("gap_probes")}
+        except Exception as e:
+            print(f"[warn] {name}: session boundary skipped: {e}")
+
     out_dir = today_dir(name)
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "verdict.json"), "w") as f:
@@ -271,7 +314,20 @@ def process_target(target: dict, defaults: dict, budget: dict) -> None:
         print(f"  [advisory] {name}: {summary.get('action')} "
               f"{summary.get('staging_id', '')}".rstrip())
 
-    status = "DRIFT" if bundle["_drift_seen"] else "stable"
+    # Intra-session model switch on a VENDOR target -> model-switch advisory.
+    if sb_switched and not target.get("kind", "").startswith("control"):
+        sbrec = public_record["session_boundary"]
+        events = [{"turn": "session", "from": sbrec["start_fingerprint"][:8],
+                   "to": sbrec["end_fingerprint"][:8], "kind": "boundary"}]
+        s = advisory.on_model_switch(
+            name, events, verdict={"boundary": True, "confidence": sbrec["confidence"]},
+            summary=(f"served model changed within a single session "
+                     f"({sbrec['start_fingerprint'][:8]} -> {sbrec['end_fingerprint'][:8]})"),
+            severity="high", target_public=target.get("public", False))
+        print(f"  [advisory] {name}: session-switch {s.get('action')} "
+              f"{s.get('staging_id', '')}".rstrip())
+
+    status = "SESSION-SWITCH" if sb_switched else ("DRIFT" if bundle["_drift_seen"] else "stable")
     ctl = f" control={'PASS' if control['pass'] else 'FAIL'}" if control else ""
     print(f"[ok] {name}: {status}{ctl} → {out_dir}/verdict.json")
     if control and not control["pass"]:

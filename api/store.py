@@ -76,6 +76,7 @@ class Store:
             "drift_seen": bool(latest.get("drift_seen")),
             "coverage": _coverage(latest),
             "control_check": latest.get("control_check"),
+            "session_boundary": latest.get("session_boundary"),
             **interp,
             "evidence": {"date": dstr, "manifest_root": m.get("manifest_root"),
                          "signed": bool(m.get("signed"))},

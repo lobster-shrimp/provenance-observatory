@@ -383,3 +383,14 @@ def test_advisory_page_renders_model_switch():
     assert "MPA-2026-001" in page and "HIGH" in page
     assert "mid-session model switch" in page
     assert "Google Gemini" in page and "GLM (Zhipu)" in page
+
+
+def test_session_boundary_note_renders():
+    switched = {"session_boundary": {"start_fingerprint": "aaaaaaaa11", "end_fingerprint": "bbbbbbbb22",
+                                     "switched": True, "confidence": "full"}}
+    h = build._session_boundary_note(switched)
+    assert "Intra-session model switch" in h and "aaaaaaaa" in h and "bbbbbbbb" in h
+    stable = {"session_boundary": {"start_fingerprint": "cccccccc", "end_fingerprint": "cccccccc",
+                                   "switched": False, "confidence": "full"}}
+    assert "stable across the session" in build._session_boundary_note(stable)
+    assert build._session_boundary_note({}) == ""

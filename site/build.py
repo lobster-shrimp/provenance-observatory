@@ -138,6 +138,21 @@ def _coverage_badge(rec: dict) -> str:
     return ""
 
 
+def _session_boundary_note(rec: dict) -> str:
+    """Detail-page line for the intra-session (start-vs-end) model-switch check."""
+    sb = rec.get("session_boundary")
+    if not sb:
+        return ""
+    sf, ef = (sb.get("start_fingerprint") or "")[:8], (sb.get("end_fingerprint") or "")[:8]
+    if sb.get("switched"):
+        return (f'<div class="note" style="border-left-color:#b42318">'
+                f'<b>Intra-session model switch</b> &mdash; the served model changed '
+                f'<i>within a single session</i>: {html.escape(sf)} &rarr; {html.escape(ef)} '
+                f'({html.escape(str(sb.get("confidence","")))} confidence).</div>')
+    return (f'<div class="note">Session boundary: stable across the session '
+            f'({html.escape(sf)}).</div>')
+
+
 def _coverage_note(rec: dict) -> str:
     """Detail-page coverage summary: layers present + degradation warning."""
     c = _coverage(rec)
@@ -200,6 +215,7 @@ def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | 
   <p>{kind or "target"} &middot; {len(records)} run(s) in the hot window &middot;
      {n_changes} fingerprint change(s)</p></header>
 {_coverage_note(records[-1][1]) if records else ""}
+{_session_boundary_note(records[-1][1]) if records else ""}
 {adv_html}
 <table>
   <thead><tr><th>Date</th><th>Fingerprint</th><th>Change</th><th>Control</th>

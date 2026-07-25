@@ -185,3 +185,18 @@ def test_store_target_includes_transcript(tmp_path):
     assert t and t["model_change_events"][0]["to"] == "GLM (Zhipu)"
     assert s.status()["model_switch_alerts"] == 1
     assert s.model_switches()[0]["target"] == "chat-z-ai-webapp"
+
+
+def test_store_item_includes_session_boundary(tmp_path):
+    import json as _json
+    from datetime import date as _date
+    d = tmp_path / "data" / "t1" / _date.today().isoformat()
+    d.mkdir(parents=True)
+    (d / "verdict.json").write_text(_json.dumps(
+        {"fingerprint_id": "fp", "drift_seen": False,
+         "session_boundary": {"start_fingerprint": "a", "end_fingerprint": "b", "switched": True},
+         "target": {"name": "t1", "kind": "aggregator"}}))
+    from api.store import Store
+    s = Store(str(tmp_path / "data"))
+    v = s.verdicts()["items"][0]
+    assert v["session_boundary"]["switched"] is True
