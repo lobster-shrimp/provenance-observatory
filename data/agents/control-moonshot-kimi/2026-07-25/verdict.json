@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.1.0",
+  "kind": "agent",
+  "captured_at": "2026-07-25T18:15:00Z",
+  "target": "control-moonshot-kimi",
+  "endpoint": "api.moonshot.ai",
+  "model": "kimi-latest",
+  "observation": [
+    "trace",
+    "active-probe"
+  ],
+  "engine": "provenance-probe==0.5.0",
+  "authorized": true,
+  "verdict": {
+    "provenance_verdict": "LIKELY",
+    "jurisdiction_verdict": "CONFIRMED",
+    "label": "CONFIRMED",
+    "worst_step_verdict": "CONFIRMED",
+    "steps": 1,
+    "model_switches": [],
+    "switch_detected": false,
+    "alert": true
+  },
+  "note": "jurisdiction CONFIRMED for api.moonshot.ai (.ai international endpoint) \u2014 verify real CN hosting vs over-broad network pattern before any named verdict"
+}

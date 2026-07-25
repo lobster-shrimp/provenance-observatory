@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1.0",
+  "kind": "agent",
+  "captured_at": "2026-07-25T18:15:00Z",
+  "target": "control-openai",
+  "endpoint": "api.openai.com",
+  "model": "gpt-4o-mini",
+  "observation": [
+    "trace",
+    "active-probe"
+  ],
+  "engine": "provenance-probe==0.5.0",
+  "authorized": true,
+  "verdict": {
+    "provenance_verdict": "NO EVIDENCE",
+    "jurisdiction_verdict": "UNLIKELY",
+    "label": "UNLIKELY",
+    "worst_step_verdict": "UNLIKELY",
+    "steps": 1,
+    "model_switches": [],
+    "switch_detected": false,
+    "alert": false
+  }
+}
