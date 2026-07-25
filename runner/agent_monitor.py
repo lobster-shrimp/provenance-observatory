@@ -15,11 +15,23 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))   # runner/ on path (repo convention)
 import advisory  # noqa: E402
+
+_SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
+AGENT_TRACE_TIMEOUT = 300     # seconds — a hung engine call can't stall the nightly run
+
+
+def safe_name(name: str) -> str:
+    """Reject target names that could escape the data/staging tree (`/`, `..`) or
+    break the manifest glob. Path-injection guard."""
+    if not isinstance(name, str) or not _SAFE_NAME.match(name):
+        raise ValueError(f"unsafe target name {name!r}: use [A-Za-z0-9._-] only")
+    return name
 
 
 def agent_fingerprint(record: dict) -> str:
@@ -39,7 +51,7 @@ def run_agent_target(trace_path: str, export_path: str) -> dict:
     return the exported evidence record. Raises on a hard engine failure."""
     r = subprocess.run(
         ["provenance-probe", "agent-trace", trace_path, "--export", export_path],
-        capture_output=True, text=True)
+        capture_output=True, text=True, timeout=AGENT_TRACE_TIMEOUT)
     if r.returncode not in (0, 2):      # 2 = a switch was detected (alert, not error)
         raise RuntimeError(f"agent-trace failed ({r.returncode}): {r.stderr[:200]}")
     with open(export_path) as f:
@@ -72,9 +84,10 @@ def monitor_agent(target_name: str, record: dict, *, target_public: bool) -> dic
             "switch_in_run": bool(evidence["model_switches"])}
 
 
-def write_agent_record(data_dir: str, target_name: str, date_str: str, record: dict) -> str:
+def write_agent_record(data_dir: str, target_name: str, date_str: str, record: dict,
+                       filename: str = "verdict.json") -> str:
     """Drop the evidence record where the daily cosign+Rekor manifest signs it."""
-    d = os.path.join(data_dir, "agents", target_name, date_str)
+    d = os.path.join(data_dir, "agents", safe_name(target_name), date_str)
     os.makedirs(d, exist_ok=True)
     path = os.path.join(d, "verdict.json")
     with open(path, "w") as f:

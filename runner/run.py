@@ -338,10 +338,26 @@ def process_agent_target(target: dict) -> None:
     """E2/E3: assess a captured agent run via the engine, drop the signed-ready
     record, and drive the advisory pipeline on any composition drift."""
     import agent_monitor
-    name = target["name"]
+    name = agent_monitor.safe_name(target["name"])   # path-injection guard
     date_str = date.today().isoformat()
+
+    ok, reason = should_probe(target)                # SAME auth/commercial gate as endpoints
+    if not ok:
+        agent_monitor.write_agent_record(DATA_DIR, name, date_str,
+                                         {"kind": "agent", "no_verdict": reason}, "no-verdict.json")
+        print(f">>> agent {name}: skipped ({reason})")
+        return
+
     export = os.path.join(STAGING_DIR, f"{name}-agent.json")
-    record = agent_monitor.run_agent_target(target["agent_trace"], export)
+    try:
+        record = agent_monitor.run_agent_target(target["agent_trace"], export)
+    except (RuntimeError, subprocess.TimeoutExpired, OSError, ValueError) as e:
+        agent_monitor.write_agent_record(DATA_DIR, name, date_str,
+                                         {"kind": "agent", "no_verdict": f"engine failed: {e}"},
+                                         "no-verdict.json")
+        print(f">>> agent {name}: no-verdict ({e})")
+        return
+
     agent_monitor.write_agent_record(DATA_DIR, name, date_str, record)
     result = agent_monitor.monitor_agent(name, record, target_public=target.get("public", False))
     print(f">>> agent {name}: verdict={record.get('verdict',{}).get('label')} "

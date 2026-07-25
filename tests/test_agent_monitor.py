@@ -57,3 +57,15 @@ def test_write_agent_record_lands_where_manifest_signs(tmp_path):
     p = agent_monitor.write_agent_record(str(tmp_path), "agent-w", "2026-07-25", _rec("m"))
     assert p.endswith("agents/agent-w/2026-07-25/verdict.json")
     assert os.path.exists(p)
+
+
+def test_safe_name_rejects_path_traversal(tmp_path):
+    for bad in ("../etc", "a/b", "x/../../y", ""):
+        with pytest.raises(ValueError):
+            agent_monitor.safe_name(bad)
+    assert agent_monitor.safe_name("acme-copilot.1") == "acme-copilot.1"
+
+
+def test_write_agent_record_rejects_unsafe_name(tmp_path):
+    with pytest.raises(ValueError):
+        agent_monitor.write_agent_record(str(tmp_path), "../escape", "2026-07-25", _rec("m"))
