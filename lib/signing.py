@@ -51,7 +51,10 @@ def build_manifest(data_dir: str, date_str: str) -> dict:
 
 def _iter_records(data_dir: str, date_str: str, filename: str):
     import glob
+    # endpoint records: data/<target>/<date>/verdict.json
     yield from glob.glob(os.path.join(data_dir, "*", date_str, filename))
+    # agent records (engine `--export` drops, E5): data/agents/<target>/<date>/verdict.json
+    yield from glob.glob(os.path.join(data_dir, "agents", "*", date_str, filename))
 
 
 def write_manifest(data_dir: str, date_str: str) -> str:

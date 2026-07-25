@@ -1,0 +1,66 @@
+{
+  "authorized": true,
+  "captured_at": "2026-07-25T15:45:00Z",
+  "endpoint": "api.deepseek.com",
+  "engine": "provenance-probe (phase2)",
+  "kind": "agent",
+  "model": "deepseek-v4-flash",
+  "note": "Live sentinel proxy-interposition test (Phase 2 A). 3 model calls proxied to api.deepseek.com; jurisdiction CONFIRMED PRC-soil, provenance LIKELY (echoed CN model), no mid-session switch. call#0 was a 400 (stale model name) -> INDETERMINATE.",
+  "observation": [
+    "proxy"
+  ],
+  "schema_version": "0.1.0",
+  "steps": [
+    {
+      "degraded": false,
+      "echoed_model": null,
+      "host": "https://api.deepseek.com",
+      "index": 0,
+      "jurisdiction": "CONFIRMED",
+      "jurisdiction_basis": "PRC",
+      "kind": "model",
+      "name": "call#0",
+      "provenance": "INDETERMINATE",
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "deepseek-v4-flash",
+      "host": "https://api.deepseek.com",
+      "index": 1,
+      "jurisdiction": "CONFIRMED",
+      "jurisdiction_basis": "PRC",
+      "kind": "model",
+      "name": "call#1",
+      "provenance": "LIKELY",
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "deepseek-v4-flash",
+      "host": "https://api.deepseek.com",
+      "index": 2,
+      "jurisdiction": "CONFIRMED",
+      "jurisdiction_basis": "PRC",
+      "kind": "model",
+      "name": "call#2",
+      "provenance": "LIKELY",
+      "truncated": false,
+      "unordered": false
+    }
+  ],
+  "target": "proxy-deepseek-live",
+  "verdict": {
+    "alert": true,
+    "jurisdiction_verdict": "CONFIRMED",
+    "label": "MIXED",
+    "model_switches": [],
+    "ordering_incomplete": false,
+    "provenance_verdict": "LIKELY",
+    "steps": 3,
+    "switch_detected": false,
+    "worst_step_verdict": "CONFIRMED"
+  }
+}

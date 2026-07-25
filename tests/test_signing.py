@@ -26,6 +26,20 @@ def test_manifest_lists_records_with_hashes(tmp_path):
     assert len(m["manifest_root"]) == 64
 
 
+def test_manifest_includes_agent_records(tmp_path):
+    # E5 record-drop: engine `--export` bundles land under data/agents/<target>/<date>/
+    # and MUST be picked up + signed by the daily manifest (Codex/Claude E5 seam).
+    data = str(tmp_path)
+    _rec(data, "endpoint-1", {"fingerprint_id": "a"})
+    ap = os.path.join(data, "agents", "acme-copilot", D)
+    os.makedirs(ap, exist_ok=True)
+    with open(os.path.join(ap, "verdict.json"), "w") as f:
+        json.dump({"kind": "agent", "verdict": {"label": "MIXED"}}, f)
+    m = signing.build_manifest(data, D)
+    assert f"agents/acme-copilot/{D}/verdict.json" in m["entries"]
+    assert f"endpoint-1/{D}/verdict.json" in m["entries"]      # endpoint records still included
+
+
 def test_manifest_root_is_deterministic(tmp_path):
     data = str(tmp_path)
     _rec(data, "t1", {"fingerprint_id": "a"})
