@@ -61,6 +61,14 @@ ingest of captured session transcripts (the engine's `transcript` analyzer) that
 surfaces mid-session identity flips as **model-switch alerts**, promotable to a
 numbered advisory. See `runner/ingest_transcripts.py` and `runner/promote.py`.
 
+**Continuous agent monitoring (E2/E3).** A target with an `agent_trace` is assessed
+nightly by the engine's agent flight recorder; `runner/agent_monitor.py` computes a
+stable **agent fingerprint** (its model composition) and drives the SAME MPA
+advisory pipeline — when tonight's agent runs a different model, routes
+differently, or egresses to a new jurisdiction, a numbered agent advisory opens.
+The signed-ready record lands under `data/agents/<target>/<date>/verdict.json` and
+is covered by the daily cosign+Rekor manifest.
+
 ## Launch gates (nothing accusatory goes public until all pass)
 
 1. **Legal standing** — publishing entity + counsel sign-off on named-vendor
@@ -103,6 +111,7 @@ probe tool →" nav link; the probe UI has an "Observatory →" link).
 | `runner/run.py` | Nightly runner — probe, drift check, session-boundary check (all via the provenance-probe CLI) |
 | `runner/advisory.py` | Drift / model-switch → draft advisory in private staging → promotion (MPA-YYYY-NNN) |
 | `runner/ingest_transcripts.py` | Ingest captured sessions → model-switch alerts (two-tier) |
+| `runner/agent_monitor.py` | **Continuous agent monitoring (E2) + agent advisories (E3)** — fingerprint an agent's model composition, drift it vs the pinned baseline, drive the MPA advisory pipeline; drop the signed-ready record under `data/agents/` |
 | `runner/promote.py` | Maintainer CLI: promote a staged draft to a numbered public advisory |
 | `lib/verdict.py` | Two-tier split: neutral vs interpreted |
 | `lib/records.py` | Canonical readers for `data/` (shared by the site + API) |

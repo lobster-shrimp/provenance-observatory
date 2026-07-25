@@ -334,6 +334,21 @@ def process_target(target: dict, defaults: dict, budget: dict) -> None:
         print(f"  [FP-GATE] {name}: control expectation FAILED — {control}")
 
 
+def process_agent_target(target: dict) -> None:
+    """E2/E3: assess a captured agent run via the engine, drop the signed-ready
+    record, and drive the advisory pipeline on any composition drift."""
+    import agent_monitor
+    name = target["name"]
+    date_str = date.today().isoformat()
+    export = os.path.join(STAGING_DIR, f"{name}-agent.json")
+    record = agent_monitor.run_agent_target(target["agent_trace"], export)
+    agent_monitor.write_agent_record(DATA_DIR, name, date_str, record)
+    result = agent_monitor.monitor_agent(name, record, target_public=target.get("public", False))
+    print(f">>> agent {name}: verdict={record.get('verdict',{}).get('label')} "
+          f"fp={result['fingerprint'][:8]} advisory={result['advisory'].get('action')} "
+          f"switch_in_run={result['switch_in_run']}")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--targets", default=os.path.join(ROOT, "targets.yaml"))
@@ -344,7 +359,10 @@ def main() -> int:
     os.makedirs(STAGING_DIR, exist_ok=True)
     for t in cfg.get("targets", []):
         try:
-            process_target(t, defaults, budget)
+            if t.get("agent_trace"):          # E2: continuous agent monitoring
+                process_agent_target(t)
+            else:
+                process_target(t, defaults, budget)
         except Exception as e:   # never let one target kill the run
             print(f"[error] {t.get('name','?')}: {e}")
     # Build the day's evidence manifest (root hash over all records). Signing
