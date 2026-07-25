@@ -175,6 +175,18 @@ targets:
     authorized: false      # flip only with written authorization to probe it
     notes: "GLM-behind-Gemini-persona web app. Nightly = neutral drift watch (deception OFF); expect degraded coverage if usage is suppressed."
 
+  # --- Continuous agent monitoring (E2/E3) --------------------------------
+  # A target with an `agent_trace` is assessed nightly by the engine's agent
+  # flight recorder (runner/agent_monitor.py), not the endpoint `assess` path.
+  # The engine runs `agent-trace <agent_trace> --export`, drops the signed-ready
+  # record under data/agents/<name>/<date>/, and drifts the agent fingerprint;
+  # a composition change opens a numbered MPA agent advisory. Provide a captured
+  # OTel-GenAI / minimal-JSON trace of the authorized agent run.
+  # - name: acme-copilot
+  #   agent_trace: traces/acme-copilot/latest.json
+  #   public: false        # Gate 1: verdict withheld until cleared
+  #   authorized: false    # flip only with written authorization
+
 # Monthly spend ceiling across all targets (U2). Runner aborts to a
 # no-verdict{budget-exceeded} artifact if a run would breach it.
 budget:
