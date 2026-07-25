@@ -371,3 +371,15 @@ def test_security_txt_generated(tmp_path):
     assert st.exists()
     body = st.read_text()
     assert body.startswith("Contact:") and "Expires:" in body
+
+
+def test_advisory_page_renders_model_switch():
+    adv = {"advisory_id": "MPA-2026-001", "target": "chat-z-ai-webapp",
+           "promoted_at": "2026-07-25", "kind": "model_switch", "severity": "high",
+           "summary": "served model switched to GLM (Zhipu)",
+           "model_change_events": [{"turn": 7, "from": "Google Gemini",
+                                    "to": "GLM (Zhipu)", "kind": "concession"}]}
+    page = build._advisory_page(adv)
+    assert "MPA-2026-001" in page and "HIGH" in page
+    assert "mid-session model switch" in page
+    assert "Google Gemini" in page and "GLM (Zhipu)" in page

@@ -95,3 +95,39 @@ def test_drafts_do_not_consume_advisory_numbers(staging):
     rb = advisory.on_drift("t-b", "fpY", EVID, target_public=True, now=NOW)
     pub = advisory.promote("t-b", rb["staging_id"], now=NOW + timedelta(days=31))
     assert pub["advisory_id"] == "MPA-2026-001"   # t-a's unpromoted draft consumed nothing
+
+
+# --- model-switch advisories (transcript pipeline) --------------------------
+
+SWITCH = [{"turn": 7, "from": "Google Gemini", "to": "GLM (Zhipu)", "kind": "concession"}]
+
+
+def test_model_switch_opens_draft_and_promotes(staging):
+    s = advisory.on_model_switch("chat-z-ai-webapp", SWITCH,
+                                 verdict={"misrepresentation": True, "severity": "critical"},
+                                 summary="switched to GLM (Zhipu)", severity="high",
+                                 target_public=True, now=NOW)
+    assert s["action"] == "opened"
+    # window not elapsed -> refused without override
+    with pytest.raises(PermissionError):
+        advisory.promote("chat-z-ai-webapp", s["staging_id"], now=NOW)
+    rec = advisory.promote("chat-z-ai-webapp", s["staging_id"], now=NOW, force_window=True)
+    assert rec["advisory_id"].startswith("MPA-")
+    assert rec["kind"] == "model_switch" and rec["severity"] == "high"
+    assert rec["model_change_events"][0]["to"] == "GLM (Zhipu)"
+
+
+def test_model_switch_refuses_promotion_when_not_public(staging):
+    s = advisory.on_model_switch("some-webapp", SWITCH, verdict=None,
+                                 summary="switch", severity="medium",
+                                 target_public=False, now=NOW)
+    with pytest.raises(PermissionError):
+        advisory.promote("some-webapp", s["staging_id"], now=NOW, force_window=True)
+
+
+def test_model_switch_dedups(staging):
+    a1 = advisory.on_model_switch("t", SWITCH, verdict=None, summary="x",
+                                  severity="medium", target_public=True, now=NOW)
+    a2 = advisory.on_model_switch("t", SWITCH, verdict=None, summary="x",
+                                  severity="medium", target_public=True, now=NOW)
+    assert a1["staging_id"] == a2["staging_id"] and a2["action"] == "exists"
