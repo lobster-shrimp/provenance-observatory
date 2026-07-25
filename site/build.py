@@ -325,7 +325,10 @@ def _footer(base: str = "", api_url: str = "") -> str:
       <a href="{base}data-dictionary.html">Data Dictionary</a>
       <a href="{api_url}/api/docs">API Documentation</a></div>
     <div class="fcol"><h4>Policies</h4>
-      <a href="{base}disclosure.html">Responsible Disclosure</a></div>
+      <a href="{base}disclosure.html">Responsible Disclosure</a>
+      <a href="{base}security.html">Security Policy</a>
+      <a href="{base}privacy.html">Privacy Policy</a>
+      <a href="{base}terms.html">Terms of Use</a></div>
     <div class="fcol"><h4>Verification</h4>
       <p>Verify any evidence bundle signature and log inclusion.</p>
       <a href="{base}verify.html">Verify Evidence &#8599;</a></div>
@@ -535,6 +538,84 @@ disclosure and legal review.</p>
 <p>The fingerprinting engine is
 <a href="https://github.com/lobster-shrimp/provenance-probe">provenance-probe</a>;
 this service consumes it as a black-box CLI. Both are open source and forkable.</p>""")
+
+
+_CONTACT = "https://github.com/lobster-shrimp/provenance-observatory"
+
+
+def _privacy_page() -> str:
+    return _page("Privacy Policy", f"""
+<p class="small muted">Describes this project's actual data practices. Last reviewed with the current build.</p>
+<p>The Provenance Observatory is a public evidence site and a read-only JSON
+API. There are <b>no user accounts and no sign-in</b>.</p>
+<h2>What we collect from you</h2>
+<ul>
+  <li><b>The static site:</b> nothing. No cookies, no analytics, no trackers,
+    no fingerprinting. Your browser fetches static files.</li>
+  <li><b>The API:</b> a client IP is held transiently in memory only to enforce
+    rate limiting; it is not persisted, logged to disk, or shared. Standard
+    access logs may be retained by the hosting/CDN provider under their own
+    policies.</li>
+</ul>
+<h2>What we publish</h2>
+<p>Measurements about third-party <i>LLM endpoints</i> — not about site
+visitors. Cryptographic signatures of our evidence are recorded in the public
+<a href="https://www.sigstore.dev/">Rekor</a> transparency log.</p>
+<h2>Third parties</h2>
+<p>Requests are served by our hosting/CDN provider, which processes them under
+its own privacy terms. We use no advertising or analytics vendors.</p>
+<h2>Contact</h2>
+<p>Questions or requests: <a href="{_CONTACT}">the project repository</a>.</p>""")
+
+
+def _security_page() -> str:
+    return _page("Security Policy", f"""
+<p>The published surface is static and read-only, holds no user data or secrets,
+and every day's evidence is cosign-signed and recorded in Rekor, so tampering is
+detectable (see <a href="verify.html">Verify Evidence</a>).</p>
+<h2>Reporting a vulnerability</h2>
+<p>Please report security issues privately via
+<a href="{_CONTACT}/security/advisories">the repository's security advisories</a>
+(or open a minimal issue asking for a private channel). Include steps to
+reproduce and impact. We aim to acknowledge promptly and to fix and disclose
+responsibly.</p>
+<h2>Scope</h2>
+<ul>
+  <li>In scope: this site, the API, the signing/verification path, the engine.</li>
+  <li>Out of scope: denial-of-service, findings that require a compromised host,
+    and the third-party endpoints we monitor (we only probe authorized targets;
+    behavioral probes are off for commercial targets).</li>
+</ul>
+<p>A machine-readable summary is at
+<a href="/.well-known/security.txt">/.well-known/security.txt</a>.</p>""")
+
+
+def _terms_page() -> str:
+    return _page("Terms of Use", f"""
+<p>By using this site, the API, or the published evidence, you agree to the
+following. The evidence and code are open source under the repository's licence.</p>
+<h2>No warranty; verdicts are not proof</h2>
+<p>Everything is provided <b>as is</b>, without warranty. Verdicts are
+<b>probabilistic estimates</b> carrying a confidence level and a measured error
+rate — they are <b>not proof</b> and <b>not legal advice</b>. Independently
+verify the signed evidence before relying on any verdict for a decision.</p>
+<h2>Use of the evidence</h2>
+<ul>
+  <li>The append-only, signed log is the canonical record; quote it in context
+    and do not misrepresent a verdict's tier, confidence, or withheld status.</li>
+  <li>Interpreted verdicts are published only for cleared targets; others are
+    withheld and must not be inferred.</li>
+  <li>The API is read-only and rate-limited; automated clients must respect the
+    limits and identify themselves where practical.</li>
+</ul>
+<h2>Corrections and disputes</h2>
+<p>Operators of a monitored endpoint may dispute a record via
+<a href="disclosure.html">Responsible Disclosure</a>. Corrections are made by
+appending to the log; records are never silently deleted.</p>
+<h2>Liability</h2>
+<p>To the maximum extent permitted by law, the project and its contributors are
+not liable for any damages arising from use of the site, API, or evidence.</p>
+<p class="small muted">Contact: <a href="{_CONTACT}">the project repository</a>.</p>""")
 
 
 def _how_it_works_page() -> str:
@@ -940,9 +1021,22 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
         ("how-it-works.html", _how_it_works_page()),
         ("faq.html", _faq_page()),
         ("data-dictionary.html", _data_dictionary_page()),
+        ("security.html", _security_page()),
+        ("privacy.html", _privacy_page()),
+        ("terms.html", _terms_page()),
     ):
         with open(os.path.join(out_dir, fname), "w") as f:
             f.write(doc)
+
+    # RFC 9116 security.txt (machine-readable disclosure contact).
+    expires = (datetime.utcnow() + timedelta(days=365)).strftime("%Y-%m-%dT00:00:00Z")
+    wk = os.path.join(out_dir, ".well-known")
+    os.makedirs(wk, exist_ok=True)
+    with open(os.path.join(wk, "security.txt"), "w") as f:
+        f.write(f"Contact: {_CONTACT}/security/advisories\n"
+                f"Expires: {expires}\n"
+                f"Policy: {_CONTACT}/blob/main/DISCLOSURE.md\n"
+                "Preferred-Languages: en\n")
 
     # Static RSS feed (shared builder) so the RSS nav works without the API up.
     drift_items = [{"target": t, "last_checked": recs[-1][0]}
