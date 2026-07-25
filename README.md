@@ -5,6 +5,10 @@ LLM API endpoint — and whether it is Chinese-origin or PRC-jurisdiction. Built
 on [provenance-probe](https://github.com/lobster-shrimp/provenance-probe) as a
 black-box CLI dependency.
 
+> **New here?** The **[whitepaper](https://github.com/lobster-shrimp/provenance-probe/blob/main/WHITEPAPER.md)**
+> covers the problem, the solution, the technical detail, and the open-source
+> rationale for consumers, security practitioners, legal/compliance, and policy makers.
+
 ## In plain terms
 
 AI vendors can quietly change which model answers your API calls — swapping in a
@@ -20,25 +24,42 @@ that compliance and procurement teams can point to, not a rumor mill: verdicts
 come with confidence levels and a measured error rate, and nothing accusatory
 about a named company is published until a lawyer has cleared it.
 
-> **Status: SCAFFOLD — not live.** No public accusatory verdict ships until the
-> launch gates below pass. This repo currently wires the structure and the
-> load-bearing design decisions; the sections marked TODO in the code are the
-> real implementation.
+> **Status: built.** The full pipeline is implemented and tested — nightly
+> probing, a cosign+Rekor-signed append-only evidence log, the two-tier
+> publication gate, the advisory pipeline, a live JSON API, and the public site.
+> Going public with named-vendor verdicts is gated on the operator's legal
+> clearance (see Launch gates); everything else runs.
 
 ## What it does
 
-Nightly, it probes a small set of endpoints and commits the results to git as an
-append-only, tamper-evident log (Certificate Transparency for model provenance).
-It publishes measurements immediately and gates accusations:
+Nightly, it probes a watch list and commits the results to git as an append-only,
+tamper-evident log (Certificate Transparency for model provenance, anchored in
+[Rekor](https://www.sigstore.dev/)). It publishes measurements immediately and
+gates accusations:
 
-- **Neutral evidence** (token counts, headers, latency, `fingerprint_id`, the
-  fact that drift occurred) — public immediately.
-- **Interpreted verdict** (CONFIRMED/LIKELY jurisdiction + provenance) — withheld
-  behind a responsible-disclosure window and released only after Gate 1 clears
-  the target. See `lib/verdict.py`.
+- **Neutral evidence** (token counts, headers, latency, `fingerprint_id`, drift,
+  signed manifests) — public immediately.
+- **Interpreted verdict** (provenance + jurisdiction tiers) — withheld behind a
+  responsible-disclosure window and released only after Gate 1 clears the target.
+  See `lib/verdict.py`.
 
-Verdict *changes* become numbered advisories (MPA-YYYY-NNN) practitioners can
-cite in ATO packages and procurement memos.
+It surfaces the evidence three ways:
+
+- **A public site** — a dense verdict table with client-side search / filters /
+  pagination, per-target drift timelines, an assurance panel (live control
+  false-positive rate + the engine's hermetic eval), a transparency log with
+  Rekor inclusion links, methodology / FAQ / verify / policy pages, and RSS.
+- **A JSON API** (`api/`, FastAPI): `/api/verdicts` (filter + paginate),
+  `/api/targets/{name}`, `/api/advisories`, `/api/manifests`, `/api/model-changes`,
+  `/api/status`, `/api/search`, an SSE stream, and auto OpenAPI at `/api/docs`.
+- **Numbered advisories** (MPA-YYYY-NNN) practitioners can cite in ATO packages
+  and procurement memos.
+
+**Model-switch detection.** Beyond day-over-day drift, it records a served
+model changing identity: a `session_boundary` check for an intra-run swap, and an
+ingest of captured session transcripts (the engine's `transcript` analyzer) that
+surfaces mid-session identity flips as **model-switch alerts**, promotable to a
+numbered advisory. See `runner/ingest_transcripts.py` and `runner/promote.py`.
 
 ## Launch gates (nothing accusatory goes public until all pass)
 
@@ -78,13 +99,20 @@ probe tool →" nav link; the probe UI has an "Observatory →" link).
 
 | Path | Role |
 |------|------|
-| `targets.yaml` | Monitored targets; `public` gate + spend budget (U1/U2). Add one → [`docs/adding-targets.md`](docs/adding-targets.md) |
-| `runner/run.py` | Nightly runner — shells out to provenance-probe CLI (T7) |
-| `runner/advisory.py` | Drift → draft advisory in private staging → promotion |
-| `lib/verdict.py` | Two-tier split: neutral vs interpreted (T5) |
-| `lib/baseline.py` | Baseline lifecycle + UNSTABLE state machine (T9) |
-| `site/build.py` | Variant C Pages renderer (neutral-only until gated) |
-| `.github/workflows/observatory.yml` | Nightly cron; secrets posture |
+| `targets.yaml` | Monitored targets; `public` gate, `session_boundary` opt-in, spend budget. Add one → [`docs/adding-targets.md`](docs/adding-targets.md) |
+| `runner/run.py` | Nightly runner — probe, drift check, session-boundary check (all via the provenance-probe CLI) |
+| `runner/advisory.py` | Drift / model-switch → draft advisory in private staging → promotion (MPA-YYYY-NNN) |
+| `runner/ingest_transcripts.py` | Ingest captured sessions → model-switch alerts (two-tier) |
+| `runner/promote.py` | Maintainer CLI: promote a staged draft to a numbered public advisory |
+| `lib/verdict.py` | Two-tier split: neutral vs interpreted |
+| `lib/records.py` | Canonical readers for `data/` (shared by the site + API) |
+| `lib/baseline.py` | Baseline lifecycle + UNSTABLE state machine |
+| `lib/signing.py` | Manifest hashing + cosign keyless (Rekor) signing/verification |
+| `lib/feed.py` | Shared RSS builder (site + API) |
+| `api/` | Live JSON API (FastAPI): verdicts, targets, advisories, manifests, model-changes, status, search, SSE, OpenAPI. See [`api/README.md`](api/README.md) + [`api/DEPLOY.md`](api/DEPLOY.md) |
+| `site/build.py` | Static site renderer (Variant C): table, timelines, transparency log, advisories, policy pages |
+| `deploy/` | Fly.io + Render configs for the API |
+| `.github/workflows/observatory.yml` | Nightly cron: probe → ingest → sign → commit → site |
 
 ## Local dev
 
