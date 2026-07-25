@@ -47,6 +47,25 @@ def load_promoted_advisories(data_dir: str) -> dict[str, dict]:
     return latest
 
 
+def load_transcripts(data_dir: str) -> dict[str, dict]:
+    """target -> latest transcript-analysis record (mid-session model-switch
+    detection). Neutral event counts are always present; the interpreted
+    misrepresentation verdict is withheld for un-cleared targets (two-tier)."""
+    latest: dict[str, dict] = {}
+    for p in glob.glob(os.path.join(data_dir, "*", "*", "transcript.json")):
+        parts = p.split(os.sep)
+        target, dstr = parts[-3], parts[-2]
+        try:
+            with open(p) as f:
+                rec = json.load(f)
+        except (OSError, ValueError):
+            continue
+        rec["date"] = dstr
+        if target not in latest or dstr > latest[target].get("date", ""):
+            latest[target] = rec
+    return latest
+
+
 def _rekor_index(bundle_path: str) -> int | None:
     """Pull the Rekor transparency-log index out of a cosign bundle, if present.
 

@@ -58,6 +58,7 @@ class Store:
         self.records = _records.load_target_records(self.data_dir)
         self.promoted = _records.load_promoted_advisories(self.data_dir)
         self._manifests = _records.load_manifests(self.data_dir)
+        self.transcripts = _records.load_transcripts(self.data_dir)
         self._mbd = {m.get("date"): m for m in self._manifests}
 
     # -- item shaping --------------------------------------------------------
@@ -102,15 +103,35 @@ class Store:
 
     def target(self, name: str) -> dict | None:
         recs = self.records.get(name)
-        if not recs:
+        trec = self.transcripts.get(name)
+        if not recs and not trec:
             return None
-        item = self._item(name, recs)
-        item["history"] = [{"date": d, "fingerprint_id": r.get("fingerprint_id", ""),
-                            "drift_seen": bool(r.get("drift_seen")),
-                            "coverage": _coverage(r),
-                            "control_check": r.get("control_check")}
-                           for d, r in reversed(recs)]
+        if recs:
+            item = self._item(name, recs)
+            item["history"] = [{"date": d, "fingerprint_id": r.get("fingerprint_id", ""),
+                                "drift_seen": bool(r.get("drift_seen")),
+                                "coverage": _coverage(r),
+                                "control_check": r.get("control_check")}
+                               for d, r in reversed(recs)]
+        else:
+            item = {"target": name, "kind": "session-watch", "withheld": True,
+                    "provenance": None, "jurisdiction": None, "confidence": None}
+        if trec:
+            item["model_change_events"] = trec.get("model_change_events", [])
+            item["distinct_identities"] = trec.get("distinct_identities", [])
+            item["session_verdict"] = trec.get("verdict")
         return item
+
+    def model_switches(self) -> list:
+        """Targets with recorded mid-session model/identity switches."""
+        out = []
+        for t, r in sorted(self.transcripts.items()):
+            evs = r.get("model_change_events") or []
+            if evs:
+                out.append({"target": t, "events": evs,
+                            "distinct_identities": r.get("distinct_identities", []),
+                            "verdict": r.get("verdict")})
+        return out
 
     def advisories(self) -> list:
         return sorted(self.promoted.values(),
@@ -132,6 +153,8 @@ class Store:
             "active_aggregators": n_aggr,
             "drift_events": n_drift,
             "published_advisories": len(self.promoted),
+            "model_switch_alerts": sum(1 for r in self.transcripts.values()
+                                       if r.get("model_change_events")),
             "last_updated": latest.get("date"),
             "transparency_log_tree_head": latest.get("manifest_root"),
             "ok": True,

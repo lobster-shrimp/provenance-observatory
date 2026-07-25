@@ -157,3 +157,31 @@ def test_sse_stream_emits_status_event():
     assert r.headers["content-type"].startswith("text/event-stream")
     assert "event: status" in r.text and "data:" in r.text
     app_module._hits.clear()
+
+
+# --- transcript integration: model-switch endpoints -------------------------
+
+def test_model_changes_endpoint():
+    r = client.get("/api/model-changes")
+    assert r.status_code == 200 and "items" in r.json()
+
+
+def test_status_has_model_switch_alerts():
+    assert "model_switch_alerts" in client.get("/api/status").json()
+
+
+def test_store_target_includes_transcript(tmp_path):
+    import json as _json
+    from datetime import date as _date
+    d = tmp_path / "data" / "chat-z-ai-webapp" / _date.today().isoformat()
+    d.mkdir(parents=True)
+    (d / "transcript.json").write_text(_json.dumps(
+        {"model_change_events": [{"turn": 7, "from": "Google Gemini", "to": "GLM (Zhipu)",
+                                  "kind": "concession"}],
+         "distinct_identities": ["Google Gemini"], "verdict": {"withheld": True}}))
+    from api.store import Store
+    s = Store(str(tmp_path / "data"))
+    t = s.target("chat-z-ai-webapp")            # transcript-only target still resolves
+    assert t and t["model_change_events"][0]["to"] == "GLM (Zhipu)"
+    assert s.status()["model_switch_alerts"] == 1
+    assert s.model_switches()[0]["target"] == "chat-z-ai-webapp"

@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1.0",
+  "target": "chat-z-ai-webapp",
+  "turns_analyzed": 5,
+  "distinct_identities": [
+    "Google Gemini"
+  ],
+  "model_change_events": [
+    {
+      "turn": 7,
+      "from": "Google Gemini",
+      "to": "GLM (Zhipu)",
+      "kind": "concession"
+    }
+  ],
+  "event_count": 1,
+  "verdict": {
+    "withheld": true
+  }
+}

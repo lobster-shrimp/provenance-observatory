@@ -109,6 +109,12 @@ def advisories():
     return {"items": store.advisories()}
 
 
+@app.get("/api/model-changes", tags=["verdicts"])
+def model_changes():
+    """Targets observed switching model identity mid-session (transcript analysis)."""
+    return {"items": store.model_switches()}
+
+
 @app.get("/api/manifests", tags=["transparency"])
 def manifests():
     """The signed daily manifest chain (transparency log; roots verifiable via Rekor)."""

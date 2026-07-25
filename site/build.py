@@ -42,6 +42,7 @@ SPARK_DAYS = 7
 _load_target_records = _records.load_target_records
 _load_promoted_advisories = _records.load_promoted_advisories
 _manifests = _records.load_manifests
+_load_transcripts = _records.load_transcripts
 
 
 
@@ -155,7 +156,7 @@ def _slug(target: str) -> str:
 
 
 def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | None,
-                 *, now_iso: str, probe_url: str) -> str:
+                 *, now_iso: str, probe_url: str, transcript: dict | None = None) -> str:
     """Full drift timeline for one target: every dated run, fingerprint changes,
     control status, tokenizer coverage, and interpreted verdict (withheld unless
     cleared/promoted). The per-target drill-down the index table links to."""
@@ -207,6 +208,7 @@ def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | 
 {chr(10).join(trows) if trows else '<tr><td colspan="6" class="muted">No runs yet.</td></tr>'}
   </tbody>
 </table>
+{_model_change_section(transcript)}
 <footer><span>Neutral evidence, append-only. Interpreted verdicts withheld until
   Gate 1 clears the target.</span><span>Updated {html.escape(now_iso[:16])} UTC</span></footer>"""
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
@@ -860,6 +862,76 @@ _CSS = """
 """
 
 
+def _model_change_section(trec: dict | None) -> str:
+    """Detail-page section: recorded mid-session model/identity switches + verdict."""
+    if not trec:
+        return ""
+    events = trec.get("model_change_events") or []
+    v = trec.get("verdict") or {}
+    if v.get("withheld"):
+        verdict = ('<span class="withheld">verdict withheld</span> (interpreted '
+                   'misrepresentation call pending clearance)')
+    elif v.get("misrepresentation"):
+        verdict = (f'<span class="sev high">MISREPRESENTATION</span> '
+                   f'{html.escape(v.get("severity") or "")} &mdash; '
+                   f'{html.escape(v.get("finding") or "")}')
+    else:
+        verdict = '<span class="badge ok">no misrepresentation asserted</span>'
+    if events:
+        rows = "".join(
+            f'<tr><td class="mono small">turn {html.escape(str(e.get("turn")))}</td>'
+            f'<td class="mono">{html.escape(str(e.get("from")))} &rarr; '
+            f'{html.escape(str(e.get("to")))}</td>'
+            f'<td><span class="sev {"high" if e.get("kind")=="flip" else "medium"}">'
+            f'{html.escape(str(e.get("kind")))}</span></td></tr>' for e in events)
+        table = (f'<table><thead><tr><th>Where</th><th>Identity change</th><th>Kind</th>'
+                 f'</tr></thead><tbody>{rows}</tbody></table>')
+    else:
+        table = '<p class="muted">No mid-session identity change detected.</p>'
+    ids = ", ".join(html.escape(i) for i in (trec.get("distinct_identities") or [])) or "&mdash;"
+    return (f'<h2>Session model-change events</h2>'
+            f'<p class="small">Analyzed {html.escape(str(trec.get("turns_analyzed", 0)))} '
+            f'assistant turns &middot; identities claimed: {ids}</p>'
+            f'<div class="note">{verdict}</div>{table}')
+
+
+def _transcript_detail_page(target: str, trec: dict, *, now_iso: str) -> str:
+    """Standalone detail page for a transcript-only target (no probe record yet)."""
+    body = (f'<div class="topnav"><a href="../index.html">&larr; Observatory</a></div>'
+            f'<header><h1>{html.escape(target)}</h1>'
+            f'<p>session model-switch watch &middot; {html.escape(trec.get("date",""))}</p></header>'
+            f'{_model_change_section(trec)}'
+            f'<footer><span>Neutral evidence (what the model said) is published; the '
+            f'interpreted misrepresentation verdict is withheld until the target is '
+            f'cleared.</span></footer>')
+    return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            f'<title>{html.escape(target)} &middot; Provenance Observatory</title>'
+            f'<style>{_CSS}</style></head><body><div class="wrap">{body}</div></body></html>')
+
+
+def _model_switch_panel(transcripts: dict) -> str:
+    """Index panel listing targets with recorded mid-session model switches."""
+    hits = {t: r for t, r in transcripts.items() if (r.get("model_change_events"))}
+    if not hits:
+        return ""
+    rows = ""
+    for t, r in sorted(hits.items()):
+        v = r.get("verdict") or {}
+        badge = ('<span class="withheld">withheld</span>' if v.get("withheld")
+                 else f'<span class="sev high">misrepresentation</span>' if v.get("misrepresentation")
+                 else '<span class="badge ok">clean</span>')
+        ids = " &rarr; ".join(html.escape(str(e.get("to"))) for e in r["model_change_events"])
+        rows += (f'<tr><td class="mono"><a class="tlink" href="t/{_slug(t)}.html">{html.escape(t)}</a></td>'
+                 f'<td>{len(r["model_change_events"])}</td>'
+                 f'<td class="small">{html.escape(", ".join(r.get("distinct_identities") or []))} '
+                 f'&rArr; {ids}</td><td>{badge}</td></tr>')
+    return (f'<div class="note" style="border-left-color:#b42318"><b>Model-switch alerts</b> '
+            f'&mdash; endpoints observed changing model identity mid-session</div>'
+            f'<table><thead><tr><th>Target</th><th>Switches</th>'
+            f'<th>Identity</th><th>Verdict</th></tr></thead><tbody>{rows}</tbody></table>')
+
+
 def _nav(api_url: str, probe_url: str) -> str:
     """Top nav matching the design: STATUS badge, SEARCH, ABOUT, API, RSS."""
     return (f'<div class="nav"><span class="brand">PROVENANCE OBSERVATORY</span>'
@@ -938,16 +1010,18 @@ PAGE_SIZE = 25
 
 
 def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | None = None,
-           manifests: list[dict] | None = None) -> str:
+           manifests: list[dict] | None = None, transcripts: dict | None = None) -> str:
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
     api_url = os.environ.get("OBSERVATORY_API_URL", "http://127.0.0.1:8000")
     app_js = _APP_JS.replace("__API_URL__", api_url).replace("__PAGE_SIZE__", str(PAGE_SIZE))
     manifests = manifests or []
+    transcripts = transcripts or {}
     mbd = {m.get("date"): m for m in manifests}
     n_targets = len(records)
     n_aggregators = sum(1 for recs in records.values()
                         if recs and (recs[-1][1].get("target") or {}).get("kind") == "aggregator")
     n_drift = sum(1 for recs in records.values() if recs and recs[-1][1].get("drift_seen"))
+    n_switch = sum(1 for r in transcripts.values() if r.get("model_change_events"))
     rows = "\n".join(_row(t, recs, promoted.get(t), mbd) for t, recs in sorted(records.items()))
     return f"""<!doctype html>
 <html lang="en"><head>
@@ -967,9 +1041,11 @@ pending responsible disclosure and legal review (Gate 1). Verdicts are probabili
   <div class="stat"><b>{n_targets}</b><span>MONITORED TARGETS</span></div>
   <div class="stat"><b>{n_aggregators}</b><span>ACTIVE AGGREGATORS</span></div>
   <div class="stat"><b>{n_drift}</b><span>DRIFT EVENTS (LATEST)</span></div>
+  <div class="stat"><b>{n_switch}</b><span>MODEL-SWITCH ALERTS</span></div>
   <div class="stat"><b>{len(promoted)}</b><span>PUBLISHED ADVISORIES</span></div>
   <div class="stat"><b>{html.escape(now_iso[:16])}</b><span>LAST UPDATED (UTC)</span></div>
 </div>
+{_model_switch_panel(transcripts)}
 <div class="layout">
   <main>
   {_controls()}
@@ -1002,13 +1078,14 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     promoted = _load_promoted_advisories(data_dir)
     engine_eval = _load_engine_eval(data_dir)
     manifests = _manifests(data_dir)
+    transcripts = _load_transcripts(data_dir)
     now_iso = now_iso or datetime.utcnow().isoformat()
     os.makedirs(out_dir, exist_ok=True)
 
     out_path = os.path.join(out_dir, "index.html")
     with open(out_path, "w") as f:
-        f.write(render(records, promoted, now_iso=now_iso,
-                       engine_eval=engine_eval, manifests=manifests))
+        f.write(render(records, promoted, now_iso=now_iso, engine_eval=engine_eval,
+                       manifests=manifests, transcripts=transcripts))
 
     # Footer + nav content pages (real links, not dead spans).
     for fname, doc in (
@@ -1059,15 +1136,21 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
         with open(os.path.join(adir, f"{_slug(adv.get('advisory_id',''))}.html"), "w") as f:
             f.write(_advisory_page(adv))
 
-    # Per-target detail pages (drift timeline) under t/.
+    # Per-target detail pages (drift timeline + model-change events) under t/.
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
     tdir = os.path.join(out_dir, "t")
     os.makedirs(tdir, exist_ok=True)
     for target, recs in records.items():
-        page = _detail_page(target, recs, promoted.get(target),
-                            now_iso=now_iso, probe_url=probe_url)
+        page = _detail_page(target, recs, promoted.get(target), now_iso=now_iso,
+                            probe_url=probe_url, transcript=transcripts.get(target))
         with open(os.path.join(tdir, f"{_slug(target)}.html"), "w") as f:
             f.write(page)
+    # Targets with a captured transcript but no probe record yet (e.g. a web app).
+    for target, trec in transcripts.items():
+        if target in records:
+            continue
+        with open(os.path.join(tdir, f"{_slug(target)}.html"), "w") as f:
+            f.write(_transcript_detail_page(target, trec, now_iso=now_iso))
     return out_path
 
 
