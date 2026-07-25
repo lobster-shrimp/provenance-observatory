@@ -1054,22 +1054,34 @@ def _agent_panel(agent_records: dict) -> str:
         steps = rec.get("steps") or []
         endpoint = html.escape(rec.get("endpoint") or "")
         note = html.escape(rec.get("note") or "")
-        srows = "".join(
-            f'<tr><td class="mono small">{html.escape(s.get("echoed_model") or "&mdash;")}</td>'
-            f'<td>{_badge(s.get("provenance"))}</td>'
-            f'<td>{_badge(s.get("jurisdiction"))}'
-            + (f' <span class="small muted">{html.escape(s.get("jurisdiction_basis") or "")}</span>'
-               if s.get("jurisdiction_basis") else "")
-            + "</td></tr>"
-            for s in steps)
+        # Two-tier gate (same as the endpoint table): interpreted verdicts about a
+        # named target are withheld unless the record is cleared `public: true`.
+        # Neutral evidence (which models were probed) is shown either way.
+        published = bool(rec.get("public"))
+        if published:
+            head_verdict = f' &middot; {_badge(v.get("label"))} <span class="small muted">worst of {len(steps)} model(s)</span>'
+            srows = "".join(
+                f'<tr><td class="mono small">{html.escape(s.get("echoed_model")) or "&mdash;"}</td>'
+                f'<td>{_badge(s.get("provenance"))}</td>'
+                f'<td>{_badge(s.get("jurisdiction"))}'
+                + (f' <span class="small muted">{html.escape(s.get("jurisdiction_basis") or "")}</span>'
+                   if s.get("jurisdiction_basis") else "")
+                + "</td></tr>"
+                for s in steps)
+            table = (f'<table class="agent-tbl"><thead><tr><th>Model</th><th>Provenance</th>'
+                     f'<th>Jurisdiction</th></tr></thead><tbody>{srows}</tbody></table>')
+        else:
+            head_verdict = ' &middot; <span class="badge warn">VERDICT WITHHELD</span>'
+            models = ", ".join(html.escape(s.get("echoed_model") or "?") for s in steps) or "&mdash;"
+            table = (f'<p class="small">{len(steps)} model(s) probed &middot; '
+                     f'<span class="mono small muted">{models}</span></p>'
+                     f'<p class="small muted">Interpreted verdicts withheld pending '
+                     f'responsible disclosure and Gate-1 legal review.</p>')
         cards.append(
             f'<div class="agent-card"><div class="agent-head">'
             f'<b class="mono">{html.escape(target)}</b> <span class="small muted">{endpoint}</span>'
-            f' &middot; {_badge(v.get("label"))} '
-            f'<span class="small muted">worst of {len(steps)} model(s)</span></div>'
-            f'<p class="small muted">{note}</p>'
-            f'<table class="agent-tbl"><thead><tr><th>Model</th><th>Provenance</th>'
-            f'<th>Jurisdiction</th></tr></thead><tbody>{srows}</tbody></table></div>')
+            f'{head_verdict}</div>'
+            f'<p class="small muted">{note}</p>{table}</div>')
     return (f'<section class="agents"><h2>Agent &amp; platform assessments</h2>'
             f'<p class="muted small">Each platform\'s advertised models, active-probed. '
             f'Provenance is the model\'s weight origin; jurisdiction is who runs it '

@@ -1,24 +1,25 @@
 {
-  "schema_version": "0.1.0",
-  "kind": "agent",
+  "authorized": true,
   "captured_at": "2026-07-25T18:15:00Z",
-  "target": "control-openai",
   "endpoint": "api.openai.com",
+  "engine": "provenance-probe==0.5.0",
+  "kind": "agent",
   "model": "gpt-4o-mini",
   "observation": [
     "trace",
     "active-probe"
   ],
-  "engine": "provenance-probe==0.5.0",
-  "authorized": true,
+  "public": true,
+  "schema_version": "0.1.0",
+  "target": "control-openai",
   "verdict": {
-    "provenance_verdict": "NO EVIDENCE",
+    "alert": false,
     "jurisdiction_verdict": "UNLIKELY",
     "label": "UNLIKELY",
-    "worst_step_verdict": "UNLIKELY",
-    "steps": 1,
     "model_switches": [],
+    "provenance_verdict": "NO EVIDENCE",
+    "steps": 1,
     "switch_detected": false,
-    "alert": false
+    "worst_step_verdict": "UNLIKELY"
   }
 }

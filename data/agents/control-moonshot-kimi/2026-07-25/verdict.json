@@ -1,26 +1,27 @@
 {
-  "schema_version": "0.1.0",
-  "kind": "agent",
+  "authorized": true,
   "captured_at": "2026-07-25T18:15:00Z",
-  "target": "control-moonshot-kimi",
   "endpoint": "api.moonshot.ai",
+  "engine": "provenance-probe==0.5.0",
+  "jurisdiction_basis": "PRC-operator",
+  "kind": "agent",
   "model": "kimi-latest",
+  "note": "VERIFIED 2026-07-25: jurisdiction CONFIRMED is correct on PRC-OPERATOR grounds, not server-soil. api.moonshot.ai is a deliberate PRC_ENDPOINTS entry classified 'PRC-operator' (0.9), distinct from api.moonshot.cn ('PRC', 0.99). Live DNS resolves to Cloudflare (104.18.28.136/104.18.29.136, CLOUDFLARENET) \u2014 the endpoint is CDN-fronted, so geo-IP alone would read 'US' and miss it; the operator-attribution corpus catches that Moonshot AI (Beijing-domiciled) is the operator (NIL Art.7 exposure regardless of TLS termination). Not a false positive and not on-soil hosting.",
   "observation": [
     "trace",
     "active-probe"
   ],
-  "engine": "provenance-probe==0.5.0",
-  "authorized": true,
+  "public": true,
+  "schema_version": "0.1.0",
+  "target": "control-moonshot-kimi",
   "verdict": {
-    "provenance_verdict": "LIKELY",
+    "alert": true,
     "jurisdiction_verdict": "CONFIRMED",
     "label": "CONFIRMED",
-    "worst_step_verdict": "CONFIRMED",
-    "steps": 1,
     "model_switches": [],
+    "provenance_verdict": "LIKELY",
+    "steps": 1,
     "switch_detected": false,
-    "alert": true
-  },
-  "jurisdiction_basis": "PRC-operator",
-  "note": "VERIFIED 2026-07-25: jurisdiction CONFIRMED is correct on PRC-OPERATOR grounds, not server-soil. api.moonshot.ai is a deliberate PRC_ENDPOINTS entry classified 'PRC-operator' (0.9), distinct from api.moonshot.cn ('PRC', 0.99). Live DNS resolves to Cloudflare (104.18.28.136/104.18.29.136, CLOUDFLARENET) \u2014 the endpoint is CDN-fronted, so geo-IP alone would read 'US' and miss it; the operator-attribution corpus catches that Moonshot AI (Beijing-domiciled) is the operator (NIL Art.7 exposure regardless of TLS termination). Not a false positive and not on-soil hosting."
+    "worst_step_verdict": "CONFIRMED"
+  }
 }

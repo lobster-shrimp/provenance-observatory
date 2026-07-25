@@ -1,24 +1,25 @@
 {
-  "schema_version": "0.1.0",
-  "kind": "agent",
+  "authorized": true,
   "captured_at": "2026-07-25T18:15:00Z",
-  "target": "control-deepseek",
   "endpoint": "api.deepseek.com",
+  "engine": "provenance-probe==0.5.0",
+  "kind": "agent",
   "model": "deepseek-chat",
   "observation": [
     "trace",
     "active-probe"
   ],
-  "engine": "provenance-probe==0.5.0",
-  "authorized": true,
+  "public": true,
+  "schema_version": "0.1.0",
+  "target": "control-deepseek",
   "verdict": {
-    "provenance_verdict": "LIKELY",
+    "alert": true,
     "jurisdiction_verdict": "CONFIRMED",
     "label": "CONFIRMED",
-    "worst_step_verdict": "CONFIRMED",
-    "steps": 1,
     "model_switches": [],
+    "provenance_verdict": "LIKELY",
+    "steps": 1,
     "switch_detected": false,
-    "alert": true
+    "worst_step_verdict": "CONFIRMED"
   }
 }
