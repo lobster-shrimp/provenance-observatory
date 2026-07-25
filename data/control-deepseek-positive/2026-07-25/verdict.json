@@ -1,0 +1,226 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {},
+    "errors": {
+      "cjk_dense": "no usage field (HTTP 400)",
+      "cjk_mixed": "no usage field (HTTP 400)",
+      "jp_kana": "no usage field (HTTP 400)",
+      "ko_hangul": "no usage field (HTTP 400)",
+      "ws_runs": "no usage field (HTTP 400)",
+      "tabs_deep": "no usage field (HTTP 400)",
+      "digits_long": "no usage field (HTTP 400)",
+      "punct_repeat": "no usage field (HTTP 400)",
+      "emoji_zwj": "no usage field (HTTP 400)",
+      "rare_unicode": "no usage field (HTTP 400)",
+      "diacritics": "no usage field (HTTP 400)",
+      "arabic_hebrew": "no usage field (HTTP 400)",
+      "cyrillic": "no usage field (HTTP 400)",
+      "code_json": "no usage field (HTTP 400)",
+      "code_regex": "no usage field (HTTP 400)",
+      "url_paths": "no usage field (HTTP 400)",
+      "base64ish": "no usage field (HTTP 400)",
+      "md_table": "no usage field (HTTP 400)",
+      "mixed_script_cjk_code": "no usage field (HTTP 400)",
+      "newline_storm": "no usage field (HTTP 400)"
+    },
+    "meta": {},
+    "usable": false
+  },
+  "headers": {
+    "status": 400,
+    "server": "elb",
+    "echoed_model": null,
+    "vendor_headers": [
+      {
+        "header": "x-ds-trace-id",
+        "implies": "DeepSeek",
+        "value": "7f5aba065f03ffbdf2bb268b92bf5df0"
+      },
+      {
+        "header": "x-amz-cf-id",
+        "implies": "AWS CloudFront",
+        "value": "9C27l8UG23wk9YUywsco0qA6I1e-jNh0bnrTgJIIR-KWM0JrFnj8ag=="
+      }
+    ],
+    "header_names": [
+      "access-control-allow-credentials",
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "server",
+      "strict-transport-security",
+      "vary",
+      "via",
+      "x-amz-cf-id",
+      "x-amz-cf-pop",
+      "x-cache",
+      "x-content-type-options",
+      "x-ds-trace-id"
+    ],
+    "header_shape_hash": "5d534d89d3561354"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"The supported API model names are deepseek-v4-pro or deepseek-v4-flash, but you passed deepseek-chat.\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Failed to deserialize the JSON body into the target type: max_tokens: invalid value: integer `-5`, expected u32 at line 1 column 92\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "bad_model",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"The supported API model names are deepseek-v4-pro or deepseek-v4-flash, but you passed __nonexistent_model_probe__.\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "bad_role",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Failed to deserialize the JSON body into the target type: messages[0].role: unknown variant `wizard`, expected one of `system`, `user`, `assistant`, `tool`, `latest_reminder` at line 1 column 57\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"The supported API model names are deepseek-v4-pro or deepseek-v4-flash, but you passed deepseek-chat.\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"The supported API model names are deepseek-v4-pro or deepseek-v4-flash, but you passed deepseek-chat.\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_request_error\"}}"
+      }
+    ],
+    "error_signature": "7e102f585db88f5e"
+  },
+  "streaming": {
+    "chunk_count": 1,
+    "chunk_fields": [],
+    "final_usage_chunk": false,
+    "finish_reason": null,
+    "ttft_s": 0.3139
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.3261,
+      "median": 0.324,
+      "p10": 0.3164,
+      "p90": 0.3338,
+      "stdev": 0.0098
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.3261,
+      "median": 0.324,
+      "p10": 0.3164,
+      "p90": 0.3338,
+      "stdev": 0.0098
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.3261,
+      "median": 0.324,
+      "p10": 0.3164,
+      "p90": 0.3338,
+      "stdev": 0.0098
+    }
+  },
+  "network": {
+    "host": "api.deepseek.com",
+    "addresses": [
+      {
+        "ip": "3.173.21.63",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      }
+    ],
+    "findings": [
+      {
+        "type": "prc_endpoint",
+        "severity": "critical",
+        "detail": "Hostname matches known PRC-operated inference endpoint: DeepSeek"
+      }
+    ],
+    "jurisdiction": "PRC",
+    "operator": "DeepSeek",
+    "confidence": 0.99
+  },
+  "fingerprint_id": "ea82fff0b004b8eb54a8a91e",
+  "timestamp": "2026-07-25T05:50:37+00:00",
+  "target": {
+    "name": "control-deepseek-positive",
+    "base_url": "https://api.deepseek.com/v1",
+    "model": "deepseek-chat",
+    "api_style": "openai"
+  },
+  "drift_seen": false,
+  "verdict": {
+    "provenance": "INDETERMINATE",
+    "jurisdiction": "CONFIRMED",
+    "confidence": "low - insufficient evidence layers; do not report a verdict on this alone"
+  },
+  "control_check": {
+    "kind": "control-positive",
+    "top_model": null,
+    "top_score": null,
+    "top_origin": null,
+    "expected_family": "DeepSeek-V3",
+    "pass": false
+  }
+}
