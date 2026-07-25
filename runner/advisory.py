@@ -193,6 +193,43 @@ def on_drift(target_name: str, current_fp: str, evidence: dict,
             "notified_at": adv["notified_at"]}
 
 
+def on_model_switch(target_name: str, events: list, *, verdict: dict | None,
+                    summary: str, severity: str, target_public: bool,
+                    now: datetime | None = None) -> dict:
+    """A captured session showed the served model switching identity mid-session.
+
+    Opens a DRAFT advisory in staging (same disclosure pipeline as drift), keyed
+    to the switch signature so a repeat of the same switch dedups. The
+    interpreted misrepresentation verdict stays in staging until promotion.
+    """
+    now = _now(now)
+    sig = hashlib.sha256(json.dumps(events, sort_keys=True).encode()).hexdigest()[:8]
+    sid = f"{target_name}-{now.date().isoformat()}-switch-{sig}"
+    if os.path.exists(_advisory_path(target_name, sid)):
+        return {"action": "exists", "staging_id": sid, "target": target_name}
+    evidence = {"kind": "model_switch", "model_change_events": events,
+                "verdict": verdict, "summary": summary, "severity": severity}
+    evidence["evidence_manifest_sha256"] = evidence_manifest_sha256(evidence)
+    adv = {
+        "staging_id": sid, "target": target_name, "status": "draft",
+        "public": bool(target_public), "opened_at": now.isoformat(),
+        "notified_at": now.isoformat(),
+        "baseline_fingerprint": None, "current_fingerprint": None,
+        "evidence": evidence, "advisory_id": None,
+        "history": [{"ts": now.isoformat(), "event": "opened",
+                     "note": "mid-session model switch detected"}],
+    }
+    _write_advisory(target_name, adv)
+    with open(os.path.join(_target_dir(target_name), f"notice-{sid}.txt"), "w") as f:
+        f.write(f"Provenance Observatory — coordinated disclosure notice\n"
+                f"Target: {target_name}\nOpened: {adv['opened_at']}\n"
+                f"Finding: mid-session model-identity switch — {summary}\n"
+                f"Evidence manifest SHA-256: {evidence['evidence_manifest_sha256']}\n"
+                f"You have {DISCLOSURE_WINDOW_DAYS} days to respond before the "
+                f"interpreted verdict may be published.\n")
+    return {"action": "opened", "staging_id": sid, "target": target_name}
+
+
 def close_advisory(target_name: str, advisory_fingerprint: str,
                    *, now: datetime | None = None) -> dict:
     """Maintainer NORMAL close (resolved). Advances the pinned baseline."""
@@ -225,13 +262,14 @@ def _next_mpa_number(now: datetime) -> str:
 
 
 def promote(target_name: str, staging_id: str, *,
-            now: datetime | None = None) -> dict:
+            now: datetime | None = None, force_window: bool = False) -> dict:
     """Maintainer action: publish the interpreted verdict + advisory.
 
     Refuses unless (a) the target is public (Gate 1 cleared) AND (b) the
-    disclosure window has elapsed since notification. Assigns MPA-YYYY-NNN here,
-    so unpromoted drafts never consume a public number.
-    Returns the public advisory record to hand to the publish step (site/feed).
+    disclosure window has elapsed since notification. `force_window=True` is a
+    logged maintainer override of the window only (never the Gate-1 public
+    gate). Assigns MPA-YYYY-NNN here, so unpromoted drafts never consume a
+    public number. Returns the public advisory record to publish (site/feed).
     """
     now = _now(now)
     adv = _load_advisory(target_name, staging_id)
@@ -239,7 +277,7 @@ def promote(target_name: str, staging_id: str, *,
         raise PermissionError(
             f"{staging_id}: target not public (Gate 1 not cleared) — cannot promote")
     notified = datetime.fromisoformat(adv["notified_at"])
-    if now - notified < timedelta(days=DISCLOSURE_WINDOW_DAYS):
+    if now - notified < timedelta(days=DISCLOSURE_WINDOW_DAYS) and not force_window:
         remaining = timedelta(days=DISCLOSURE_WINDOW_DAYS) - (now - notified)
         raise PermissionError(
             f"{staging_id}: disclosure window not elapsed ({remaining.days}d left)")
@@ -247,25 +285,34 @@ def promote(target_name: str, staging_id: str, *,
         return _public_record(adv)   # idempotent: already promoted
     adv["advisory_id"] = _next_mpa_number(now)
     adv["status"] = "promoted"
-    adv["history"].append({"ts": now.isoformat(), "event": "promoted",
-                           "note": f"assigned {adv['advisory_id']}"})
+    note = f"assigned {adv['advisory_id']}"
+    if force_window and now - notified < timedelta(days=DISCLOSURE_WINDOW_DAYS):
+        note += " (maintainer override of disclosure window)"
+    adv["history"].append({"ts": now.isoformat(), "event": "promoted", "note": note})
     _write_advisory(target_name, adv)
     return _public_record(adv)
 
 
 def _public_record(adv: dict) -> dict:
     """The record safe to publish to the public feed after promotion."""
-    return {
+    ev = adv.get("evidence") or {}
+    rec = {
         "advisory_id": adv["advisory_id"],
         "target": adv["target"],
         "opened_at": adv["opened_at"],
         "promoted_at": adv["history"][-1]["ts"],
         "baseline_fingerprint": adv["baseline_fingerprint"],
         "current_fingerprint": adv["current_fingerprint"],
-        "evidence_manifest_sha256": adv["evidence"]["evidence_manifest_sha256"],
-        "verdict": adv["evidence"].get("verdict"),
-        "monitor_changes": adv["evidence"].get("monitor_changes"),
+        "evidence_manifest_sha256": ev.get("evidence_manifest_sha256"),
+        "verdict": ev.get("verdict"),
+        "monitor_changes": ev.get("monitor_changes"),
     }
+    # model-switch advisories carry their switch evidence for the site/feed.
+    if ev.get("kind") == "model_switch":
+        rec.update(kind="model_switch", summary=ev.get("summary"),
+                   severity=ev.get("severity"),
+                   model_change_events=ev.get("model_change_events"))
+    return rec
 
 
 __all__ = ["on_drift", "close_advisory", "promote", "load_state", "save_state",

@@ -1,0 +1,29 @@
+{
+  "advisory_id": "MPA-2026-001",
+  "target": "chat-z-ai-webapp",
+  "opened_at": "2026-07-25T13:27:14.865945+00:00",
+  "promoted_at": "2026-07-25T13:27:14.934578+00:00",
+  "baseline_fingerprint": null,
+  "current_fingerprint": null,
+  "evidence_manifest_sha256": "d1fdb3a586f09675b2eb307844f9b003466ccf1b583e1be2490e5723c46f53c1",
+  "verdict": {
+    "claimed": "Google Gemini",
+    "hard_evidence_origin": "CN",
+    "misrepresentation": true,
+    "severity": "critical",
+    "finding": "MATERIAL MISREPRESENTATION. The service asserts the persona 'Google Gemini' AND, when asked directly, denied that this conversation is subject to PRC jurisdiction (1/None probes). It justified the denial by citing 'Google' as its developer. Hard evidence shows a PRC-origin backend:  A user relying on that answer for a compliance decision would be materially misled. This is a false compliance assurance, not a hallucinated identity.",
+    "denial_count": 1
+  },
+  "monitor_changes": null,
+  "kind": "model_switch",
+  "summary": "served model switched identity mid-session to GLM (Zhipu) (claimed: Google Gemini)",
+  "severity": "high",
+  "model_change_events": [
+    {
+      "turn": 7,
+      "from": "Google Gemini",
+      "to": "GLM (Zhipu)",
+      "kind": "concession"
+    }
+  ]
+}

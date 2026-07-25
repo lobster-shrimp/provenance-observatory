@@ -486,16 +486,26 @@ def _rekor_cell(m: dict) -> str:
 def _advisory_page(adv: dict) -> str:
     sev = _severity_of(adv)
     aid = html.escape(adv.get("advisory_id", ""))
-    changes = adv.get("evidence", {}).get("monitor_changes") or []
-    ch = "".join(f'<li><b>{html.escape(c.get("severity",""))}</b> '
-                 f'{html.escape(c.get("field",""))}: {html.escape(c.get("detail",""))}</li>'
-                 for c in changes) or "<li>(no change detail recorded)</li>"
+    if adv.get("kind") == "model_switch" or adv.get("model_change_events"):
+        events = adv.get("model_change_events") or []
+        ch = "".join(
+            f'<li>turn {html.escape(str(e.get("turn")))}: '
+            f'<b>{html.escape(str(e.get("from")))} &rarr; {html.escape(str(e.get("to")))}</b> '
+            f'[{html.escape(str(e.get("kind")))}]</li>' for e in events
+        ) or "<li>(no switch detail recorded)</li>"
+        ev_title = "Evidence (mid-session model switch)"
+    else:
+        changes = (adv.get("evidence", {}) or {}).get("monitor_changes") or adv.get("monitor_changes") or []
+        ch = "".join(f'<li><b>{html.escape(c.get("severity",""))}</b> '
+                     f'{html.escape(c.get("field",""))}: {html.escape(c.get("detail",""))}</li>'
+                     for c in changes) or "<li>(no change detail recorded)</li>"
+        ev_title = "Evidence (what changed)"
     inner = f"""
 <p><span class="sev {sev}">{sev.upper()}</span> &middot; promoted
 {html.escape(adv.get("promoted_at","")[:10])} &middot; target
 <span class="mono">{html.escape(adv.get("target",""))}</span></p>
 <p>{html.escape(adv.get("summary") or adv.get("title") or "Verdict change advisory.")}</p>
-<h2>Evidence (what changed)</h2>
+<h2>{ev_title}</h2>
 <ul>{ch}</ul>
 <p class="small muted">Interpreted verdicts are published only for targets cleared
 through responsible disclosure and Gate-1 review.</p>"""

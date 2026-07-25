@@ -27,6 +27,9 @@ import sys
 import tempfile
 from datetime import date
 
+sys.path.insert(0, os.path.dirname(__file__))
+import advisory  # noqa: E402  (runner/ on path)
+
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 DATA_DIR = os.environ.get("OBSERVATORY_DATA_DIR", os.path.join(ROOT, "data"))
 TRANSCRIPTS_DIR = os.environ.get("OBSERVATORY_TRANSCRIPTS_DIR", os.path.join(ROOT, "transcripts"))
@@ -95,7 +98,8 @@ def ingest(transcripts_dir: str = TRANSCRIPTS_DIR, data_dir: str = DATA_DIR,
         except Exception as e:  # noqa: BLE001 — never let one target abort the run
             print(f"[warn] transcript ingest {target}: {e}")
             continue
-        rec = split(result, target=target, public=(target in public_targets))
+        is_public = target in public_targets
+        rec = split(result, target=target, public=is_public)
         out_dir = os.path.join(data_dir, target, today)
         os.makedirs(out_dir, exist_ok=True)
         path = os.path.join(out_dir, "transcript.json")
@@ -103,6 +107,22 @@ def ingest(transcripts_dir: str = TRANSCRIPTS_DIR, data_dir: str = DATA_DIR,
             json.dump(rec, f, indent=2)
         written.append(path)
         n = rec["event_count"]
+        # A switch opens a DRAFT advisory in the disclosure pipeline (promoted
+        # separately by a maintainer via runner/promote.py).
+        if n:
+            events = result["model_change_events"]
+            corr = result.get("correlation") or {}
+            to = events[-1].get("to")
+            summary = (f"served model switched identity mid-session to {to} "
+                       f"(claimed: {', '.join(result.get('distinct_identities') or []) or '?'})")
+            severity = "high" if corr.get("misrepresentation") else "medium"
+            try:
+                s = advisory.on_model_switch(target, events, verdict=corr or None,
+                                             summary=summary, severity=severity,
+                                             target_public=is_public)
+                print(f"  [advisory] {target}: {s.get('action')} {s.get('staging_id','')}".rstrip())
+            except Exception as e:  # noqa: BLE001
+                print(f"  [warn] advisory open failed for {target}: {e}")
         print(f"[ok] {target}: {n} model-change event(s) -> {path}")
     return written
 
