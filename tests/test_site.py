@@ -344,3 +344,30 @@ def test_rekor_index_none_when_unsigned(tmp_path):
         {"date": "2026-07-24", "entries": {}, "manifest_root": "r"}))
     ms = records.load_manifests(str(tmp_path / "data"))
     assert ms[0]["signed"] is False and ms[0]["rekor_log_index"] is None
+
+
+# --- Policy pages (Security / Privacy / Terms) + security.txt ----------------
+
+def test_policy_pages_generated_and_linked(tmp_path):
+    data = tmp_path / "data"
+    _write_verdict(str(data), "t1", "aggregator", {"fingerprint_id": "fp"})
+    out = tmp_path / "out"
+    build.build(str(data), str(out), now_iso="2026-07-24T00:00:00")
+    for p in ("security.html", "privacy.html", "terms.html"):
+        assert (out / p).exists(), p
+    idx = (out / "index.html").read_text()
+    for href in ("security.html", "privacy.html", "terms.html"):
+        assert f'href="{href}"' in idx                       # footer Policies links
+    # honest, accurate content (not fabricated legal claims)
+    assert "not proof" in (out / "terms.html").read_text()
+    assert "no cookies" in (out / "privacy.html").read_text().lower()
+    assert "Reporting a vulnerability" in (out / "security.html").read_text()
+
+
+def test_security_txt_generated(tmp_path):
+    out = tmp_path / "out"
+    build.build(str(tmp_path / "data"), str(out), now_iso="2026-07-24T00:00:00")
+    st = out / ".well-known" / "security.txt"
+    assert st.exists()
+    body = st.read_text()
+    assert body.startswith("Contact:") and "Expires:" in body
