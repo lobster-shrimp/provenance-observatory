@@ -31,6 +31,7 @@ targets:
     expect_family: "DeepSeek-V3"       # must match a DeepSeek family (CN)
     public: true
     authorized: true                   # own paid account
+    session_boundary: true             # P2: also check for an intra-session model swap
 
   - name: control-openai-negative
     kind: control-negative
@@ -41,6 +42,7 @@ targets:
     expect_not_origin: "CN"            # must come back NOT-Chinese (FP gate)
     public: true
     authorized: true                   # own paid account
+    session_boundary: true             # P2: also check for an intra-session model swap
 
   # --- Commercial aggregators (U1) — WITHHELD until Gate 1 counsel clears ---
   # Commercial targets are only probed when OBSERVATORY_PROBE_COMMERCIAL=1 AND

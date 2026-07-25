@@ -57,3 +57,17 @@ def test_webapp_needs_authorization_even_with_gate_on(monkeypatch):
     assert not ok and "authorized=false" in why
     ok2, _ = run.should_probe({**WEBAPP, "authorized": True})
     assert ok2                                               # both gates satisfied
+
+
+# --- P2 session-boundary gate + cost ----------------------------------------
+
+def test_session_boundary_gate():
+    assert run.session_boundary_enabled({"session_boundary": True}, {}) is True
+    assert run.session_boundary_enabled({}, {"session_boundary": True}) is True   # default
+    assert run.session_boundary_enabled({}, {}) is False
+
+
+def test_session_boundary_adds_probe_cost():
+    base = run.est_probe_count({"layers": ["tokenizer", "wire"]})
+    withb = run.est_probe_count({"layers": ["tokenizer", "wire"]}, {"session_boundary": True})
+    assert withb > base                                   # accounted for in the cap
