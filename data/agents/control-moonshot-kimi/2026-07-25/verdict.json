@@ -21,5 +21,6 @@
     "switch_detected": false,
     "alert": true
   },
-  "note": "jurisdiction CONFIRMED for api.moonshot.ai (.ai international endpoint) \u2014 verify real CN hosting vs over-broad network pattern before any named verdict"
+  "jurisdiction_basis": "PRC-operator",
+  "note": "VERIFIED 2026-07-25: jurisdiction CONFIRMED is correct on PRC-OPERATOR grounds, not server-soil. api.moonshot.ai is a deliberate PRC_ENDPOINTS entry classified 'PRC-operator' (0.9), distinct from api.moonshot.cn ('PRC', 0.99). Live DNS resolves to Cloudflare (104.18.28.136/104.18.29.136, CLOUDFLARENET) \u2014 the endpoint is CDN-fronted, so geo-IP alone would read 'US' and miss it; the operator-attribution corpus catches that Moonshot AI (Beijing-domiciled) is the operator (NIL Art.7 exposure regardless of TLS termination). Not a false positive and not on-soil hosting."
 }
