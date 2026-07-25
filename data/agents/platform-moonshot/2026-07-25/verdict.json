@@ -1,0 +1,105 @@
+{
+  "authorized": true,
+  "captured_at": "2026-07-25T19:45:00Z",
+  "endpoint": "api.moonshot.ai",
+  "engine": "provenance-probe==0.9.0",
+  "kind": "agent",
+  "note": "All 4 chat models probed for moonshot (cap 5); one step per model.",
+  "observation": [
+    "active-probe"
+  ],
+  "schema_version": "0.1.0",
+  "steps": [
+    {
+      "degraded": false,
+      "echoed_model": "kimi-k2.7-code",
+      "host": "https://api.moonshot.ai/v1",
+      "index": 0,
+      "jurisdiction": "CONFIRMED",
+      "jurisdiction_basis": "PRC-operator",
+      "kind": "model",
+      "name": "kimi-k2.7-code",
+      "parent_id": null,
+      "provenance": "CONFIRMED",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "kimi-k2.6",
+      "host": "https://api.moonshot.ai/v1",
+      "index": 1,
+      "jurisdiction": "CONFIRMED",
+      "jurisdiction_basis": "PRC-operator",
+      "kind": "model",
+      "name": "kimi-k2.6",
+      "parent_id": null,
+      "provenance": "CONFIRMED",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "kimi-k2.7-code-highspeed",
+      "host": "https://api.moonshot.ai/v1",
+      "index": 2,
+      "jurisdiction": "CONFIRMED",
+      "jurisdiction_basis": "PRC-operator",
+      "kind": "model",
+      "name": "kimi-k2.7-code-highspeed",
+      "parent_id": null,
+      "provenance": "CONFIRMED",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "kimi-k3",
+      "host": "https://api.moonshot.ai/v1",
+      "index": 3,
+      "jurisdiction": "CONFIRMED",
+      "jurisdiction_basis": "PRC-operator",
+      "kind": "model",
+      "name": "kimi-k3",
+      "parent_id": null,
+      "provenance": "CONFIRMED",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    }
+  ],
+  "target": "platform-moonshot",
+  "verdict": {
+    "alert": true,
+    "jurisdiction_verdict": "CONFIRMED",
+    "label": "CONFIRMED",
+    "model_switches": [
+      {
+        "at_step": 1,
+        "from": "kimi-k2.7-code",
+        "reason": "echoed_model",
+        "to": "kimi-k2.6"
+      },
+      {
+        "at_step": 2,
+        "from": "kimi-k2.6",
+        "reason": "echoed_model",
+        "to": "kimi-k2.7-code-highspeed"
+      },
+      {
+        "at_step": 3,
+        "from": "kimi-k2.7-code-highspeed",
+        "reason": "echoed_model",
+        "to": "kimi-k3"
+      }
+    ],
+    "ordering_incomplete": false,
+    "provenance_verdict": "CONFIRMED",
+    "steps": 4,
+    "switch_detected": true,
+    "worst_step_verdict": "CONFIRMED"
+  }
+}
