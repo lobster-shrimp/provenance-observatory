@@ -1,0 +1,85 @@
+{
+  "authorized": true,
+  "captured_at": "2026-07-26T00:00:00Z",
+  "endpoint": "api.anthropic.com",
+  "engine": "provenance-probe==0.9.1",
+  "kind": "agent",
+  "note": "All 3 callable chat models probed; tokenizer MEASURED.",
+  "observation": [
+    "active-probe"
+  ],
+  "public": true,
+  "schema_version": "0.1.0",
+  "steps": [
+    {
+      "degraded": false,
+      "echoed_model": "claude-opus-4-8",
+      "host": "https://api.anthropic.com",
+      "index": 0,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "claude-opus-4-8",
+      "parent_id": null,
+      "provenance": "NO EVIDENCE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "claude-sonnet-5",
+      "host": "https://api.anthropic.com",
+      "index": 1,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "claude-sonnet-5",
+      "parent_id": null,
+      "provenance": "NO EVIDENCE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "claude-opus-4-7",
+      "host": "https://api.anthropic.com",
+      "index": 2,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "claude-opus-4-7",
+      "parent_id": null,
+      "provenance": "NO EVIDENCE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    }
+  ],
+  "target": "platform-anthropic",
+  "verdict": {
+    "alert": true,
+    "jurisdiction_verdict": "UNLIKELY",
+    "label": "UNLIKELY",
+    "model_switches": [
+      {
+        "at_step": 1,
+        "from": "claude-opus-4-8",
+        "reason": "echoed_model",
+        "to": "claude-sonnet-5"
+      },
+      {
+        "at_step": 2,
+        "from": "claude-sonnet-5",
+        "reason": "echoed_model",
+        "to": "claude-opus-4-7"
+      }
+    ],
+    "ordering_incomplete": false,
+    "provenance_verdict": "NO EVIDENCE",
+    "steps": 3,
+    "switch_detected": true,
+    "worst_step_verdict": "UNLIKELY"
+  }
+}
