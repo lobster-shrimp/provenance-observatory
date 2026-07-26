@@ -1,0 +1,64 @@
+{
+  "authorized": true,
+  "captured_at": "2026-07-26T00:00:00Z",
+  "endpoint": "generativelanguage.googleapis.com",
+  "engine": "provenance-probe==0.9.1",
+  "kind": "agent",
+  "note": "All 2 callable chat models probed; tokenizer MEASURED.",
+  "observation": [
+    "active-probe"
+  ],
+  "public": true,
+  "schema_version": "0.1.0",
+  "steps": [
+    {
+      "degraded": false,
+      "echoed_model": "gemini-flash-latest",
+      "host": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "index": 0,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "gemini-flash-latest",
+      "parent_id": null,
+      "provenance": "INDETERMINATE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    },
+    {
+      "degraded": false,
+      "echoed_model": "gemini-flash-lite-latest",
+      "host": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "index": 1,
+      "jurisdiction": "UNLIKELY",
+      "jurisdiction_basis": "non-PRC-firstparty",
+      "kind": "model",
+      "name": "gemini-flash-lite-latest",
+      "parent_id": null,
+      "provenance": "INDETERMINATE",
+      "span_id": null,
+      "truncated": false,
+      "unordered": false
+    }
+  ],
+  "target": "platform-gemini",
+  "verdict": {
+    "alert": true,
+    "jurisdiction_verdict": "UNLIKELY",
+    "label": "INDETERMINATE",
+    "model_switches": [
+      {
+        "at_step": 1,
+        "from": "gemini-flash-latest",
+        "reason": "echoed_model",
+        "to": "gemini-flash-lite-latest"
+      }
+    ],
+    "ordering_incomplete": false,
+    "provenance_verdict": "INDETERMINATE",
+    "steps": 2,
+    "switch_detected": true,
+    "worst_step_verdict": "INDETERMINATE"
+  }
+}

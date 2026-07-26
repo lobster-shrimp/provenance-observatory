@@ -1061,7 +1061,7 @@ def _agent_panel(agent_records: dict) -> str:
         if published:
             head_verdict = f' &middot; {_badge(v.get("label"))} <span class="small muted">worst of {len(steps)} model(s)</span>'
             srows = "".join(
-                f'<tr><td class="mono small">{html.escape(s.get("echoed_model")) or "&mdash;"}</td>'
+                f'<tr><td class="mono small">{html.escape(s.get("echoed_model") or "") or "&mdash;"}</td>'
                 f'<td>{_badge(s.get("provenance"))}</td>'
                 f'<td>{_badge(s.get("jurisdiction"))}'
                 + (f' <span class="small muted">{html.escape(s.get("jurisdiction_basis") or "")}</span>'

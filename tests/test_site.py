@@ -63,6 +63,19 @@ def test_agent_panel_gates_verdict_on_public(tmp_path):
     assert "vendor-x" in doc
 
 
+def test_agent_panel_tolerates_missing_echoed_model(tmp_path):
+    # a step with no echoed model id must not crash the renderer (html.escape(None)).
+    data = tmp_path / "data"
+    rec = {"kind": "agent", "endpoint": "api.vendor.com", "public": True,
+           "verdict": {"label": "UNLIKELY", "provenance_verdict": "UNLIKELY",
+                       "jurisdiction_verdict": "UNLIKELY"},
+           "steps": [{"echoed_model": None, "provenance": "UNLIKELY",
+                      "jurisdiction": "UNLIKELY"}]}
+    _write_agent(str(data), "agent-noecho", rec)
+    doc = open(build.build(str(data), str(tmp_path / "out"), now_iso="2026-07-26T12:00:00")).read()
+    assert "agent-noecho" in doc and "&mdash;" in doc   # em-dash fallback for the blank cell
+
+
 def test_promoted_advisory_shows_verdict(tmp_path):
     data = tmp_path / "data"
     _write_verdict(str(data), "openrouter-neutral-endpoint", "aggregator",
