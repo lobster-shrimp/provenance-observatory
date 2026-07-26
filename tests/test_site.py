@@ -1,6 +1,6 @@
-"""Pages renderer: renders from data/, withholds interpreted verdicts until a
-promoted advisory exists, shows control checks, and never leaks raw verdict
-labels for un-promoted targets."""
+"""Pages renderer: renders the complete work from data/ (measurements AND the
+interpreted verdict, as collected — nothing withheld), shows control checks, and
+falls back to an em-dash only when a record genuinely carries no verdict."""
 import json
 import os
 import sys
@@ -18,7 +18,7 @@ def _write_verdict(data_dir, target, kind, rec):
         json.dump(rec, f)
 
 
-def test_renders_neutral_and_withholds_interpreted(tmp_path):
+def test_renders_measurements_and_no_verdict_em_dash(tmp_path):
     data = tmp_path / "data"
     _write_verdict(str(data), "openrouter-neutral-endpoint", "aggregator",
                    {"schema_version": "0.1.0", "fingerprint_id": "abc123def456",
@@ -31,10 +31,9 @@ def test_renders_neutral_and_withholds_interpreted(tmp_path):
     # an evidence-bundle link in its place — the approved design)
     detail = os.path.join(os.path.dirname(outp), "t", "openrouter-neutral-endpoint.html")
     assert "abc123def456"[:12] in open(detail).read()
-    # interpreted verdict withheld (no promoted advisory): the row carries no
-    # verdict (empty data-prov) and shows "withheld", never a CONFIRMED badge.
-    # ("CONFIRMED" now legitimately appears once as a filter dropdown option.)
-    assert "withheld" in doc
+    # this record genuinely carries no verdict: the row has empty data-prov and
+    # shows an em-dash (never a fabricated CONFIRMED badge). Full transparency
+    # never withholds a verdict that exists.
     assert 'data-prov=""' in doc
     assert 'data-prov="CONFIRMED"' not in doc
     assert '<span class="badge cn">CONFIRMED' not in doc
@@ -47,20 +46,23 @@ def _write_agent(data_dir, target, rec):
         json.dump(rec, f)
 
 
-def test_agent_panel_gates_verdict_on_public(tmp_path):
+def test_agent_panel_shows_verdict_regardless_of_public(tmp_path):
+    # Full transparency: every probed agent's per-model board and verdict are
+    # shown, whether or not the record carries a public flag. Nothing withheld.
     data = tmp_path / "data"
     base = {"kind": "agent", "endpoint": "api.vendor.com",
             "verdict": {"label": "CONFIRMED", "provenance_verdict": "CONFIRMED",
                         "jurisdiction_verdict": "CONFIRMED"},
             "steps": [{"echoed_model": "vendor-x", "provenance": "CONFIRMED",
                        "jurisdiction": "CONFIRMED", "jurisdiction_basis": "PRC"}]}
-    _write_agent(str(data), "agent-withheld", dict(base))                 # no public flag
-    _write_agent(str(data), "agent-cleared", {**base, "public": True})    # cleared
+    _write_agent(str(data), "agent-ungated", dict(base))                  # no public flag
+    _write_agent(str(data), "agent-flagged", {**base, "public": True})
     doc = open(build.build(str(data), str(tmp_path / "out"), now_iso="2026-07-21T12:00:00")).read()
     assert "Agent &amp; platform assessments" in doc
-    assert "agent-withheld" in doc and "VERDICT WITHHELD" in doc          # gated: no verdict badge
-    assert "agent-cleared" in doc                                        # cleared: model row shown
-    assert "vendor-x" in doc
+    assert "VERDICT WITHHELD" not in doc                                 # nothing is withheld
+    assert "agent-ungated" in doc and "agent-flagged" in doc             # both boards shown
+    assert "vendor-x" in doc                                             # model rows rendered
+    assert "CONFIRMED" in doc                                            # verdict badge shown
 
 
 def test_agent_panel_tolerates_missing_echoed_model(tmp_path):
@@ -182,12 +184,18 @@ def test_detail_page_marks_fingerprint_change():
     assert "&larr; Observatory" in html_out       # back link
 
 
-def test_detail_page_withholds_interpreted_for_ungated_target():
+def test_detail_page_shows_interpreted_verdict_as_collected():
+    # Full transparency: the interpreted verdict is shown on the detail page as
+    # collected, for any target — no Gate-1 gate, nothing withheld.
     records = [("2026-07-22", {"fingerprint_id": "x", "target": {"kind": "cn-direct"},
-                               "tokenizer": {"usable": True}})]
+                               "tokenizer": {"usable": True},
+                               "verdict": {"provenance": "CONFIRMED",
+                                           "jurisdiction": "CONFIRMED",
+                                           "confidence": "high"}})]
     html_out = build._detail_page("deepseek-direct", records, None,
                                   now_iso="2026-07-24T00:00", probe_url="http://x")
-    assert "withheld" in html_out                 # Gate-1: no leaked verdict
+    assert "CONFIRMED" in html_out                # verdict shown, not withheld
+    assert "VERDICT WITHHELD" not in html_out
 
 
 def test_build_writes_per_target_pages(tmp_path):

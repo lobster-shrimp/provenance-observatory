@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
-"""Drift -> advisory pipeline (design decisions T5 / T9 / publication gate).
+"""Drift -> advisory pipeline (full-transparency posture).
 
-Two-tier publication, made concrete:
+The observatory publishes its complete work as collected. Advisories carry the
+interpreted verdict + supporting evidence and are promoted immediately:
 
-  - Drift opens (or appends to) a DRAFT advisory in the PRIVATE staging area
-    (STAGING_DIR, outside the public repo). The interpreted verdict + evidence
-    live here and are NEVER committed to the public tree until promotion.
-  - The vendor is "notified" at detection time (a notice artifact is written to
-    staging with the evidence manifest hash; actual delivery is an ops step).
-  - A maintainer PROMOTES after the DISCLOSURE.md window AND target public=true.
-    The advisory number MPA-YYYY-NNN is assigned AT PROMOTION, so unpromoted
-    drafts leave no gaps in the public sequence.
+  - Drift opens (or appends to) a DRAFT advisory in the staging area
+    (STAGING_DIR). Drafts are a working area for deduping repeat drift into a
+    single open advisory; there is no withholding tier and no disclosure-window
+    delay before publication.
+  - The vendor is notified at detection time (a notice artifact is written with
+    the evidence manifest hash; actual delivery is an ops step). The notice
+    carries a standing correction/retraction offer — an operator can always
+    dispute and get a prominent correction.
+  - A maintainer PROMOTES the advisory, which assigns its number MPA-YYYY-NNN.
+    The number is assigned AT PROMOTION, so unpromoted drafts leave no gaps in
+    the public sequence.
 
 Dedup: one open advisory per target per unresolved change; repeat drift appends
 to the open advisory rather than opening a new one.
@@ -29,7 +33,7 @@ import json
 import os
 import sys
 from dataclasses import asdict
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from lib import baseline  # noqa: E402
@@ -37,7 +41,7 @@ from lib import baseline  # noqa: E402
 STAGING_DIR = os.environ.get(
     "OBSERVATORY_STAGING_DIR",
     os.path.join(os.path.expanduser("~"), ".provenance-observatory-staging"))
-DISCLOSURE_WINDOW_DAYS = 30
+DISCLOSURE_WINDOW_DAYS = 0   # full transparency: no withholding delay before publication
 
 
 # --- time (injectable for tests) -------------------------------------------
@@ -116,13 +120,14 @@ def _load_advisory(target_name: str, staging_id: str) -> dict:
 def _notify_vendor(target_name: str, adv: dict) -> None:
     """Write a disclosure notice artifact to staging (delivery is an ops step)."""
     notice = (
-        f"Provenance Observatory — coordinated disclosure notice\n"
+        f"Provenance Observatory — publication notice\n"
         f"Target: {target_name}\n"
         f"Opened: {adv['opened_at']}\n"
         f"Evidence manifest SHA-256: {adv['evidence']['evidence_manifest_sha256']}\n"
         f"Fingerprint: {adv['baseline_fingerprint']} -> {adv['current_fingerprint']}\n"
-        f"You have {DISCLOSURE_WINDOW_DAYS} days to respond before the interpreted "
-        f"verdict may be published. Reply to dispute or provide context.\n")
+        f"This finding and its interpreted verdict are published as collected, in "
+        f"full. You may dispute it at any time; a well-founded dispute is answered "
+        f"with a prominent, permanent correction/retraction appended to the log.\n")
     with open(os.path.join(_target_dir(target_name),
                            f"notice-{adv['staging_id']}.txt"), "w") as f:
         f.write(notice)
@@ -221,12 +226,14 @@ def on_model_switch(target_name: str, events: list, *, verdict: dict | None,
     }
     _write_advisory(target_name, adv)
     with open(os.path.join(_target_dir(target_name), f"notice-{sid}.txt"), "w") as f:
-        f.write(f"Provenance Observatory — coordinated disclosure notice\n"
+        f.write(f"Provenance Observatory — publication notice\n"
                 f"Target: {target_name}\nOpened: {adv['opened_at']}\n"
                 f"Finding: mid-session model-identity switch — {summary}\n"
                 f"Evidence manifest SHA-256: {evidence['evidence_manifest_sha256']}\n"
-                f"You have {DISCLOSURE_WINDOW_DAYS} days to respond before the "
-                f"interpreted verdict may be published.\n")
+                f"This finding and its interpreted verdict are published as "
+                f"collected, in full. You may dispute it at any time; a "
+                f"well-founded dispute is answered with a prominent, permanent "
+                f"correction/retraction appended to the log.\n")
     return {"action": "opened", "staging_id": sid, "target": target_name}
 
 
@@ -265,30 +272,20 @@ def promote(target_name: str, staging_id: str, *,
             now: datetime | None = None, force_window: bool = False) -> dict:
     """Maintainer action: publish the interpreted verdict + advisory.
 
-    Refuses unless (a) the target is public (Gate 1 cleared) AND (b) the
-    disclosure window has elapsed since notification. `force_window=True` is a
-    logged maintainer override of the window only (never the Gate-1 public
-    gate). Assigns MPA-YYYY-NNN here, so unpromoted drafts never consume a
-    public number. Returns the public advisory record to publish (site/feed).
+    Full transparency: promotion is unconditional — there is no public/Gate-1
+    gate and no disclosure-window delay. `force_window` is accepted for
+    call-site compatibility and is now a no-op. Assigns MPA-YYYY-NNN here, so
+    unpromoted drafts never consume a public number. Idempotent if already
+    promoted. Returns the public advisory record to publish (site/feed).
     """
     now = _now(now)
     adv = _load_advisory(target_name, staging_id)
-    if not adv.get("public"):
-        raise PermissionError(
-            f"{staging_id}: target not public (Gate 1 not cleared) — cannot promote")
-    notified = datetime.fromisoformat(adv["notified_at"])
-    if now - notified < timedelta(days=DISCLOSURE_WINDOW_DAYS) and not force_window:
-        remaining = timedelta(days=DISCLOSURE_WINDOW_DAYS) - (now - notified)
-        raise PermissionError(
-            f"{staging_id}: disclosure window not elapsed ({remaining.days}d left)")
     if adv.get("advisory_id"):
         return _public_record(adv)   # idempotent: already promoted
     adv["advisory_id"] = _next_mpa_number(now)
     adv["status"] = "promoted"
-    note = f"assigned {adv['advisory_id']}"
-    if force_window and now - notified < timedelta(days=DISCLOSURE_WINDOW_DAYS):
-        note += " (maintainer override of disclosure window)"
-    adv["history"].append({"ts": now.isoformat(), "event": "promoted", "note": note})
+    adv["history"].append({"ts": now.isoformat(), "event": "promoted",
+                           "note": f"assigned {adv['advisory_id']}"})
     _write_advisory(target_name, adv)
     return _public_record(adv)
 

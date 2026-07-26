@@ -1,15 +1,16 @@
 # Provenance Observatory — monitored targets
 #
-# Decisions encoded here (see docs/ARCHITECTURE.md):
-#   U1: first public targets are OpenRouter + Together, behavioral layer OFF.
-#       Both stay `public: false` until Gate 1 (legal) clears named-vendor
-#       verdicts — see the counsel questions in the provenance-probe repo's
-#       docs/tos-notes.md. Controls carry zero ToS risk and prove the pipeline.
-#   Behavioral (red-teaming) probes are OFF on every commercial target.
+# Full-transparency posture (see docs/ARCHITECTURE.md and DISCLOSURE.md):
+# everything the observatory probes is published in full — the measurements
+# AND the interpreted provenance/jurisdiction verdict, together, as collected,
+# in an append-only signed log — so consumers can see exactly how each verdict
+# was reached. There is no withholding tier and no disclosure-window delay.
+# Behavioral (red-teaming) probes remain OFF on every commercial target.
 #
-# `public` gates whether an interpreted verdict for this target may be
-# promoted to the public feed. Neutral evidence is always logged; the
-# interpreted verdict is withheld while public=false (two-tier publication).
+# `authorized` still gates whether a target is actively probed at all: a target
+# is only reached over the network when authorized=true (and, for commercial
+# targets, OBSERVATORY_PROBE_COMMERCIAL=1). `public` no longer gates anything —
+# whatever is probed is published in full — and is kept true for all targets.
 
 defaults:
   layers: [tokenizer, wire, latency]   # behavioral deliberately excluded
@@ -44,18 +45,18 @@ targets:
     authorized: true                   # own paid account
     session_boundary: true             # P2: also check for an intra-session model swap
 
-  # --- Commercial aggregators (U1) — WITHHELD until Gate 1 counsel clears ---
+  # --- Commercial aggregators -----------------------------------------------
   # Commercial targets are only probed when OBSERVATORY_PROBE_COMMERCIAL=1 AND
-  # authorized=true. Default runs probe CONTROLS ONLY — no named vendor is
-  # touched before Gate 1 counsel clears it.
+  # authorized=true. Default runs probe CONTROLS ONLY. Whatever IS probed is
+  # published in full (measurements + interpreted verdict).
   - name: openrouter-neutral-endpoint
     kind: aggregator
     base_url: "https://openrouter.ai/api/v1"
     model: "MODEL_ID_TBD"
     api_style: openai
     auth_env: "OPENROUTER_API_KEY"
-    public: false                      # blocked on Gate 1 legal sign-off
-    authorized: false                  # flip only after counsel clears; needs commercial gate too
+    public: true
+    authorized: false                  # not actively probed until authorized
     notes: "OpenRouter bans red-teaming w/o approval; behavioral stays off."
 
   - name: together-neutral-endpoint
@@ -64,9 +65,9 @@ targets:
     model: "MODEL_ID_TBD"
     api_style: openai
     auth_env: "TOGETHER_API_KEY"
-    public: false                      # blocked on Gate 1; Together bans benchmarking
-    authorized: false
-    notes: "Together ToS explicitly bans benchmarking — highest legal risk."
+    public: true
+    authorized: false                  # not actively probed until authorized
+    notes: "Together ToS explicitly bans benchmarking — probe only if authorized."
 
   - name: fireworks-neutral-endpoint
     kind: aggregator
@@ -74,7 +75,7 @@ targets:
     model: "MODEL_ID_TBD"
     api_style: openai
     auth_env: "FIREWORKS_API_KEY"
-    public: false
+    public: true
     authorized: false
     notes: "Neutral aggregator — jurisdiction resolves, provenance open. Watch for CN models."
 
@@ -84,56 +85,56 @@ targets:
     model: "MODEL_ID_TBD"
     api_style: openai
     auth_env: "DEEPINFRA_API_KEY"
-    public: false
+    public: true
     authorized: false
     notes: "Neutral aggregator; hosts many open weights incl. CN families."
 
   # --- First-party frontier APIs (US) — low-risk negative-monitoring refs ----
-  # Verdicts here are non-adverse ("serves a US model"), but still gated until
-  # Gate 1 confirms the publishing posture. Useful as always-should-be-US refs.
+  # Verdicts here are non-adverse ("serves a US model"). Useful as
+  # always-should-be-US references.
   - name: openai-frontier
     kind: first-party
     base_url: "https://api.openai.com/v1"
     model: "gpt-4o-mini"
     api_style: openai
     auth_env: "OPENAI_API_KEY"
-    public: false
-    authorized: false
+    public: true
+    authorized: true                   # own paid account
     notes: "US reference. Tokenizer o200k is in the reference set (clean fingerprint)."
 
   - name: anthropic-frontier
     kind: first-party
     base_url: "https://api.anthropic.com/v1"
     chat_path: "/messages"
-    model: "claude-3-5-haiku-20241022"
+    model: "claude-opus-4-8"
     api_style: anthropic
     auth_env: "ANTHROPIC_API_KEY"
-    public: false
-    authorized: false
-    notes: "US reference. Tokenizer not published — expect behavioral/network signal only."
+    public: true
+    authorized: true                   # own paid account
+    notes: "US reference. Claude tokenizer now in the reference set (live-measured) — expect provenance NO EVIDENCE."
 
   # --- Known CN-direct endpoints — positive references / the actual mission ---
-  # These are the family the observatory exists to track. Probing/publishing
-  # about them is exactly what Gate 1 must clear (see tos-notes.md).
+  # These are the family the observatory exists to track. Whatever is probed is
+  # published in full (measurements + interpreted verdict).
   - name: deepseek-direct
     kind: cn-direct
     base_url: "https://api.deepseek.com/v1"
     model: "deepseek-chat"
     api_style: openai
     auth_env: "DEEPSEEK_API_KEY"
-    public: false
-    authorized: false
+    public: true
+    authorized: true                   # own paid account
     notes: "PRC-domiciled operator; DeepSeek tokenizer in reference. Expect CONFIRMED CN."
 
   - name: moonshot-direct
     kind: cn-direct
-    base_url: "https://api.moonshot.cn/v1"
-    model: "moonshot-v1-8k"
+    base_url: "https://api.moonshot.ai/v1"
+    model: "kimi-k2.6"
     api_style: openai
     auth_env: "MOONSHOT_API_KEY"
-    public: false
-    authorized: false
-    notes: "PRC operator (.cn); Moonshot/Kimi tokenizer in reference."
+    public: true
+    authorized: true                   # own paid account (api.moonshot.ai)
+    notes: "Moonshot AI (Beijing-domiciled) operator via api.moonshot.ai — CDN-fronted, so PRC-operator jurisdiction; Moonshot/Kimi tokenizer in reference."
 
   # --- Web-app / platform tool (template adapter) ---------------------------
   # chat.z.ai: a GLM backend that asserts a Google Gemini persona.
@@ -152,8 +153,8 @@ targets:
   #      an Actions secret ZAI_COOKIE — set it yourself, never paste it here).
   #   3. Only with written authorization to probe the service, set
   #      authorized: true AND run with OBSERVATORY_PROBE_COMMERCIAL=1.
-  # Stays public: false regardless — no interpreted named-vendor verdict ships
-  # until Gate 1 counsel clears it (verdict withheld; neutral evidence only).
+  # Whatever is probed is published in full (measurements + interpreted
+  # verdict); `authorized` alone gates whether it is probed at all.
   - name: chat-z-ai-webapp
     kind: webapp
     base_url: "https://chat.z.ai"
@@ -171,9 +172,66 @@ targets:
     response_prompt_tokens_path: "usage.prompt_tokens"
     response_model_path: "model"
     confront_as: "Zhipu GLM"
-    public: false          # Gate 1: verdict withheld, neutral evidence only
+    public: true
     authorized: false      # flip only with written authorization to probe it
     notes: "GLM-behind-Gemini-persona web app. Nightly = neutral drift watch (deception OFF); expect degraded coverage if usage is suppressed."
+
+  # --- Requested AI web apps / agent platforms (watch list) -----------------
+  # Added to the watch list per request. These are third-party authenticated web
+  # apps, NOT owned accounts, so they are NOT probed here: each needs (1) written
+  # authorization to probe, (2) a real chat request captured from the browser
+  # (DevTools → Network) to fill chat_path + request_template + response paths,
+  # and (3) the session cookie in the named env var. Until all three exist they
+  # stay authorized:false and are skipped. The tokenizer fingerprint only works
+  # if the app exposes usage.prompt_tokens; many web apps suppress it, in which
+  # case coverage degrades to wire+latency+behavioral (see adding-sources.md).
+  - name: lindy-chat-webapp
+    kind: webapp
+    base_url: "https://chat.lindy.ai"
+    chat_path: "CAPTURE_TBD"           # capture from DevTools → Network
+    api_style: template
+    cookie_env: "LINDY_COOKIE"
+    request_template: {}               # fill from a captured request
+    response_text_path: ""
+    response_prompt_tokens_path: ""
+    response_model_path: ""
+    public: true
+    authorized: false                  # third-party; needs written auth + capture + cookie
+    notes: "Lindy AI agent platform. Assessable IF it exposes an LLM chat call with usage; needs a captured request + LINDY_COOKIE before probing."
+
+  - name: replit-agent-webapp
+    kind: webapp
+    base_url: "https://replit.com"
+    chat_path: "CAPTURE_TBD"
+    api_style: template
+    cookie_env: "REPLIT_COOKIE"
+    request_template: {}
+    response_text_path: ""
+    response_prompt_tokens_path: ""
+    response_model_path: ""
+    public: true
+    authorized: false
+    notes: "Replit AI / Agent. LLM-backed; needs a captured Agent request + REPLIT_COOKIE. Expect degraded coverage if usage is suppressed."
+
+  - name: base44-webapp
+    kind: webapp
+    base_url: "https://base44.com"
+    chat_path: "CAPTURE_TBD"
+    api_style: template
+    cookie_env: "BASE44_COOKIE"
+    request_template: {}
+    response_text_path: ""
+    response_prompt_tokens_path: ""
+    response_model_path: ""
+    public: true
+    authorized: false
+    notes: "Base44 AI app builder. LLM-backed; needs a captured request + BASE44_COOKIE before probing."
+
+  # Requested but OUT OF SCOPE for this method (no LLM text / prompt-token
+  # surface to fingerprint): ElevenLabs (voice/TTS) and Runway (video gen). This
+  # provenance method fingerprints an LLM text endpoint via tokenizer/wire/
+  # latency; it does not apply to audio/video models. If either ships an LLM
+  # chat/agent surface, add it as a webapp target above once a request is captured.
 
   # --- Continuous agent monitoring (E2/E3) --------------------------------
   # A target with an `agent_trace` is assessed nightly by the engine's agent
@@ -184,7 +242,7 @@ targets:
   # OTel-GenAI / minimal-JSON trace of the authorized agent run.
   # - name: acme-copilot
   #   agent_trace: traces/acme-copilot/latest.json
-  #   public: false        # Gate 1: verdict withheld until cleared
+  #   public: true         # full transparency: published in full when probed
   #   authorized: false    # flip only with written authorization
 
 # Monthly spend ceiling across all targets (U2). Runner aborts to a

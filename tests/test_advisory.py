@@ -1,5 +1,6 @@
-"""Advisory pipeline: draft/dedup/UNSTABLE, disclosure-window gating, promotion
-numbering, and the two-tier boundary (interpreted evidence stays private).
+"""Advisory pipeline: draft/dedup/UNSTABLE, immediate promotion, and MPA
+numbering. Full transparency: promotion is unconditional (no public/Gate-1 gate
+and no disclosure-window delay).
 """
 import os
 import sys
@@ -66,25 +67,36 @@ def test_close_advisory_advances_baseline(staging):
     assert st.status == "STABLE" and st.pinned_baseline == "fp1"
 
 
-def test_promote_refused_when_not_public(staging):
+def test_promote_succeeds_regardless_of_public_flag(staging):
+    # Full transparency: the public flag no longer gates promotion.
     advisory.save_state(T, baseline.TargetState(pinned_baseline="fp0"))
     r = advisory.on_drift(T, "fp1", EVID, target_public=False, now=NOW)
-    with pytest.raises(PermissionError, match="not public"):
-        advisory.promote(T, r["staging_id"], now=NOW + timedelta(days=40))
+    pub = advisory.promote(T, r["staging_id"], now=NOW)
+    assert pub["advisory_id"] == "MPA-2026-001"
+    assert pub["verdict"]["provenance_risk"]["verdict"] == "CONFIRMED"
 
 
-def test_promote_refused_before_window(staging):
+def test_promote_succeeds_immediately_no_window(staging):
+    # No disclosure-window delay: promotion works right away.
     r = advisory.on_drift(T, "fp1", EVID, target_public=True, now=NOW)
-    with pytest.raises(PermissionError, match="window not elapsed"):
-        advisory.promote(T, r["staging_id"], now=NOW + timedelta(days=5))
+    pub = advisory.promote(T, r["staging_id"], now=NOW)
+    assert pub["advisory_id"] == "MPA-2026-001"
+    assert pub["verdict"]["provenance_risk"]["verdict"] == "CONFIRMED"
 
 
-def test_promote_assigns_number_after_window(staging):
+def test_promote_assigns_number(staging):
     r = advisory.on_drift(T, "fp1", EVID, target_public=True, now=NOW)
-    pub = advisory.promote(T, r["staging_id"], now=NOW + timedelta(days=31))
+    pub = advisory.promote(T, r["staging_id"], now=NOW)
     assert pub["advisory_id"] == "MPA-2026-001"
     assert pub["verdict"]["provenance_risk"]["verdict"] == "CONFIRMED"
     assert "evidence_manifest_sha256" in pub
+
+
+def test_promote_is_idempotent(staging):
+    r = advisory.on_drift(T, "fp1", EVID, target_public=True, now=NOW)
+    pub1 = advisory.promote(T, r["staging_id"], now=NOW)
+    pub2 = advisory.promote(T, r["staging_id"], now=NOW + timedelta(days=1))
+    assert pub1["advisory_id"] == pub2["advisory_id"] == "MPA-2026-001"
 
 
 def test_drafts_do_not_consume_advisory_numbers(staging):
@@ -93,7 +105,7 @@ def test_drafts_do_not_consume_advisory_numbers(staging):
     advisory.save_state("t-b", baseline.TargetState(pinned_baseline="fp0"))
     advisory.on_drift("t-a", "fpX", EVID, target_public=True, now=NOW)
     rb = advisory.on_drift("t-b", "fpY", EVID, target_public=True, now=NOW)
-    pub = advisory.promote("t-b", rb["staging_id"], now=NOW + timedelta(days=31))
+    pub = advisory.promote("t-b", rb["staging_id"], now=NOW)
     assert pub["advisory_id"] == "MPA-2026-001"   # t-a's unpromoted draft consumed nothing
 
 
@@ -108,21 +120,21 @@ def test_model_switch_opens_draft_and_promotes(staging):
                                  summary="switched to GLM (Zhipu)", severity="high",
                                  target_public=True, now=NOW)
     assert s["action"] == "opened"
-    # window not elapsed -> refused without override
-    with pytest.raises(PermissionError):
-        advisory.promote("chat-z-ai-webapp", s["staging_id"], now=NOW)
-    rec = advisory.promote("chat-z-ai-webapp", s["staging_id"], now=NOW, force_window=True)
+    # full transparency: promotes immediately, no window to wait out
+    rec = advisory.promote("chat-z-ai-webapp", s["staging_id"], now=NOW)
     assert rec["advisory_id"].startswith("MPA-")
     assert rec["kind"] == "model_switch" and rec["severity"] == "high"
     assert rec["model_change_events"][0]["to"] == "GLM (Zhipu)"
 
 
-def test_model_switch_refuses_promotion_when_not_public(staging):
+def test_model_switch_promotes_regardless_of_public_flag(staging):
+    # The public flag no longer gates promotion under full transparency.
     s = advisory.on_model_switch("some-webapp", SWITCH, verdict=None,
                                  summary="switch", severity="medium",
                                  target_public=False, now=NOW)
-    with pytest.raises(PermissionError):
-        advisory.promote("some-webapp", s["staging_id"], now=NOW, force_window=True)
+    rec = advisory.promote("some-webapp", s["staging_id"], now=NOW)
+    assert rec["advisory_id"].startswith("MPA-")
+    assert rec["kind"] == "model_switch"
 
 
 def test_model_switch_dedups(staging):

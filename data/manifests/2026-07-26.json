@@ -4,8 +4,12 @@
   "entries": {
     "agents/platform-anthropic/2026-07-26/verdict.json": "52abfbdc90de97698bd822d4467923e800f74b77fd9762c67c8a5977a841e740",
     "agents/platform-gemini/2026-07-26/verdict.json": "e27666162239a9178b4f2df6810bd53dd2ac0d48ae1f3ea6011973f439f5325a",
+    "anthropic-frontier/2026-07-26/verdict.json": "80e8dc86176ef92aa6cdfdcbcafe365de47fc751abadecaa44a14f8f25e857c0",
     "control-deepseek-positive/2026-07-26/verdict.json": "316fcb729346efcfab05744501fbd9ec325d0f080a4e028ad207a74778c89afe",
-    "control-openai-negative/2026-07-26/verdict.json": "fce034c8f54eda8ca26bf9fb5ccb965f613019a9beebf787a5d1846fb01838e9"
+    "control-openai-negative/2026-07-26/verdict.json": "fce034c8f54eda8ca26bf9fb5ccb965f613019a9beebf787a5d1846fb01838e9",
+    "deepseek-direct/2026-07-26/verdict.json": "75bc793ec14f37fb928dec192af42338fe3e418487ded9e2a6a02165710c8547",
+    "moonshot-direct/2026-07-26/verdict.json": "07cfeafda06f7c0528ac41f6dc7451b3874dfe8b611a8d0de6ef8225e6173f8e",
+    "openai-frontier/2026-07-26/verdict.json": "3df4c8d2b297973ac65b82a6c8480d2bf46a1bf0c1438e6f41255c5b3cf010b6"
   },
-  "manifest_root": "29b8d91bb924a01f6f19edb7d71d48edae9fe087b1595b2f13428a1c5e177900"
+  "manifest_root": "b4662066a3d0356c5042aad4821383a5f4f66daaa6515dfa254f899c1c16cb2e"
 }
