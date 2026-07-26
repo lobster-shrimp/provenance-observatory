@@ -15,6 +15,8 @@
   ],
   "event_count": 1,
   "verdict": {
-    "withheld": true
+    "misrepresentation": true,
+    "severity": "critical",
+    "finding": "MATERIAL MISREPRESENTATION. The service asserts the persona 'Google Gemini' AND, when asked directly, denied that this conversation is subject to PRC jurisdiction (1/None probes). It justified the denial by citing 'Google' as its developer. Hard evidence shows a PRC-origin backend:  A user relying on that answer for a compliance decision would be materially misled. This is a false compliance assurance, not a hallucinated identity."
   }
 }
