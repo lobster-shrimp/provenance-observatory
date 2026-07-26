@@ -1,51 +1,45 @@
-"""Two-tier verdict handling (design decision T5 / U1).
+"""Verdict record assembly — FULL-TRANSPARENCY posture.
 
-The observatory publishes MEASUREMENTS immediately but GATES ACCUSATIONS.
+The observatory publishes its complete work as collected: the measurements AND
+the interpreted verdict, together, so consumers can see exactly how every
+verdict was reached and judge confidence for themselves. There is no
+withholding tier and no disclosure-window delay — accuracy is served by
+transparency plus the accuracy safeguards elsewhere (known-answer + negative
+controls, a published false-positive rate, per-verdict confidence labels, and
+prominent corrections/retractions), not by hiding evidence.
 
-- Neutral evidence (token counts, headers, latency, fingerprint hash, the fact
-  that drift occurred) is public the moment it's collected.
-- The interpreted verdict (CONFIRMED/LIKELY jurisdiction + provenance labels
-  and their `meaning` strings) is an accusation about a named operator. It is
-  withheld until the responsible-disclosure window has run and the target is
-  cleared for public accusatory verdicts (`public: true`).
-
-This module is the single place that splits a provenance-probe bundle into the
-public tier and the gated tier, so the split can never drift between the runner
-and the site.
+`split()` is retained as the single record-assembly point so the runner and the
+site never drift. It now returns a fully-populated public record; the second
+tuple element is kept only for backward compatibility with existing callers.
 """
 from __future__ import annotations
 
 SCHEMA_VERSION = "0.1.0"  # stable field names; bump on any breaking change
 
-# Keys in a provenance-probe bundle that are neutral measurement, safe to
-# publish immediately.
+# Measurement evidence.
 _NEUTRAL_KEYS = ("tokenizer", "headers", "errors", "streaming", "latency",
                  "network", "fingerprint_id", "timestamp", "target")
 
-# Keys that carry an interpretation/accusation and are gated.
+# Interpretation of that evidence. Published alongside it (full transparency),
+# not withheld — a verdict without its supporting work is less trustworthy, not
+# more.
 _INTERPRETED_KEYS = ("score", "user_warning", "tokenizer_match", "deception")
 
 
-def split(bundle: dict, *, target_public: bool) -> tuple[dict, dict]:
+def split(bundle: dict, *, target_public: bool = True) -> tuple[dict, dict]:
     """Return (public_record, gated_record).
 
-    public_record is always safe to commit to the public log. gated_record
-    holds the interpreted verdict; it is only merged into the public feed
-    after the disclosure window AND target_public is True.
+    Full transparency: the public record carries every measurement AND the
+    interpreted verdict. `target_public` is accepted for call-site compatibility
+    but no longer withholds anything — nothing is gated.
     """
     public_record = {"schema_version": SCHEMA_VERSION}
-    for k in _NEUTRAL_KEYS:
+    for k in _NEUTRAL_KEYS + _INTERPRETED_KEYS:
         if k in bundle:
             public_record[k] = bundle[k]
-    # A neutral "something changed" flag is fine to publish; the interpretation
-    # of WHAT changed is not.
     public_record["drift_seen"] = bool(bundle.get("_drift_seen"))
 
-    # For a CLEARED target (public=true: our own controls, or a vendor a lawyer
-    # has signed off on), the interpreted verdict IS publishable, so surface a
-    # compact provenance/jurisdiction/confidence block in the public record. For
-    # an un-cleared target this stays out (the site shows "withheld").
-    if target_public and isinstance(bundle.get("score"), dict):
+    if isinstance(bundle.get("score"), dict):
         s = bundle["score"]
         public_record["verdict"] = {
             "provenance": (s.get("provenance_risk") or {}).get("verdict"),
@@ -53,9 +47,8 @@ def split(bundle: dict, *, target_public: bool) -> tuple[dict, dict]:
             "confidence": s.get("confidence"),
         }
 
-    gated_record = {"schema_version": SCHEMA_VERSION}
-    for k in _INTERPRETED_KEYS:
-        if k in bundle:
-            gated_record[k] = bundle[k]
-    gated_record["publishable"] = bool(target_public)  # AND disclosure window (advisory.py)
+    # Backward-compatible second element; mirrors the public record now that
+    # nothing is withheld.
+    gated_record = dict(public_record)
+    gated_record["publishable"] = True
     return public_record, gated_record

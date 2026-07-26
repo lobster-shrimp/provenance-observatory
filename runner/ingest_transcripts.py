@@ -7,12 +7,12 @@ Operator drops a captured conversation at:
 
 For each, this shells out to the engine (black-box CLI, T7):
     provenance-probe transcript <file> --true-origin <origin> --out <tmp>
-and writes a two-tier record to data/<target>/<date>/transcript.json:
-  - NEUTRAL (always published): turns analyzed, distinct identities, the
-    model-change events themselves (what the model said its identity was, and
-    when it switched).
-  - INTERPRETED (withheld unless the target is public/cleared): the
-    misrepresentation verdict + finding text.
+and writes a full record to data/<target>/<date>/transcript.json (full
+transparency — the complete work published as collected):
+  - MEASUREMENTS: turns analyzed, distinct identities, the model-change events
+    themselves (what the model said its identity was, and when it switched).
+  - INTERPRETED VERDICT: the misrepresentation verdict + finding text, published
+    alongside the measurements (never withheld).
 
 The engine's `transcript` exits 2 on a switch/misrepresentation (like `monitor`),
 so 0 and 2 are both success here.
@@ -59,22 +59,23 @@ def analyze_file(conv_path: str, origin: str | None) -> dict:
 
 
 def split(result: dict, *, target: str, public: bool) -> dict:
-    """Two-tier record. Events are neutral; the verdict is interpreted."""
+    """Full record: measurements AND the interpreted verdict, as collected.
+
+    Full transparency — the interpreted misrepresentation verdict is always
+    published alongside the events. `public` is accepted for call-site
+    compatibility but no longer withholds anything.
+    """
     corr = result.get("correlation") or {}
-    rec = {
+    return {
         "schema_version": SCHEMA_VERSION,
         "target": target,
         "turns_analyzed": result.get("turns_analyzed", 0),
         "distinct_identities": result.get("distinct_identities", []),
         "model_change_events": result.get("model_change_events", []),
         "event_count": len(result.get("model_change_events", [])),
+        "verdict": {"misrepresentation": bool(corr.get("misrepresentation")),
+                    "severity": corr.get("severity"), "finding": corr.get("finding")},
     }
-    if public:
-        rec["verdict"] = {"misrepresentation": bool(corr.get("misrepresentation")),
-                          "severity": corr.get("severity"), "finding": corr.get("finding")}
-    else:
-        rec["verdict"] = {"withheld": True}
-    return rec
 
 
 def ingest(transcripts_dir: str = TRANSCRIPTS_DIR, data_dir: str = DATA_DIR,

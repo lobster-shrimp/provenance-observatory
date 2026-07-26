@@ -1,5 +1,6 @@
-"""Transcript integration: two-tier ingest, shared reader, site + API surfacing
-of mid-session model switches."""
+"""Transcript integration: full-transparency ingest (measurements AND the
+interpreted verdict, as collected), shared reader, and site + API surfacing of
+mid-session model switches."""
 import json
 import os
 import sys
@@ -22,14 +23,17 @@ RESULT = {
 }
 
 
-def test_ingest_split_two_tier():
-    withheld = ingest.split(RESULT, target="chat-z-ai-webapp", public=False)
-    assert withheld["event_count"] == 1
-    assert withheld["model_change_events"][0]["to"] == "GLM (Zhipu)"   # neutral fact published
-    assert withheld["verdict"] == {"withheld": True}                   # interpreted withheld
-    cleared = ingest.split(RESULT, target="cleared", public=True)
-    assert cleared["verdict"]["misrepresentation"] is True
-    assert cleared["verdict"]["severity"] == "critical"
+def test_ingest_split_publishes_verdict_regardless_of_public():
+    # Full transparency: the interpreted verdict is published as collected,
+    # whether or not the target is flagged public. Nothing is withheld.
+    ungated = ingest.split(RESULT, target="chat-z-ai-webapp", public=False)
+    assert ungated["event_count"] == 1
+    assert ungated["model_change_events"][0]["to"] == "GLM (Zhipu)"
+    assert ungated["verdict"]["misrepresentation"] is True
+    assert ungated["verdict"]["severity"] == "critical"
+    flagged = ingest.split(RESULT, target="cleared", public=True)
+    assert flagged["verdict"]["misrepresentation"] is True
+    assert flagged["verdict"]["severity"] == "critical"
 
 
 def _write_transcript(data_dir, target, rec):
@@ -55,11 +59,13 @@ def test_site_surfaces_model_switch(tmp_path):
     idx = (out / "index.html").read_text()
     assert "MODEL-SWITCH ALERTS" in idx and "Model-switch alerts" in idx
     assert "t/chat-z-ai-webapp.html" in idx
-    # transcript-only target still gets a detail page with the events + withheld verdict
+    # transcript-only target gets a detail page with the events AND the
+    # interpreted verdict, published as collected (nothing withheld)
     detail = (out / "t" / "chat-z-ai-webapp.html").read_text()
     assert "Session model-change events" in detail
     assert "Google Gemini" in detail and "GLM (Zhipu)" in detail
-    assert "verdict withheld" in detail
+    assert "MISREPRESENTATION" in detail
+    assert "verdict withheld" not in detail
 
 
 def test_model_change_section_shows_verdict_when_public():

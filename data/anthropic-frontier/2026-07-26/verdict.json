@@ -1,0 +1,604 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {
+      "cjk_dense": 144,
+      "cjk_mixed": 63,
+      "jp_kana": 71,
+      "ko_hangul": 54,
+      "ws_runs": 107,
+      "tabs_deep": 58,
+      "digits_long": 190,
+      "punct_repeat": 89,
+      "emoji_zwj": 388,
+      "rare_unicode": 479,
+      "diacritics": 276,
+      "arabic_hebrew": 78,
+      "cyrillic": 48,
+      "code_json": 213,
+      "code_regex": 326,
+      "url_paths": 227,
+      "base64ish": 270,
+      "md_table": 161,
+      "mixed_script_cjk_code": 161,
+      "newline_storm": 12
+    },
+    "errors": {},
+    "meta": {
+      "echoed_models": [
+        "claude-opus-4-8"
+      ]
+    },
+    "usable": true
+  },
+  "headers": {
+    "status": 200,
+    "server": "cloudflare",
+    "echoed_model": "claude-opus-4-8",
+    "vendor_headers": [
+      {
+        "header": "anthropic-ratelimit-requests-limit",
+        "implies": "Anthropic",
+        "value": "10000"
+      }
+    ],
+    "header_names": [
+      "anthropic-organization-id",
+      "anthropic-ratelimit-input-tokens-limit",
+      "anthropic-ratelimit-input-tokens-remaining",
+      "anthropic-ratelimit-input-tokens-reset",
+      "anthropic-ratelimit-output-tokens-limit",
+      "anthropic-ratelimit-output-tokens-remaining",
+      "anthropic-ratelimit-output-tokens-reset",
+      "anthropic-ratelimit-requests-limit",
+      "anthropic-ratelimit-requests-remaining",
+      "anthropic-ratelimit-requests-reset",
+      "anthropic-ratelimit-tokens-limit",
+      "anthropic-ratelimit-tokens-remaining",
+      "anthropic-ratelimit-tokens-reset",
+      "cf-cache-status",
+      "cf-ray",
+      "connection",
+      "content-encoding",
+      "content-security-policy",
+      "content-type",
+      "date",
+      "request-id",
+      "server",
+      "server-timing",
+      "strict-transport-security",
+      "traceresponse",
+      "transfer-encoding",
+      "vary",
+      "x-robots-tag"
+    ],
+    "header_shape_hash": "d829bbb4195271ea"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 400,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"temperature: range: 0..1\"},\"request_id\":\"req_011CdQtYrYbpp1VGC8BKVGWe\"}"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 400,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"max_tokens: must be greater than or equal to 0\"},\"request_id\":\"req_011CdQtYsAZdKiBczU1zUcE1\"}"
+      },
+      {
+        "probe": "bad_model",
+        "status": 404,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"not_found_error\",\"message\":\"model: __nonexistent_model_probe__\"},\"request_id\":\"req_011CdQtYsxw1ppCR6AXv27yV\"}"
+      },
+      {
+        "probe": "bad_role",
+        "status": 400,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages: Unexpected role \\\"wizard\\\". Allowed roles are \\\"user\\\" or \\\"assistant\\\"\"},\"request_id\":\"req_011CdQtYu2RgkfdmjkMaAh8h\"}"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 400,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"stop: Extra inputs are not permitted\"},\"request_id\":\"req_011CdQtYudPeadrfmMGqJVwV\"}"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 400,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"__probe_unknown_field__: Extra inputs are not permitted\"},\"request_id\":\"req_011CdQtYvPnRnrPRXtG4eTps\"}"
+      }
+    ],
+    "error_signature": "5ac679670fbbabce"
+  },
+  "streaming": {
+    "chunk_count": 1,
+    "chunk_fields": [],
+    "final_usage_chunk": false,
+    "finish_reason": null,
+    "ttft_s": 0.2146
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.2739,
+      "median": 0.2389,
+      "p10": 0.1093,
+      "p90": 0.5342,
+      "stdev": 0.1296
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.2739,
+      "median": 0.2389,
+      "p10": 0.1093,
+      "p90": 0.5343,
+      "stdev": 0.1296
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.2739,
+      "median": 0.2389,
+      "p10": 0.1093,
+      "p90": 0.5343,
+      "stdev": 0.1296
+    }
+  },
+  "network": {
+    "host": "api.anthropic.com",
+    "addresses": [
+      {
+        "ip": "160.79.104.10",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      }
+    ],
+    "findings": [
+      {
+        "type": "first_party",
+        "severity": "info",
+        "detail": "Anthropic is a first-party US model developer serving its own weights; jurisdiction non-PRC. Verify the served model with the tokenizer/behavioral layers (a first-party can still reroute)."
+      }
+    ],
+    "jurisdiction": "non-PRC-firstparty",
+    "operator": "Anthropic",
+    "confidence": 0.85
+  },
+  "fingerprint_id": "519a6ffe29e987bf01163ced",
+  "timestamp": "2026-07-26T15:16:08+00:00",
+  "target": {
+    "name": "anthropic-frontier",
+    "base_url": "https://api.anthropic.com/v1",
+    "model": "claude-opus-4-8",
+    "api_style": "anthropic"
+  },
+  "score": {
+    "signals": [
+      {
+        "signal": "tokenizer_match_noncn",
+        "layer": "tokenizer",
+        "evidence": "Best tokenizer match Claude (Claude/Anthropic, origin=US) score=1.0, 20/20 exact"
+      }
+    ],
+    "jurisdictional_risk": {
+      "likelihood": 0.182,
+      "logodds": 0,
+      "verdict": "UNLIKELY",
+      "meaning": "Inference executed by a PRC-domiciled operator or on PRC soil (PIPL/DSL/CSL/NIL Art.7 exposure)."
+    },
+    "provenance_risk": {
+      "likelihood": 0.029,
+      "logodds": -2.0,
+      "verdict": "NO EVIDENCE",
+      "meaning": "Model weights are Chinese-origin regardless of where served (bias/integrity/procurement-policy exposure)."
+    },
+    "evidence_coverage": {
+      "network": true,
+      "tokenizer": true,
+      "tokenizer_reference": true,
+      "wire": true,
+      "behavioral": false,
+      "logprobs": false,
+      "artifacts": false,
+      "client_source": false,
+      "deception": false
+    },
+    "confidence": "moderate"
+  },
+  "user_warning": {
+    "level": "green",
+    "level_label": "No problems found in this check",
+    "headline": "No signs of a hidden or misrepresented AI model.",
+    "facts": [
+      "The checks did not find evidence that this app is disguising which AI model it uses or where your data goes."
+    ],
+    "actions": [
+      "No action needed based on this check.",
+      "Re-check periodically \u2014 services can change their AI provider without notice."
+    ],
+    "app": "anthropic-frontier",
+    "url": "https://api.anthropic.com/v1"
+  },
+  "tokenizer_match": [
+    {
+      "model": "Claude",
+      "family": "Claude/Anthropic",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 0,
+      "exact_matches": 20,
+      "norm_l1": 0.0,
+      "score": 1.0,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 1.1429
+    },
+    {
+      "model": "Command-R",
+      "family": "Cohere",
+      "origin": "CA",
+      "shared_probes": 20,
+      "template_overhead": 40,
+      "exact_matches": 2,
+      "norm_l1": 0.25766,
+      "score": 0.05,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.6111
+    },
+    {
+      "model": "StarCoder",
+      "family": "StarCoder",
+      "origin": "EU",
+      "shared_probes": 20,
+      "template_overhead": 40,
+      "exact_matches": 2,
+      "norm_l1": 0.2823,
+      "score": 0.05,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.8254
+    },
+    {
+      "model": "MPT",
+      "family": "MPT",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 16,
+      "exact_matches": 2,
+      "norm_l1": 0.20312,
+      "score": 0.05,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 1.3968
+    },
+    {
+      "model": "GPT-NeoX",
+      "family": "GPT-NeoX",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 16,
+      "exact_matches": 2,
+      "norm_l1": 0.20312,
+      "score": 0.05,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 1.3968
+    },
+    {
+      "model": "Refact",
+      "family": "Refact",
+      "origin": "EU",
+      "shared_probes": 20,
+      "template_overhead": 40,
+      "exact_matches": 2,
+      "norm_l1": 0.28509,
+      "score": 0.05,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.8254
+    },
+    {
+      "model": "InternLM2.5",
+      "family": "InternLM",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 28,
+      "exact_matches": 2,
+      "norm_l1": 0.27685,
+      "score": 0.05,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.5238
+    },
+    {
+      "model": "Gemini",
+      "family": "Gemini/Google",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 37,
+      "exact_matches": 2,
+      "norm_l1": 0.34974,
+      "score": 0.05,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.5794
+    },
+    {
+      "model": "Qwen2/Qwen2.5",
+      "family": "Qwen",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 50,
+      "exact_matches": 1,
+      "norm_l1": 0.3477,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.5317
+    },
+    {
+      "model": "DeepSeek-LLM",
+      "family": "DeepSeek",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 6,
+      "exact_matches": 1,
+      "norm_l1": 0.24425,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.5476
+    },
+    {
+      "model": "DeepSeek-Coder",
+      "family": "DeepSeek",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 0,
+      "exact_matches": 1,
+      "norm_l1": 0.21592,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.6746
+    },
+    {
+      "model": "Llama-3",
+      "family": "Llama-3",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 52,
+      "exact_matches": 1,
+      "norm_l1": 0.2055,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.7302
+    },
+    {
+      "model": "GPT-2",
+      "family": "GPT-2/OpenAI",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 4,
+      "exact_matches": 1,
+      "norm_l1": 0.31007,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 2.3175
+    },
+    {
+      "model": "Falcon",
+      "family": "Falcon/TII",
+      "origin": "AE",
+      "shared_probes": 20,
+      "template_overhead": 8,
+      "exact_matches": 1,
+      "norm_l1": 0.20018,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 1.1984
+    },
+    {
+      "model": "OpenAI-cl100k",
+      "family": "OpenAI",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 29,
+      "exact_matches": 1,
+      "norm_l1": 0.2133,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 1.1825
+    },
+    {
+      "model": "OpenAI-o200k",
+      "family": "OpenAI",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 47,
+      "exact_matches": 1,
+      "norm_l1": 0.22778,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.6825
+    },
+    {
+      "model": "GLM-4.5",
+      "family": "GLM/Zhipu",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 53,
+      "exact_matches": 1,
+      "norm_l1": 0.21721,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.4921
+    },
+    {
+      "model": "GLM-4-9B",
+      "family": "GLM/Zhipu",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 53,
+      "exact_matches": 1,
+      "norm_l1": 0.21721,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.4921
+    },
+    {
+      "model": "Yi-1.5",
+      "family": "Yi/01.AI",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 10,
+      "exact_matches": 1,
+      "norm_l1": 0.26183,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.5159
+    },
+    {
+      "model": "MiniCPM3",
+      "family": "MiniCPM",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 18,
+      "exact_matches": 1,
+      "norm_l1": 0.37561,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.5317
+    },
+    {
+      "model": "Qwen3",
+      "family": "Qwen",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 50,
+      "exact_matches": 1,
+      "norm_l1": 0.3477,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.5317
+    },
+    {
+      "model": "DeepSeek-V3",
+      "family": "DeepSeek",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 51,
+      "exact_matches": 1,
+      "norm_l1": 0.25146,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.4841
+    },
+    {
+      "model": "Moonshot",
+      "family": "Moonshot",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 51,
+      "exact_matches": 1,
+      "norm_l1": 0.23959,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.4762
+    },
+    {
+      "model": "Phi-3.5",
+      "family": "Phi",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 13,
+      "exact_matches": 1,
+      "norm_l1": 0.26148,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 1.4444
+    },
+    {
+      "model": "Mistral-v0.3",
+      "family": "Mistral",
+      "origin": "EU",
+      "shared_probes": 20,
+      "template_overhead": 16,
+      "exact_matches": 1,
+      "norm_l1": 0.25255,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 1.0873
+    },
+    {
+      "model": "Baichuan2",
+      "family": "Baichuan",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 14,
+      "exact_matches": 1,
+      "norm_l1": 0.41476,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.4921
+    },
+    {
+      "model": "Gemma-2",
+      "family": "Gemma",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 39,
+      "exact_matches": 1,
+      "norm_l1": 0.40118,
+      "score": 0.025,
+      "han_tok_per_char_obs": 1.1429,
+      "han_tok_per_char_ref": 0.5952
+    }
+  ],
+  "drift_seen": false,
+  "verdict": {
+    "provenance": "NO EVIDENCE",
+    "jurisdiction": "UNLIKELY",
+    "confidence": "moderate"
+  }
+}

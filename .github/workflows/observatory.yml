@@ -60,18 +60,20 @@ jobs:
           git diff --cached --quiet || git commit -m "data: nightly probe $(date -u +%F)"
           git push
 
-  # Render the Variant C site from data/ and keep it as a downloadable artifact.
-  # Public Pages DEPLOYMENT is deliberately deferred: the repo is private and
-  # nothing goes public until Gate 1. To publish later, enable GitHub Pages in
-  # repo settings and swap the upload-artifact step for actions/deploy-pages
-  # (with pages/id-token permissions + a github-pages environment).
-  # site/build.py renders neutral evidence only; interpreted verdicts show for
-  # cleared (public:true) targets and stay "withheld" otherwise.
+  # Render the Variant C site from data/ and DEPLOY it to GitHub Pages.
+  # Full-transparency posture: the site publishes measurements AND interpreted
+  # verdicts as collected. (Requires GitHub Pages enabled with source =
+  # "GitHub Actions" in repo Settings → Pages.)
   site:
     needs: probe
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pages: write            # publish to GitHub Pages
+      id-token: write         # OIDC for the Pages deployment
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -81,7 +83,10 @@ jobs:
         run: |
           pip install pyyaml
           python site/build.py --data data --out site/dist
-      - uses: actions/upload-artifact@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          name: observatory-site
           path: site/dist
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

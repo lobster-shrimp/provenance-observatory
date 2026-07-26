@@ -2,9 +2,9 @@
 """Maintainer action: promote a staged draft advisory to a numbered public one.
 
 Assigns MPA-YYYY-NNN and writes the public record to data/advisories/<id>.json
-(where the site + /api/advisories render it). Refuses unless the target is
-public (Gate-1 cleared). The disclosure window is enforced unless --force-window
-(a logged maintainer override).
+(where the site + /api/advisories render it). Full transparency: promotion is
+unconditional — no public/Gate-1 gate and no disclosure-window delay. The
+--force-window flag is retained for compatibility and is now a no-op.
 
     python runner/promote.py <target> --latest [--force-window]
     python runner/promote.py <target> --staging-id <id>
@@ -40,7 +40,7 @@ def main() -> int:
     ap.add_argument("--latest", action="store_true", help="promote the newest draft")
     ap.add_argument("--list", action="store_true", help="list staged drafts and exit")
     ap.add_argument("--force-window", action="store_true",
-                    help="maintainer override of the disclosure window (logged)")
+                    help="retained for compatibility; no-op under full transparency")
     ap.add_argument("--data", default=DATA_DIR)
     a = ap.parse_args()
 

@@ -6,12 +6,13 @@ dense verdict table, an advisories rail, and methodology/disclosure/verification
 links in the footer. Chosen for citability: reads as neutral evidence, not a
 vendor dashboard.
 
-PUBLICATION RULE (T5 / Gate 1): the site renders only NEUTRAL evidence from
-data/<target>/<date>/verdict.json. The interpreted columns (provenance,
-jurisdiction, confidence) show "withheld" unless a PROMOTED public advisory
-exists for that target (data/advisories/*.json). Control checks are about our
-own endpoints, so they are shown. Nothing accusatory about a named vendor
-appears until it has been promoted through the disclosure pipeline.
+PUBLICATION RULE (full transparency): the site renders the COMPLETE work from
+data/<target>/<date>/verdict.json — the measurements AND the interpreted
+verdict (provenance, jurisdiction, confidence), together, as collected. Nothing
+is withheld. An interpreted cell is blank (em-dash) only when a record genuinely
+carries no verdict (no data / probe failure). Every verdict is probabilistic,
+carries a confidence label, and is backed by known-answer + negative controls
+with a published false-positive rate; wrong verdicts are prominently corrected.
 
 Scaling (U2): reads the hot window (last HOT_WINDOW_DAYS of daily records).
 Raw JSON is never deleted; only the rendered view is bounded.
@@ -88,8 +89,9 @@ def _badge(verdict: str) -> str:
 def _interpreted_cells(latest: dict, promoted: dict | None) -> tuple[str, str, str]:
     """(provenance, jurisdiction, confidence).
 
-    Shown when the target is CLEARED (the public record carries a `verdict`
-    block, i.e. public=true) or a promoted advisory exists. Otherwise withheld.
+    Full transparency: the interpreted verdict is always shown when the record
+    carries one. An em-dash means no verdict was produced for that record (no
+    data / probe failure), never a deliberate withhold.
     """
     v = latest.get("verdict")
     if v:
@@ -100,8 +102,7 @@ def _interpreted_cells(latest: dict, promoted: dict | None) -> tuple[str, str, s
         return (_badge((pv.get("provenance_risk") or {}).get("verdict")),
                 _badge((pv.get("jurisdictional_risk") or {}).get("verdict")),
                 html.escape(str((pv.get("provenance_risk") or {}).get("confidence", "—"))))
-    return ('<span class="withheld">withheld</span>',
-            '<span class="withheld">withheld</span>', "—")
+    return ("&mdash;", "&mdash;", "—")
 
 
 def _coverage(rec: dict) -> dict:
@@ -173,8 +174,8 @@ def _slug(target: str) -> str:
 def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | None,
                  *, now_iso: str, probe_url: str, transcript: dict | None = None) -> str:
     """Full drift timeline for one target: every dated run, fingerprint changes,
-    control status, tokenizer coverage, and interpreted verdict (withheld unless
-    cleared/promoted). The per-target drill-down the index table links to."""
+    control status, tokenizer coverage, and the interpreted verdict (always
+    shown as collected). The per-target drill-down the index table links to."""
     tgt = (records[-1][1].get("target") or {}) if records else {}
     kind = html.escape(str(tgt.get("kind", "") if isinstance(tgt, dict) else ""))
 
@@ -225,8 +226,8 @@ def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | 
   </tbody>
 </table>
 {_model_change_section(transcript)}
-<footer><span>Neutral evidence, append-only. Interpreted verdicts withheld until
-  Gate 1 clears the target.</span><span>Updated {html.escape(now_iso[:16])} UTC</span></footer>"""
+<footer><span>Complete work published as collected, append-only: measurements and
+  the interpreted verdict together.</span><span>Updated {html.escape(now_iso[:16])} UTC</span></footer>"""
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
             f'<title>{html.escape(target)} &middot; Provenance Observatory</title>'
@@ -255,8 +256,8 @@ def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None,
     fp = html.escape((latest.get("fingerprint_id") or "")[:12])
     prov, juris, conf = _interpreted_cells(latest, promoted)
 
-    # Raw values for client-side filtering (data-* attributes). Withheld rows
-    # carry empty prov/juris so a provenance filter simply won't match them.
+    # Raw values for client-side filtering (data-* attributes). Rows with no
+    # verdict yet carry empty prov/juris so a provenance filter won't match them.
     v = latest.get("verdict") or {}
     pv = (promoted or {}).get("verdict") or {}
     raw_prov = v.get("provenance") or (pv.get("provenance_risk") or {}).get("verdict") or ""
@@ -304,8 +305,8 @@ def _advisories_rail(promoted: dict[str, dict]) -> str:
     head = '<a class="viewall tlink" href="advisories.html">VIEW ALL</a>'
     if not promoted:
         return (head + '<p class="muted">No advisories published yet. A verdict '
-                '<i>change</i> becomes a numbered advisory (MPA-YYYY-NNN) after '
-                'responsible disclosure and Gate-1 legal review.</p>')
+                '<i>change</i> becomes a numbered advisory (MPA-YYYY-NNN), '
+                'published in full as collected.</p>')
     items = []
     for adv in sorted(promoted.values(), key=lambda a: a.get("promoted_at", ""), reverse=True):
         sev = _severity_of(adv)
@@ -343,7 +344,7 @@ def _footer(base: str = "", api_url: str = "") -> str:
       <a href="{base}data-dictionary.html">Data Dictionary</a>
       <a href="{api_url}/api/docs">API Documentation</a></div>
     <div class="fcol"><h4>Policies</h4>
-      <a href="{base}disclosure.html">Responsible Disclosure</a>
+      <a href="{base}disclosure.html">Publication Policy</a>
       <a href="{base}security.html">Security Policy</a>
       <a href="{base}privacy.html">Privacy Policy</a>
       <a href="{base}terms.html">Terms of Use</a></div>
@@ -419,23 +420,32 @@ repository.</p>""")
 
 
 def _disclosure_page() -> str:
-    return _page("Responsible Disclosure", """
-<p>This project publishes <b>neutral evidence</b> (token counts, wire
-fingerprint, latency, drift, fingerprint id, signed manifests) as it is
-collected. <b>Interpreted verdicts</b> about a named operator are <b>withheld</b>
-until:</p>
+    return _page("Publication Policy", """
+<p>This project publishes its <b>complete work as collected</b>: the
+measurements (token counts, wire fingerprint, latency, drift, fingerprint id,
+signed manifests) <b>and</b> the interpreted provenance/jurisdiction verdict,
+together, in an append-only, cryptographically signed log. Nothing is withheld
+and nothing is delayed — a verdict published alongside the evidence that
+produced it is more trustworthy, not less.</p>
+<p>A verdict <i>change</i> becomes a numbered advisory (MPA-YYYY-NNN), published
+in full on the same surfaces as every other record.</p>
+<h2>What we do NOT claim</h2>
 <ul>
-  <li>the operator has been privately notified and given a disclosure window to
-    respond, and</li>
-  <li>legal review (Gate 1) has cleared publication for that target.</li>
+  <li>Verdicts are <b>probabilistic, not proof</b>; each carries a confidence
+    label and must be read against a measured error rate.</li>
+  <li>Distillation and fine-tuning can confound weight origin.</li>
+  <li>Black-box signal degrades under evasion; when the strongest layer is
+    unavailable, coverage is labelled <b>degraded</b> and confidence lowered.</li>
+  <li>A live false-positive rate (from continuous known-answer + negative
+    controls) is published on the home page.</li>
 </ul>
-<p>A verdict <i>change</i> becomes a numbered advisory (MPA-YYYY-NNN) only after
-that process. Verdicts are probabilistic, not proof, and carry a confidence
-level and a measured error rate.</p>
-<h2>Reporting</h2>
-<p>To dispute a record or report an issue with a monitored endpoint you operate,
-open an issue on the project repository. Corrections are appended to the log
-(records are never silently deleted).</p>""")
+<h2>Corrections and retractions</h2>
+<p>Any operator or reader may dispute a record at any time by opening an issue on
+the project repository. A verdict we find to be wrong is prominently
+<b>retracted</b>; the retraction is itself an appended, signed record, so the
+correction and what it corrects both stay in the log. Corrections publish on the
+same surfaces (site, API, RSS) with equal prominence. Records are never silently
+deleted. See the full <a href="https://github.com/lobster-shrimp/provenance-observatory/blob/main/DISCLOSURE.md">publication policy</a>.</p>""")
 
 
 def _verify_page() -> str:
@@ -523,16 +533,17 @@ def _advisory_page(adv: dict) -> str:
 <p>{html.escape(adv.get("summary") or adv.get("title") or "Verdict change advisory.")}</p>
 <h2>{ev_title}</h2>
 <ul>{ch}</ul>
-<p class="small muted">Interpreted verdicts are published only for targets cleared
-through responsible disclosure and Gate-1 review.</p>"""
+<p class="small muted">Verdicts are probabilistic, not proof; each carries a
+confidence label. Disputes are answered with a prominent correction/retraction
+appended to the log &mdash; see the <a href="../disclosure.html">publication policy</a>.</p>"""
     return _page(f"{aid} advisory", inner, base="../")
 
 
 def _advisories_index(promoted: dict) -> str:
     if not promoted:
         inner = ('<p class="muted">No advisories published yet. A verdict change '
-                 'becomes a numbered advisory (MPA-YYYY-NNN) after responsible '
-                 'disclosure and Gate-1 legal review.</p>')
+                 'becomes a numbered advisory (MPA-YYYY-NNN), published in full '
+                 'as collected.</p>')
     else:
         items = "".join(
             f'<div class="adv-item"><div class="adv-head">'
@@ -551,11 +562,11 @@ def _about_page() -> str:
 <p>The Provenance Observatory is independent, continuous, evidence-backed
 monitoring of what actually serves a given LLM API endpoint — and whether that
 model is Chinese-origin or under PRC jurisdiction.</p>
-<p>Every night it probes a curated watch list, commits the raw measurements to
-an append-only, cryptographically signed log, and opens a numbered advisory when
-an endpoint's fingerprint changes. It publishes neutral evidence as collected;
-interpreted verdicts about a named operator appear only after responsible
-disclosure and legal review.</p>
+<p>Every night it probes a curated watch list, commits the measurements to an
+append-only, cryptographically signed log, and opens a numbered advisory when an
+endpoint's fingerprint changes. It publishes the complete work as collected:
+the measurements and the interpreted provenance/jurisdiction verdict, together,
+so you can see exactly how each verdict was reached.</p>
 <h2>Use it</h2>
 <ul>
   <li><a href="index.html">Live verdict table</a> — search, filter, drill into any target.</li>
@@ -630,16 +641,17 @@ verify the signed evidence before relying on any verdict for a decision.</p>
 <h2>Use of the evidence</h2>
 <ul>
   <li>The append-only, signed log is the canonical record; quote it in context
-    and do not misrepresent a verdict's tier, confidence, or withheld status.</li>
-  <li>Interpreted verdicts are published only for cleared targets; others are
-    withheld and must not be inferred.</li>
+    and do not misrepresent a verdict's tier or confidence.</li>
+  <li>Verdicts are probabilistic estimates, not proof; do not present a verdict
+    as a definitive determination of a model's origin or operator.</li>
   <li>The API is read-only and rate-limited; automated clients must respect the
     limits and identify themselves where practical.</li>
 </ul>
 <h2>Corrections and disputes</h2>
-<p>Operators of a monitored endpoint may dispute a record via
-<a href="disclosure.html">Responsible Disclosure</a>. Corrections are made by
-appending to the log; records are never silently deleted.</p>
+<p>Operators of a monitored endpoint, or any reader, may dispute a record at any
+time via the <a href="disclosure.html">Publication Policy</a>. Corrections and
+retractions are made by appending to the log; records are never silently
+deleted.</p>
 <h2>Liability</h2>
 <p>To the maximum extent permitted by law, the project and its contributors are
 not liable for any damages arising from use of the site, API, or evidence.</p>
@@ -660,14 +672,16 @@ def _how_it_works_page() -> str:
   <li><b>Commit.</b> The signed evidence is appended to git — the source of
     truth this site and API read.</li>
   <li><b>Detect drift.</b> Each run is diffed against a pinned baseline; a
-    changed fingerprint opens a numbered advisory (after disclosure + review).</li>
+    changed fingerprint opens a numbered advisory, published in full.</li>
 </ul>
-<h2>Two-tier publication</h2>
-<p>Neutral evidence (token counts, wire fingerprint, latency, drift,
-fingerprint id, signed manifests) is published as collected. Interpreted
-verdicts about a named operator are withheld until responsible disclosure and
-legal review clear the target. See <a href="methodology.html">Methodology</a>
-and <a href="disclosure.html">Responsible Disclosure</a>.</p>""")
+<h2>Full-transparency publication</h2>
+<p>The complete work is published as collected: the measurements (token counts,
+wire fingerprint, latency, drift, fingerprint id, signed manifests) <b>and</b>
+the interpreted provenance/jurisdiction verdict, together, so you can see exactly
+how each verdict was reached. Nothing is withheld. Verdicts are probabilistic,
+not proof; each carries a confidence label, and wrong verdicts are prominently
+corrected. See <a href="methodology.html">Methodology</a> and the
+<a href="disclosure.html">Publication Policy</a>.</p>""")
 
 
 def _faq_page() -> str:
@@ -677,9 +691,13 @@ def _faq_page() -> str:
 <b>Jurisdiction</b> = is inference executed by a PRC-domiciled operator / on PRC
 soil. They are scored independently; a US-hosted Chinese-origin model trips
 provenance but not jurisdiction.</p>
-<h2>Why are some verdicts "withheld"?</h2>
-<p>Interpreted verdicts about a named operator publish only after responsible
-disclosure and legal review. Until then the neutral evidence is still shown.</p>
+<h2>How do I read a verdict?</h2>
+<p>Every record shows the measurements <b>and</b> the interpreted verdict
+together, as collected — nothing is withheld. Read each verdict with its
+<b>confidence tier</b> (low / moderate / high), its <b>coverage</b> label (full
+vs degraded), and the <b>published false-positive rate</b> from the live
+controls. A verdict we find to be wrong is prominently corrected/retracted and
+the correction stays in the append-only log.</p>
 <h2>Are these verdicts proof?</h2>
 <p>No. They are probabilistic, carry a confidence level and a measured error
 rate, and can be independently verified from the signed evidence.</p>
@@ -707,7 +725,8 @@ def _data_dictionary_page() -> str:
   <li><code>provenance</code> / <code>jurisdiction</code> — verdict tier
     (CONFIRMED, LIKELY, INDETERMINATE, UNLIKELY, NO EVIDENCE) or null.</li>
   <li><code>confidence</code> — low / moderate / high.</li>
-  <li><code>withheld</code> — true when the interpreted verdict is not yet cleared.</li>
+  <li><code>withheld</code> — deprecated; always false under full transparency
+    (every verdict is published as collected). Retained for schema compatibility.</li>
   <li><code>drift_seen</code> — fingerprint changed vs the pinned baseline.</li>
   <li><code>coverage</code> — <code>{layers, degraded}</code>; degraded = token counts suppressed.</li>
   <li><code>fingerprint_id</code> — stable backend identity (overhead-invariant).</li>
@@ -900,10 +919,9 @@ def _model_change_section(trec: dict | None) -> str:
         return ""
     events = trec.get("model_change_events") or []
     v = trec.get("verdict") or {}
-    if v.get("withheld"):
-        verdict = ('<span class="withheld">verdict withheld</span> (interpreted '
-                   'misrepresentation call pending clearance)')
-    elif v.get("misrepresentation"):
+    # Full transparency: the interpreted misrepresentation verdict is always
+    # shown as collected — never withheld.
+    if v.get("misrepresentation"):
         verdict = (f'<span class="sev high">MISREPRESENTATION</span> '
                    f'{html.escape(v.get("severity") or "")} &mdash; '
                    f'{html.escape(v.get("finding") or "")}')
@@ -933,9 +951,8 @@ def _transcript_detail_page(target: str, trec: dict, *, now_iso: str) -> str:
             f'<header><h1>{html.escape(target)}</h1>'
             f'<p>session model-switch watch &middot; {html.escape(trec.get("date",""))}</p></header>'
             f'{_model_change_section(trec)}'
-            f'<footer><span>Neutral evidence (what the model said) is published; the '
-            f'interpreted misrepresentation verdict is withheld until the target is '
-            f'cleared.</span></footer>')
+            f'<footer><span>The complete work is published as collected: what the model '
+            f'said and the interpreted misrepresentation verdict, together.</span></footer>')
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
             f'<title>{html.escape(target)} &middot; Provenance Observatory</title>'
@@ -950,8 +967,7 @@ def _model_switch_panel(transcripts: dict) -> str:
     rows = ""
     for t, r in sorted(hits.items()):
         v = r.get("verdict") or {}
-        badge = ('<span class="withheld">withheld</span>' if v.get("withheld")
-                 else f'<span class="sev high">misrepresentation</span>' if v.get("misrepresentation")
+        badge = ('<span class="sev high">misrepresentation</span>' if v.get("misrepresentation")
                  else '<span class="badge ok">clean</span>')
         ids = " &rarr; ".join(html.escape(str(e.get("to"))) for e in r["model_change_events"])
         rows += (f'<tr><td class="mono"><a class="tlink" href="t/{_slug(t)}.html">{html.escape(t)}</a></td>'
@@ -1054,29 +1070,19 @@ def _agent_panel(agent_records: dict) -> str:
         steps = rec.get("steps") or []
         endpoint = html.escape(rec.get("endpoint") or "")
         note = html.escape(rec.get("note") or "")
-        # Two-tier gate (same as the endpoint table): interpreted verdicts about a
-        # named target are withheld unless the record is cleared `public: true`.
-        # Neutral evidence (which models were probed) is shown either way.
-        published = bool(rec.get("public"))
-        if published:
-            head_verdict = f' &middot; {_badge(v.get("label"))} <span class="small muted">worst of {len(steps)} model(s)</span>'
-            srows = "".join(
-                f'<tr><td class="mono small">{html.escape(s.get("echoed_model") or "") or "&mdash;"}</td>'
-                f'<td>{_badge(s.get("provenance"))}</td>'
-                f'<td>{_badge(s.get("jurisdiction"))}'
-                + (f' <span class="small muted">{html.escape(s.get("jurisdiction_basis") or "")}</span>'
-                   if s.get("jurisdiction_basis") else "")
-                + "</td></tr>"
-                for s in steps)
-            table = (f'<table class="agent-tbl"><thead><tr><th>Model</th><th>Provenance</th>'
-                     f'<th>Jurisdiction</th></tr></thead><tbody>{srows}</tbody></table>')
-        else:
-            head_verdict = ' &middot; <span class="badge warn">VERDICT WITHHELD</span>'
-            models = ", ".join(html.escape(s.get("echoed_model") or "?") for s in steps) or "&mdash;"
-            table = (f'<p class="small">{len(steps)} model(s) probed &middot; '
-                     f'<span class="mono small muted">{models}</span></p>'
-                     f'<p class="small muted">Interpreted verdicts withheld pending '
-                     f'responsible disclosure and Gate-1 legal review.</p>')
+        # Full transparency: every probed target's per-model board is shown with
+        # its interpreted verdict and the evidence behind it. Nothing withheld.
+        head_verdict = f' &middot; {_badge(v.get("label"))} <span class="small muted">worst of {len(steps)} model(s)</span>'
+        srows = "".join(
+            f'<tr><td class="mono small">{html.escape(s.get("echoed_model") or "") or "&mdash;"}</td>'
+            f'<td>{_badge(s.get("provenance"))}</td>'
+            f'<td>{_badge(s.get("jurisdiction"))}'
+            + (f' <span class="small muted">{html.escape(s.get("jurisdiction_basis") or "")}</span>'
+               if s.get("jurisdiction_basis") else "")
+            + "</td></tr>"
+            for s in steps)
+        table = (f'<table class="agent-tbl"><thead><tr><th>Model</th><th>Provenance</th>'
+                 f'<th>Jurisdiction</th></tr></thead><tbody>{srows}</tbody></table>')
         cards.append(
             f'<div class="agent-card"><div class="agent-head">'
             f'<b class="mono">{html.escape(target)}</b> <span class="small muted">{endpoint}</span>'
@@ -1114,9 +1120,11 @@ def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | N
   <h1>PROVENANCE OBSERVATORY</h1>
   <p>Independent, continuous, evidence-backed monitoring of LLM model provenance and jurisdiction.</p>
 </header>
-<div class="note">Neutral evidence (token counts, wire fingerprint, latency, drift) is published as
-collected, in an append-only log. Interpreted verdicts about named operators are <b>withheld</b>
-pending responsible disclosure and legal review (Gate 1). Verdicts are probabilistic, not proof.</div>
+<div class="note">Full transparency: the complete work &mdash; measurements (token counts, wire
+fingerprint, latency, drift) <b>and</b> the interpreted provenance/jurisdiction verdict &mdash; is
+published as collected, in an append-only log, so you can see exactly how each verdict was reached.
+Verdicts are probabilistic, not proof; every verdict carries a confidence label and is backed by
+known-answer + negative controls with a published false-positive rate.</div>
 {_assurance_panel(records, engine_eval or {})}
 <div class="stats">
   <div class="stat"><b>{n_targets}</b><span>MONITORED TARGETS</span></div>

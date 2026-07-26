@@ -1,5 +1,7 @@
-"""Locks the two-tier split: interpreted verdict never leaks into the public
-record, and gated records are only publishable when the target is public."""
+"""Locks the full-transparency split: the public record carries the measurements
+AND the interpreted verdict (a `verdict` block) as collected, regardless of the
+target_public flag; the second (gated) element mirrors it and is always
+publishable."""
 import os
 import sys
 
@@ -19,18 +21,21 @@ def _bundle():
     }
 
 
-def test_public_record_has_no_interpretation():
+def test_public_record_includes_interpretation():
+    # Full transparency: the public record carries the measurements AND the
+    # interpreted keys as collected, regardless of target_public.
     pub, _ = verdict.split(_bundle(), target_public=False)
-    for accusatory in ("score", "user_warning", "tokenizer_match"):
-        assert accusatory not in pub
+    for interpreted in ("score", "user_warning", "tokenizer_match"):
+        assert interpreted in pub
     assert pub["fingerprint_id"] == "fp0"
     assert pub["drift_seen"] is True
     assert pub["schema_version"] == verdict.SCHEMA_VERSION
 
 
-def test_gated_record_not_publishable_when_target_private():
+def test_gated_record_publishable_when_target_private():
+    # Nothing is withheld: the mirror record is always publishable.
     _, gated = verdict.split(_bundle(), target_public=False)
-    assert gated["publishable"] is False
+    assert gated["publishable"] is True
     assert gated["score"]["provenance_risk"]["verdict"] == "CONFIRMED"
 
 
@@ -44,13 +49,13 @@ def test_public_target_exposes_verdict_block():
     b["score"]["jurisdictional_risk"] = {"verdict": "LIKELY"}
     b["score"]["confidence"] = "high"
     pub, _ = verdict.split(b, target_public=True)
-    assert pub["verdict"]["provenance"] == "CONFIRMED"   # cleared target -> shown
+    assert pub["verdict"]["provenance"] == "CONFIRMED"
     assert pub["verdict"]["jurisdiction"] == "LIKELY"
     assert pub["verdict"]["confidence"] == "high"
-    # raw interpreted objects still never leak into the public record
-    assert "score" not in pub and "user_warning" not in pub
 
 
-def test_private_target_has_no_verdict_block():
+def test_private_target_still_has_verdict_block():
+    # Full transparency: the verdict block is published even when target_public
+    # is False — the flag no longer withholds anything.
     pub, _ = verdict.split(_bundle(), target_public=False)
-    assert "verdict" not in pub                          # un-cleared -> withheld
+    assert pub["verdict"]["provenance"] == "CONFIRMED"

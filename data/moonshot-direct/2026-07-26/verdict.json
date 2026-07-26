@@ -1,0 +1,630 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {
+      "cjk_dense": 67,
+      "cjk_mixed": 40,
+      "jp_kana": 71,
+      "ko_hangul": 45,
+      "ws_runs": 86,
+      "tabs_deep": 34,
+      "digits_long": 191,
+      "punct_repeat": 20,
+      "emoji_zwj": 286,
+      "diacritics": 217,
+      "arabic_hebrew": 70,
+      "cyrillic": 50,
+      "code_json": 150,
+      "code_regex": 231,
+      "url_paths": 178,
+      "base64ish": 181,
+      "md_table": 117,
+      "mixed_script_cjk_code": 118,
+      "newline_storm": 18
+    },
+    "errors": {
+      "rare_unicode": "no usage field (HTTP 400)"
+    },
+    "meta": {
+      "echoed_models": [
+        "kimi-k2.6"
+      ]
+    },
+    "usable": true
+  },
+  "headers": {
+    "status": 200,
+    "server": "cloudflare",
+    "echoed_model": "kimi-k2.6",
+    "vendor_headers": [],
+    "header_names": [
+      "cf-cache-status",
+      "cf-ray",
+      "connection",
+      "content-encoding",
+      "content-type",
+      "date",
+      "msh-context-cache-token-saved",
+      "msh-gid",
+      "msh-org-id",
+      "msh-project-id",
+      "msh-request-id",
+      "msh-trace-mode",
+      "msh-uid",
+      "server",
+      "strict-transport-security",
+      "transfer-encoding",
+      "vary",
+      "x-msh-trace-id"
+    ],
+    "header_shape_hash": "0276d902fe2e8363"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 400,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"invalid temperature: only 1 is allowed for this model\",\"type\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 400,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Invalid request: max_tokens must not be negative\",\"type\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "bad_model",
+        "status": 404,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Not found the model __nonexistent_model_probe__ or Permission denied\",\"type\":\"resource_not_found_error\"}}"
+      },
+      {
+        "probe": "bad_role",
+        "status": 400,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Invalid request: role must be one of 'system', 'user', 'assistant', 'tool'\",\"type\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 400,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Invalid request: stop array too long. Expected an array with maximum length 5, but got an array with length 64 instead\",\"type\":\"invalid_request_error\"}}"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 200,
+        "schema": {
+          "choices": [
+            {
+              "finish_reason": "str",
+              "index": "int",
+              "message": {
+                "content": "...",
+                "reasoning_content": "...",
+                "role": "..."
+              }
+            }
+          ],
+          "created": "int",
+          "id": "str",
+          "model": "str",
+          "object": "str",
+          "usage": {
+            "cached_tokens": "int",
+            "completion_tokens": "int",
+            "completion_tokens_details": {
+              "reasoning_tokens": "int"
+            },
+            "prompt_tokens": "int",
+            "prompt_tokens_details": {
+              "cached_tokens": "int"
+            },
+            "total_tokens": "int"
+          }
+        },
+        "excerpt": "{\"id\":\"chatcmpl-6a6623fbffde72061b126366\",\"object\":\"chat.completion\",\"created\":1785078779,\"model\":\"kimi-k2.6\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":\"The\"},\"finish_reason\":\"length\"}],\"usage\":{\"prompt_tokens\":8,\"completion_tokens\":2,\"total_tokens\":10,\"cac"
+      }
+    ],
+    "error_signature": "ef13cd2465e0da4c"
+  },
+  "streaming": {
+    "chunk_count": 1,
+    "chunk_fields": [],
+    "final_usage_chunk": false,
+    "finish_reason": null,
+    "ttft_s": 0.269
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.2759,
+      "median": 0.2702,
+      "p10": 0.2609,
+      "p90": 0.289,
+      "stdev": 0.0179
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.2759,
+      "median": 0.2703,
+      "p10": 0.2609,
+      "p90": 0.2891,
+      "stdev": 0.0179
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.2759,
+      "median": 0.2703,
+      "p10": 0.2609,
+      "p90": 0.2891,
+      "stdev": 0.0179
+    }
+  },
+  "network": {
+    "host": "api.moonshot.ai",
+    "addresses": [
+      {
+        "ip": "104.18.28.136",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      },
+      {
+        "ip": "104.18.29.136",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      }
+    ],
+    "findings": [
+      {
+        "type": "prc_endpoint",
+        "severity": "critical",
+        "detail": "Hostname matches known PRC-operated inference endpoint: Moonshot (Kimi)"
+      }
+    ],
+    "jurisdiction": "PRC-operator",
+    "operator": "Moonshot (Kimi)",
+    "confidence": 0.9
+  },
+  "fingerprint_id": "dd46a2116f8ba884eaf98dd0",
+  "timestamp": "2026-07-26T15:12:55+00:00",
+  "target": {
+    "name": "moonshot-direct",
+    "base_url": "https://api.moonshot.ai/v1",
+    "model": "kimi-k2.6",
+    "api_style": "openai"
+  },
+  "score": {
+    "signals": [
+      {
+        "signal": "prc_endpoint",
+        "layer": "network",
+        "evidence": "Hostname matches known PRC-operated inference endpoint: Moonshot (Kimi)"
+      },
+      {
+        "signal": "model_name_cn",
+        "layer": "wire",
+        "evidence": "API echoed model id 'kimi-k2.6' -> Moonshot Kimi"
+      },
+      {
+        "signal": "catalog_cn",
+        "layer": "wire",
+        "evidence": "4 PRC-origin model(s) offered by endpoint: kimi-k2.7-code-highspeed, kimi-k3, kimi-k2.6, kimi-k2.7-code"
+      },
+      {
+        "signal": "tokenizer_match_cn",
+        "layer": "tokenizer",
+        "evidence": "Best tokenizer match Moonshot (Moonshot, origin=CN) score=1.0, 19/19 exact"
+      },
+      {
+        "signal": "cjk_compression",
+        "layer": "tokenizer",
+        "evidence": "Han compression 0.5317 tokens/char is in the range of CJK-optimized vocabularies (Qwen2 0.53, DeepSeek 0.55). Supporting signal only \u2014 Cohere Command-R reaches 0.61, so low Han cost alone does not establish Chinese origin."
+      }
+    ],
+    "jurisdictional_risk": {
+      "likelihood": 0.881,
+      "logodds": 3.5,
+      "verdict": "CONFIRMED",
+      "meaning": "Inference executed by a PRC-domiciled operator or on PRC soil (PIPL/DSL/CSL/NIL Art.7 exposure)."
+    },
+    "provenance_risk": {
+      "likelihood": 0.995,
+      "logodds": 6.7,
+      "verdict": "CONFIRMED",
+      "meaning": "Model weights are Chinese-origin regardless of where served (bias/integrity/procurement-policy exposure)."
+    },
+    "evidence_coverage": {
+      "network": true,
+      "tokenizer": true,
+      "tokenizer_reference": true,
+      "wire": true,
+      "behavioral": false,
+      "logprobs": true,
+      "artifacts": false,
+      "client_source": false,
+      "deception": false
+    },
+    "confidence": "high"
+  },
+  "user_warning": {
+    "level": "orange",
+    "level_label": "Use with caution \u2014 verify before trusting it",
+    "headline": "Your messages are being sent to servers operated from China.",
+    "facts": [
+      "The company running this service is based in China.",
+      "Under Chinese law, companies based there can be required to hand over data to the government, and are not allowed to tell you when they do.",
+      "Anything you typed here should be treated as no longer private: work documents, personal details, passwords, client information, code."
+    ],
+    "actions": [
+      "Do not put confidential work, personal, or client information into this app.",
+      "Check with your IT or security team before using it for anything work-related.",
+      "Consider a provider whose location and ownership you can verify."
+    ],
+    "app": "moonshot-direct",
+    "url": "https://api.moonshot.ai/v1"
+  },
+  "tokenizer_match": [
+    {
+      "model": "Moonshot",
+      "family": "Moonshot",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": 7,
+      "exact_matches": 19,
+      "norm_l1": 0.0,
+      "score": 1.0,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.4762
+    },
+    {
+      "model": "OpenAI-o200k",
+      "family": "OpenAI",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": 7,
+      "exact_matches": 5,
+      "norm_l1": 0.07853,
+      "score": 0.396,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.6825
+    },
+    {
+      "model": "DeepSeek-V3",
+      "family": "DeepSeek",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": 7,
+      "exact_matches": 5,
+      "norm_l1": 0.09314,
+      "score": 0.3522,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.4841
+    },
+    {
+      "model": "GLM-4.5",
+      "family": "GLM/Zhipu",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": 5,
+      "exact_matches": 3,
+      "norm_l1": 0.08952,
+      "score": 0.3104,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.4921
+    },
+    {
+      "model": "GLM-4-9B",
+      "family": "GLM/Zhipu",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": 5,
+      "exact_matches": 3,
+      "norm_l1": 0.08952,
+      "score": 0.3104,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.4921
+    },
+    {
+      "model": "Llama-3",
+      "family": "Llama-3",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": 7,
+      "exact_matches": 3,
+      "norm_l1": 0.09617,
+      "score": 0.2904,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.7302
+    },
+    {
+      "model": "OpenAI-cl100k",
+      "family": "OpenAI",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": 3,
+      "exact_matches": 3,
+      "norm_l1": 0.12548,
+      "score": 0.2025,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 1.1825
+    },
+    {
+      "model": "Qwen2/Qwen2.5",
+      "family": "Qwen",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": 6,
+      "exact_matches": 1,
+      "norm_l1": 0.12939,
+      "score": 0.1381,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.5317
+    },
+    {
+      "model": "Qwen3",
+      "family": "Qwen",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": 6,
+      "exact_matches": 1,
+      "norm_l1": 0.12939,
+      "score": 0.1381,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.5317
+    },
+    {
+      "model": "Falcon",
+      "family": "Falcon/TII",
+      "origin": "AE",
+      "shared_probes": 19,
+      "template_overhead": -35,
+      "exact_matches": 1,
+      "norm_l1": 0.15319,
+      "score": 0.0668,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 1.1984
+    },
+    {
+      "model": "StarCoder",
+      "family": "StarCoder",
+      "origin": "EU",
+      "shared_probes": 19,
+      "template_overhead": 3,
+      "exact_matches": 2,
+      "norm_l1": 0.16553,
+      "score": 0.056,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.8254
+    },
+    {
+      "model": "MPT",
+      "family": "MPT",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": -13,
+      "exact_matches": 2,
+      "norm_l1": 0.18083,
+      "score": 0.0526,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 1.3968
+    },
+    {
+      "model": "GPT-NeoX",
+      "family": "GPT-NeoX",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": -13,
+      "exact_matches": 2,
+      "norm_l1": 0.18083,
+      "score": 0.0526,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 1.3968
+    },
+    {
+      "model": "Refact",
+      "family": "Refact",
+      "origin": "EU",
+      "shared_probes": 19,
+      "template_overhead": 3,
+      "exact_matches": 2,
+      "norm_l1": 0.16852,
+      "score": 0.0526,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.8254
+    },
+    {
+      "model": "InternLM2.5",
+      "family": "InternLM",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": 3,
+      "exact_matches": 2,
+      "norm_l1": 0.20847,
+      "score": 0.0526,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.5238
+    },
+    {
+      "model": "Gemma-2",
+      "family": "Gemma",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": 7,
+      "exact_matches": 2,
+      "norm_l1": 0.24439,
+      "score": 0.0526,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.5952
+    },
+    {
+      "model": "Gemini",
+      "family": "Gemini/Google",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": 6,
+      "exact_matches": 2,
+      "norm_l1": 0.24358,
+      "score": 0.0526,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.5794
+    },
+    {
+      "model": "DeepSeek-LLM",
+      "family": "DeepSeek",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": -26,
+      "exact_matches": 1,
+      "norm_l1": 0.18231,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.5476
+    },
+    {
+      "model": "DeepSeek-Coder",
+      "family": "DeepSeek",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": -51,
+      "exact_matches": 1,
+      "norm_l1": 0.18218,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.6746
+    },
+    {
+      "model": "GPT-2",
+      "family": "GPT-2/OpenAI",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": -55,
+      "exact_matches": 1,
+      "norm_l1": 0.27755,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 2.3175
+    },
+    {
+      "model": "Command-R",
+      "family": "Cohere",
+      "origin": "CA",
+      "shared_probes": 19,
+      "template_overhead": 6,
+      "exact_matches": 1,
+      "norm_l1": 0.16838,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.6111
+    },
+    {
+      "model": "Yi-1.5",
+      "family": "Yi/01.AI",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": -33,
+      "exact_matches": 1,
+      "norm_l1": 0.25159,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.5159
+    },
+    {
+      "model": "MiniCPM3",
+      "family": "MiniCPM",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": -19,
+      "exact_matches": 1,
+      "norm_l1": 0.31519,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.5317
+    },
+    {
+      "model": "Phi-3.5",
+      "family": "Phi",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": -31,
+      "exact_matches": 1,
+      "norm_l1": 0.24942,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 1.4444
+    },
+    {
+      "model": "Mistral-v0.3",
+      "family": "Mistral",
+      "origin": "EU",
+      "shared_probes": 19,
+      "template_overhead": -20,
+      "exact_matches": 1,
+      "norm_l1": 0.23392,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 1.0873
+    },
+    {
+      "model": "Baichuan2",
+      "family": "Baichuan",
+      "origin": "CN",
+      "shared_probes": 19,
+      "template_overhead": -12,
+      "exact_matches": 1,
+      "norm_l1": 0.31633,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 0.4921
+    },
+    {
+      "model": "Claude",
+      "family": "Claude/Anthropic",
+      "origin": "US",
+      "shared_probes": 19,
+      "template_overhead": -43,
+      "exact_matches": 1,
+      "norm_l1": 0.19448,
+      "score": 0.0263,
+      "han_tok_per_char_obs": 0.5317,
+      "han_tok_per_char_ref": 1.1429
+    }
+  ],
+  "drift_seen": false,
+  "verdict": {
+    "provenance": "CONFIRMED",
+    "jurisdiction": "CONFIRMED",
+    "confidence": "high"
+  }
+}
