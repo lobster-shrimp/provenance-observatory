@@ -21,7 +21,7 @@
       "kind": "model",
       "name": "claude-opus-4-8",
       "parent_id": null,
-      "provenance": "UNLIKELY",
+      "provenance": "NO EVIDENCE",
       "span_id": null,
       "truncated": false,
       "unordered": false
@@ -36,7 +36,7 @@
       "kind": "model",
       "name": "claude-sonnet-5",
       "parent_id": null,
-      "provenance": "UNLIKELY",
+      "provenance": "NO EVIDENCE",
       "span_id": null,
       "truncated": false,
       "unordered": false
@@ -51,7 +51,7 @@
       "kind": "model",
       "name": "claude-opus-4-7",
       "parent_id": null,
-      "provenance": "UNLIKELY",
+      "provenance": "NO EVIDENCE",
       "span_id": null,
       "truncated": false,
       "unordered": false
@@ -77,7 +77,7 @@
       }
     ],
     "ordering_incomplete": false,
-    "provenance_verdict": "UNLIKELY",
+    "provenance_verdict": "NO EVIDENCE",
     "steps": 3,
     "switch_detected": true,
     "worst_step_verdict": "UNLIKELY"

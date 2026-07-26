@@ -21,7 +21,7 @@
       "kind": "model",
       "name": "gemini-flash-latest",
       "parent_id": null,
-      "provenance": "INDETERMINATE",
+      "provenance": "NO EVIDENCE",
       "span_id": null,
       "truncated": false,
       "unordered": false
@@ -36,7 +36,7 @@
       "kind": "model",
       "name": "gemini-flash-lite-latest",
       "parent_id": null,
-      "provenance": "INDETERMINATE",
+      "provenance": "NO EVIDENCE",
       "span_id": null,
       "truncated": false,
       "unordered": false
@@ -46,7 +46,7 @@
   "verdict": {
     "alert": true,
     "jurisdiction_verdict": "UNLIKELY",
-    "label": "INDETERMINATE",
+    "label": "UNLIKELY",
     "model_switches": [
       {
         "at_step": 1,
@@ -56,9 +56,9 @@
       }
     ],
     "ordering_incomplete": false,
-    "provenance_verdict": "INDETERMINATE",
+    "provenance_verdict": "NO EVIDENCE",
     "steps": 2,
     "switch_detected": true,
-    "worst_step_verdict": "INDETERMINATE"
+    "worst_step_verdict": "UNLIKELY"
   }
 }
