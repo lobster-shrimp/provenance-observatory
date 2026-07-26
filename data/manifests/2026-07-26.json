@@ -2,8 +2,10 @@
   "schema_version": "0.1.0",
   "date": "2026-07-26",
   "entries": {
+    "agents/platform-anthropic/2026-07-26/verdict.json": "52abfbdc90de97698bd822d4467923e800f74b77fd9762c67c8a5977a841e740",
+    "agents/platform-gemini/2026-07-26/verdict.json": "e27666162239a9178b4f2df6810bd53dd2ac0d48ae1f3ea6011973f439f5325a",
     "control-deepseek-positive/2026-07-26/verdict.json": "316fcb729346efcfab05744501fbd9ec325d0f080a4e028ad207a74778c89afe",
     "control-openai-negative/2026-07-26/verdict.json": "fce034c8f54eda8ca26bf9fb5ccb965f613019a9beebf787a5d1846fb01838e9"
   },
-  "manifest_root": "f4472c5c7fa088c4278897bc444bc52d39f39eeb26da24ff1c63cd09c01a9860"
+  "manifest_root": "29b8d91bb924a01f6f19edb7d71d48edae9fe087b1595b2f13428a1c5e177900"
 }
