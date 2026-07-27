@@ -13,6 +13,10 @@ AI vendors can quietly change which model answers your API calls. The Observator
 ![evidence](https://img.shields.io/badge/evidence-cosign%20%2B%20Rekor%20signed-success)
 ![transparency](https://img.shields.io/badge/publication-full%20transparency-blueviolet)
 
+[![the live Provenance Observatory site](docs/media/observatory-site.png)](https://lobster-shrimp.github.io/provenance-observatory/)
+
+*The live site: full-transparency banner, live control accuracy (0 false positives), and the `chat-z-ai-webapp` model-switch alert (Google Gemini persona → GLM/Zhipu).*
+
 </div>
 
 Built on **[provenance-probe](https://github.com/lobster-shrimp/provenance-probe)** as a black-box CLI dependency — same fingerprinting engine, wrapped in everything a *continuous public* service needs.
