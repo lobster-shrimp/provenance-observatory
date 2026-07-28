@@ -38,6 +38,7 @@ Nightly, it probes a watch list and commits results to git as an **append-only, 
 - ✅ Known-answer + negative **controls** with a published false-positive rate
 - 🏷️ A **confidence label** on every verdict (probabilistic, never "proof")
 - 📝 Prominent **corrections/retractions** — an operator or reader can dispute; wrong verdicts are retracted in the same signed log
+- 🚧 A **publication policy** the signer enforces ([`lib/publish_policy.py`](lib/publish_policy.py)): a proxy (`via_omniroute`) measurement is not certified without a passing calibration + routing disclosure, and a router-vs-fingerprint **CONTRADICTED** cross-check is **quarantined for human review, never auto-published**. Quarantined records are excluded from the signed manifest and shown, with the reason, in the transparency log — see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#publication-policy--what-the-signer-certifies-p2b).
 
 It surfaces the evidence three ways:
 
