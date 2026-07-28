@@ -44,6 +44,24 @@ def test_gated_record_publishable_when_target_public():
     assert gated["publishable"] is True
 
 
+def test_measurement_path_defaults_to_direct():
+    # P2b: measurement provenance is a first-class field; a first-party bundle
+    # (no OmniRoute) is "direct".
+    pub, _ = verdict.split(_bundle())
+    assert pub["measurement_path"] == "direct"
+
+
+def test_measurement_path_and_omniroute_block_carried():
+    b = _bundle()
+    b["measurement_path"] = "via_omniroute"
+    b["omniroute"] = {"router_claim": "oc/deepseek-v4",
+                      "calibration": {"passed": False},
+                      "cross_check": {"state": "INCONCLUSIVE"}}
+    pub, _ = verdict.split(b)
+    assert pub["measurement_path"] == "via_omniroute"
+    assert pub["omniroute"]["router_claim"] == "oc/deepseek-v4"
+
+
 def test_public_target_exposes_verdict_block():
     b = _bundle()
     b["score"]["jurisdictional_risk"] = {"verdict": "LIKELY"}

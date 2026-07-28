@@ -478,11 +478,12 @@ def _transparency_page(manifests: list[dict]) -> str:
             f'<td class="mono">{html.escape(m.get("date",""))}</td>'
             f'<td class="mono small">{html.escape((m.get("manifest_root") or "")[:32])}&hellip;</td>'
             f'<td>{len(m.get("entries", {}))}</td>'
+            f'<td>{_quarantine_count_cell(m)}</td>'
             f'<td>{_rekor_cell(m)}</td>'
             f'<td><a class="ev" href="evidence/{html.escape(m.get("date",""))}.json">manifest</a></td></tr>'
             for m in manifests)
     else:
-        rows = '<tr><td colspan="5" class="muted">No manifests yet.</td></tr>'
+        rows = '<tr><td colspan="6" class="muted">No manifests yet.</td></tr>'
     inner = f"""
 <p>Every day's records are committed to an append-only log and hashed into a
 signed manifest. The <code>manifest_root</code> is the tree head; any change to
@@ -492,10 +493,44 @@ transparency log — that Rekor entry is the independent inclusion proof (no
 separate log server needed). See <a href="verify.html">Verify Evidence</a> to
 check a bundle yourself.</p>
 <table><thead><tr><th>Date</th><th>Tree head (manifest_root)</th><th>Records</th>
-<th>Rekor entry</th><th>Bundle</th></tr></thead><tbody>
+<th>Quarantined</th><th>Rekor entry</th><th>Bundle</th></tr></thead><tbody>
 {rows}
-</tbody></table>"""
+</tbody></table>
+{_quarantine_section(manifests)}"""
     return _page("Transparency Log", inner)
+
+
+def _quarantine_count_cell(m: dict) -> str:
+    q = m.get("quarantined") or []
+    if not q:
+        return '<span class="muted">0</span>'
+    return f'<a class="ev" href="#q-{html.escape(m.get("date",""))}">{len(q)} &#9888;</a>'
+
+
+def _quarantine_section(manifests: list[dict]) -> str:
+    """List records the signer REFUSED to certify, with the reason. Withheld
+    from the signed manifest is not the same as hidden — the raw records remain
+    in the repo and are listed here so the omission is auditable."""
+    blocks = []
+    for m in manifests:
+        q = m.get("quarantined") or []
+        if not q:
+            continue
+        items = "\n".join(
+            f'<li><code class="mono small">{html.escape(x.get("path",""))}</code> — '
+            f'{html.escape(x.get("reason",""))}</li>' for x in q)
+        blocks.append(
+            f'<div id="q-{html.escape(m.get("date",""))}"><h3>{html.escape(m.get("date",""))} '
+            f'— {len(q)} quarantined</h3><ul>{items}</ul></div>')
+    if not blocks:
+        return ""
+    return ("\n<hr><h2>Quarantined records (uncertified)</h2>"
+            "<p>These records exist in the log but were <b>excluded from the signed "
+            "manifest</b> — the signer will not certify them. Most are proxy "
+            "(<code>via_omniroute</code>) measurements without a passing calibration, "
+            "or router-vs-fingerprint <b>CONTRADICTED</b> cross-checks held for human "
+            "review. They are shown here so the omission is transparent, never silent.</p>"
+            + "\n".join(blocks))
 
 
 def _rekor_cell(m: dict) -> str:

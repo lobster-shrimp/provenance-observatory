@@ -32,21 +32,45 @@ def _sha256_file(path: str) -> str:
 
 
 def build_manifest(data_dir: str, date_str: str) -> dict:
-    """Manifest of every record committed for `date_str`, with a root hash.
+    """Manifest of every SIGNABLE record committed for `date_str`, with a root hash.
 
     Entries are keyed by path relative to data_dir (stable across machines).
     manifest_root = sha256 over the canonical "path  hash" lines, sorted — so
     any change to any record, or any added/removed record, changes the root.
+
+    Records that fail the publication policy (lib/publish_policy) are QUARANTINED:
+    excluded from `entries`/`manifest_root` (so the signature never covers them)
+    and listed under `quarantined` with a reason. This is where the signer
+    "refuses to sign" a via_omniroute record without a passing calibration +
+    routing disclosure, and never auto-publishes a CONTRADICTED cross-check.
     """
+    from . import publish_policy
     entries: dict[str, str] = {}
-    for name in ("verdict.json", "no-verdict.json"):
+    quarantined: list[dict] = []
+    # transcript.json carries an interpreted misrepresentation verdict — sign it
+    # too (was previously unsigned) AND run it through the policy, so a proxy /
+    # CONTRADICTED transcript is quarantined, not silently published (adversarial).
+    for name in ("verdict.json", "no-verdict.json", "transcript.json"):
         for p in _iter_records(data_dir, date_str, name):
             rel = os.path.relpath(p, data_dir)
+            try:
+                with open(p) as f:
+                    record = json.load(f)
+            except Exception as e:
+                quarantined.append({"path": rel, "reason": f"unreadable record: {e}"})
+                continue
+            ok, reason = publish_policy.is_publishable(record)
+            if not ok:
+                quarantined.append({"path": rel, "reason": reason})
+                continue
             entries[rel] = _sha256_file(p)
     canonical = "\n".join(f"{k}  {entries[k]}" for k in sorted(entries))
     root = hashlib.sha256(canonical.encode()).hexdigest()
-    return {"schema_version": SCHEMA_VERSION, "date": date_str,
-            "entries": dict(sorted(entries.items())), "manifest_root": root}
+    manifest = {"schema_version": SCHEMA_VERSION, "date": date_str,
+                "entries": dict(sorted(entries.items())), "manifest_root": root}
+    if quarantined:
+        manifest["quarantined"] = sorted(quarantined, key=lambda q: q["path"])
+    return manifest
 
 
 def _iter_records(data_dir: str, date_str: str, filename: str):
@@ -64,6 +88,12 @@ def write_manifest(data_dir: str, date_str: str) -> str:
     path = os.path.join(out_dir, f"{date_str}.json")
     with open(path, "w") as f:
         json.dump(manifest, f, indent=2)
+    # Sidecar quarantine log so the site can surface WHAT was withheld from the
+    # signed manifest and WHY (transparency: withheld ≠ hidden).
+    if manifest.get("quarantined"):
+        qpath = os.path.join(out_dir, f"{date_str}.quarantine.json")
+        with open(qpath, "w") as f:
+            json.dump({"date": date_str, "quarantined": manifest["quarantined"]}, f, indent=2)
     return path
 
 

@@ -60,6 +60,20 @@ def main() -> int:
         sid = openish[-1]["staging_id"]
 
     rec = advisory.promote(a.target, sid, force_window=a.force_window)
+    # Machine guard (adversarial review): promotion is a maintainer action, but a
+    # numbered public advisory must not become a back door around the signer's
+    # quarantine. If the advisory's evidence carries proxy (via_omniroute) or
+    # CONTRADICTED data, refuse — it needs human review, not a published number.
+    sys.path.insert(0, os.path.join(ROOT, "lib"))
+    try:
+        from lib import publish_policy
+    except ImportError:
+        import publish_policy  # type: ignore
+    ok, reason = publish_policy.is_publishable(rec.get("evidence") or {})
+    if not ok:
+        print(f"[refused] {sid}: advisory evidence is quarantine-worthy — {reason}\n"
+              f"          Route this through human review; not auto-promoted.", file=sys.stderr)
+        return 2
     adir = os.path.join(a.data, "advisories")
     os.makedirs(adir, exist_ok=True)
     out = os.path.join(adir, f"{rec['advisory_id']}.json")

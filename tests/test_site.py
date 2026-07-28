@@ -212,6 +212,24 @@ def test_build_writes_per_target_pages(tmp_path):
     assert "t/control-openai-negative.html" in (out / "index.html").read_text()
 
 
+# --- P2b: quarantine surfaced on the transparency log -----------------------
+
+def test_transparency_page_surfaces_quarantined_records():
+    manifests = [{"date": "2026-07-28", "manifest_root": "a" * 64, "entries": {"t1/x": "h"},
+                  "quarantined": [{"path": "omni/2026-07-28/verdict.json",
+                                   "reason": "via_omniroute record has no passing calibration"}]}]
+    page = build._transparency_page(manifests)
+    assert "Quarantined records (uncertified)" in page
+    assert "no passing calibration" in page
+    assert "omni/2026-07-28/verdict.json" in page
+
+
+def test_transparency_page_no_quarantine_section_when_clean():
+    manifests = [{"date": "2026-07-28", "manifest_root": "a" * 64, "entries": {"t1/x": "h"}}]
+    page = build._transparency_page(manifests)
+    assert "Quarantined records (uncertified)" not in page
+
+
 # --- Coverage / degradation indicator ---------------------------------------
 
 def test_coverage_full_vs_degraded():

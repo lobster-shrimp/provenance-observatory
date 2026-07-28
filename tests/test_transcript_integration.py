@@ -51,6 +51,26 @@ def test_load_transcripts_reader(tmp_path):
     assert tx["chat-z-ai-webapp"]["event_count"] == 1
 
 
+def test_first_party_misrepresentation_transcript_still_publishes(tmp_path):
+    # The intentional feature: a first-party misrepresentation finding (no proxy
+    # data) is NOT quarantined by the policy — it publishes under full transparency.
+    data = tmp_path / "data"
+    rec = ingest.split(RESULT, target="x", public=False)
+    rec["verdict"] = {"misrepresentation": True, "severity": "critical", "finding": "..."}
+    _write_transcript(str(data), "chat-z-ai-webapp", rec)
+    assert "chat-z-ai-webapp" in records.load_transcripts(str(data))
+
+
+def test_proxy_or_contradicted_transcript_is_quarantined(tmp_path):
+    # CRITICAL (Claude): a transcript carrying CONTRADICTED / uncalibrated proxy
+    # data must NOT bypass the policy by living in transcript.json.
+    data = tmp_path / "data"
+    bad = ingest.split(RESULT, target="x", public=False)
+    bad["cross_check"] = {"state": "CONTRADICTED"}
+    _write_transcript(str(data), "sneaky-target", bad)
+    assert "sneaky-target" not in records.load_transcripts(str(data))
+
+
 def test_site_surfaces_model_switch(tmp_path):
     data = tmp_path / "data"
     _write_transcript(str(data), "chat-z-ai-webapp", ingest.split(RESULT, target="x", public=False))

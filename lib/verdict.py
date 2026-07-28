@@ -18,7 +18,7 @@ SCHEMA_VERSION = "0.1.0"  # stable field names; bump on any breaking change
 
 # Measurement evidence.
 _NEUTRAL_KEYS = ("tokenizer", "headers", "errors", "streaming", "latency",
-                 "network", "fingerprint_id", "timestamp", "target")
+                 "network", "fingerprint_id", "timestamp", "target", "omniroute")
 
 # Interpretation of that evidence. Published alongside it (full transparency),
 # not withheld — a verdict without its supporting work is less trustworthy, not
@@ -38,6 +38,14 @@ def split(bundle: dict, *, target_public: bool = True) -> tuple[dict, dict]:
         if k in bundle:
             public_record[k] = bundle[k]
     public_record["drift_seen"] = bool(bundle.get("_drift_seen"))
+    # First-class provenance-of-the-measurement (outside-voice #5): was this
+    # measured first-party ("direct") or through a router ("via_omniroute")? The
+    # signer treats via_omniroute records specially (see lib/publish_policy.py),
+    # so this must not be buried inside the omniroute block. If a routing block is
+    # present we default to via_omniroute — a proxy measurement must never be
+    # laundered as direct just by omitting the field (Codex adversarial, HIGH).
+    default_path = "via_omniroute" if bundle.get("omniroute") else "direct"
+    public_record["measurement_path"] = bundle.get("measurement_path", default_path)
 
     if isinstance(bundle.get("score"), dict):
         s = bundle["score"]
