@@ -9,7 +9,7 @@ AI vendors can quietly change which model answers your API calls. The Observator
 **[🌐 View the live Observatory →](https://lobster-shrimp.github.io/provenance-observatory/)**
 
 ![python](https://img.shields.io/badge/python-3.11%2B-blue)
-![tests](https://img.shields.io/badge/tests-96%20passing-brightgreen)
+![tests](https://img.shields.io/badge/tests-121%20passing-brightgreen)
 ![evidence](https://img.shields.io/badge/evidence-cosign%20%2B%20Rekor%20signed-success)
 ![transparency](https://img.shields.io/badge/publication-full%20transparency-blueviolet)
 
@@ -58,7 +58,7 @@ It surfaces the evidence three ways:
 git clone https://github.com/lobster-shrimp/provenance-observatory && cd provenance-observatory
 python3 -m venv .venv && source .venv/bin/activate
 pip install "provenance-probe" pyyaml pytest
-pytest                                              # lib + site + advisory tests (96)
+pytest                                              # lib + site + advisory tests (121)
 python site/build.py --data data --out site/dist   # render the site from committed evidence
 ```
 </details>

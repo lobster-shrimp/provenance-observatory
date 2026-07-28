@@ -16,32 +16,30 @@ HOT_WINDOW_DAYS = 90
 
 
 def load_target_records(data_dir: str) -> dict[str, list[tuple[str, dict]]]:
-    """target -> [(date_str, record)] sorted ascending, hot window only."""
-    cutoff = date.today() - timedelta(days=HOT_WINDOW_DAYS)
-    out: dict[str, list[tuple[str, dict]]] = {}
-    for verdict_path in glob.glob(os.path.join(data_dir, "*", "*", "verdict.json")):
-        parts = verdict_path.split(os.sep)
-        target, dstr = parts[-3], parts[-2]
-        try:
-            if date.fromisoformat(dstr) < cutoff:
-                continue
-        except ValueError:
-            continue
-        with open(verdict_path) as f:
-            rec = json.load(f)
-        out.setdefault(target, []).append((dstr, rec))
-    for recs in out.values():
-        recs.sort(key=lambda x: x[0])
-    return out
+    """target -> [(date_str, record)] sorted ascending, hot window only.
+
+    QUARANTINED records (proxy measurements without a passing calibration, or
+    CONTRADICTED cross-checks) are excluded — they must never render as a public
+    verdict on the site or the API (both read through here). They remain visible
+    in the transparency-log quarantine section via the signed manifest. This is
+    the single choke point that keeps a manifest-quarantine from being cosmetic
+    (Codex adversarial, HIGH).
+    """
+    return _load_records(data_dir, os.path.join(data_dir, "*", "*", "verdict.json"))
 
 
 def load_agent_records(data_dir: str) -> dict[str, list[tuple[str, dict]]]:
     """agent target -> [(date_str, record)] for the agent flight-recorder evidence
     under data/agents/<target>/<date>/verdict.json (one level deeper than endpoint
-    records). Hot window only."""
+    records). Hot window only; quarantined records excluded (see load_target_records)."""
+    return _load_records(data_dir, os.path.join(data_dir, "agents", "*", "*", "verdict.json"))
+
+
+def _load_records(data_dir: str, pattern: str) -> dict[str, list[tuple[str, dict]]]:
+    from . import publish_policy
     cutoff = date.today() - timedelta(days=HOT_WINDOW_DAYS)
     out: dict[str, list[tuple[str, dict]]] = {}
-    for verdict_path in glob.glob(os.path.join(data_dir, "agents", "*", "*", "verdict.json")):
+    for verdict_path in glob.glob(pattern):
         parts = verdict_path.split(os.sep)
         target, dstr = parts[-3], parts[-2]
         try:
@@ -51,6 +49,8 @@ def load_agent_records(data_dir: str) -> dict[str, list[tuple[str, dict]]]:
             continue
         with open(verdict_path) as f:
             rec = json.load(f)
+        if not publish_policy.is_publishable(rec)[0]:
+            continue                        # quarantined -> not a public verdict
         out.setdefault(target, []).append((dstr, rec))
     for recs in out.values():
         recs.sort(key=lambda x: x[0])
@@ -71,17 +71,29 @@ def load_promoted_advisories(data_dir: str) -> dict[str, dict]:
 
 def load_transcripts(data_dir: str) -> dict[str, dict]:
     """target -> latest transcript-analysis record (mid-session model-switch
-    detection). Neutral event counts are always present; the interpreted
-    misrepresentation verdict is withheld for un-cleared targets (two-tier)."""
+    detection). First-party misrepresentation findings publish under full
+    transparency; but a transcript record is run through the SAME publication
+    policy as a verdict (Codex/Claude adversarial, CRITICAL) so one that carries
+    proxy (via_omniroute) or CONTRADICTED cross-check data cannot bypass the gate
+    just by living in transcript.json. Hot-window only, like the other loaders."""
+    from . import publish_policy
+    cutoff = date.today() - timedelta(days=HOT_WINDOW_DAYS)
     latest: dict[str, dict] = {}
     for p in glob.glob(os.path.join(data_dir, "*", "*", "transcript.json")):
         parts = p.split(os.sep)
         target, dstr = parts[-3], parts[-2]
         try:
+            if date.fromisoformat(dstr) < cutoff:
+                continue
+        except ValueError:
+            continue
+        try:
             with open(p) as f:
                 rec = json.load(f)
         except (OSError, ValueError):
             continue
+        if not publish_policy.is_publishable(rec)[0]:
+            continue                        # quarantined -> not surfaced publicly
         rec["date"] = dstr
         if target not in latest or dstr > latest[target].get("date", ""):
             latest[target] = rec
@@ -109,6 +121,8 @@ def load_manifests(data_dir: str) -> list[dict]:
     rekor_log_index}."""
     out = []
     for p in glob.glob(os.path.join(data_dir, "manifests", "*.json")):
+        if p.endswith(".quarantine.json"):
+            continue                       # sidecar, not a manifest (would render a bogus row)
         try:
             with open(p) as f:
                 m = json.load(f)
