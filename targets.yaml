@@ -136,6 +136,28 @@ targets:
     authorized: true                   # own paid account (api.moonshot.ai)
     notes: "Moonshot AI (Beijing-domiciled) operator via api.moonshot.ai — CDN-fronted, so PRC-operator jurisdiction; Moonshot/Kimi tokenizer in reference."
 
+  # --- Local self-hosted route — provenance-vs-jurisdiction showcase --------
+  # A DeepSeek model served through a LOCAL OmniRoute router on 127.0.0.1. The
+  # split it demonstrates is the whole point of the harness: provenance is
+  # CONFIRMED CN (perfect DeepSeek tokenizer fingerprint) while jurisdiction is
+  # UNLIKELY (the endpoint resolves to localhost, not a PRC operator). It is an
+  # OpenAI-style endpoint, so it is probed directly (no capture/replay needed).
+  #
+  # authorized:false ON PURPOSE — 127.0.0.1:20128 only exists on the operator's
+  # machine, so the CI nightly can't reach it and must not try (it would write a
+  # broken HTTP-0 record). This record is captured on-demand locally; the day's
+  # nightly still folds the committed record into the signed manifest (the
+  # manifest hashes every record present in data/, probed this run or not).
+  - name: omniroute-deepseek-local
+    kind: cn-direct
+    base_url: "http://localhost:20128/v1"
+    model: "oc/deepseek-v4-flash-free"
+    api_style: openai
+    expect_family: "DeepSeek-V3"       # must fingerprint to a DeepSeek family (CN)
+    public: true
+    authorized: false                  # local-only endpoint; probed on-demand, never in CI
+    notes: "Local OmniRoute route -> DeepSeek. Provenance CONFIRMED CN (tokenizer score 1.0), jurisdiction UNLIKELY (localhost). Captured on-demand locally, not reachable from CI."
+
   # --- Web-app / platform tool (template adapter) ---------------------------
   # chat.z.ai: a GLM backend that asserts a Google Gemini persona.
   #

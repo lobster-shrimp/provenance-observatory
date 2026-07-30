@@ -1,0 +1,655 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {
+      "cjk_dense": 2144,
+      "cjk_mixed": 2116,
+      "jp_kana": 2133,
+      "ko_hangul": 2116,
+      "ws_runs": 2162,
+      "tabs_deep": 2139,
+      "digits_long": 2267,
+      "punct_repeat": 2100,
+      "emoji_zwj": 2346,
+      "rare_unicode": 2484,
+      "diacritics": 2253,
+      "arabic_hebrew": 2126,
+      "cyrillic": 2114,
+      "code_json": 2229,
+      "code_regex": 2327,
+      "url_paths": 2264,
+      "base64ish": 2263,
+      "md_table": 2193,
+      "mixed_script_cjk_code": 2188,
+      "newline_storm": 2094
+    },
+    "errors": {},
+    "meta": {
+      "echoed_models": [
+        "deepseek-v4-flash-free"
+      ]
+    },
+    "usable": true
+  },
+  "headers": {
+    "status": 200,
+    "server": null,
+    "echoed_model": "deepseek-v4-flash-free",
+    "vendor_headers": [
+      {
+        "header": "x-request-id",
+        "implies": "generic",
+        "value": "c089763c-0ddb-4522-af51-d1b8fc9b20e8"
+      }
+    ],
+    "header_names": [
+      "access-control-allow-headers",
+      "access-control-allow-methods",
+      "access-control-allow-origin",
+      "connection",
+      "content-security-policy",
+      "content-type",
+      "date",
+      "keep-alive",
+      "permissions-policy",
+      "referrer-policy",
+      "strict-transport-security",
+      "transfer-encoding",
+      "vary",
+      "x-content-type-options",
+      "x-correlation-id",
+      "x-frame-options",
+      "x-omniroute-cache",
+      "x-omniroute-cache-hit",
+      "x-omniroute-cost-saved",
+      "x-omniroute-latency-ms",
+      "x-omniroute-model",
+      "x-omniroute-provider",
+      "x-omniroute-response-cost",
+      "x-omniroute-route-class",
+      "x-omniroute-session-id",
+      "x-omniroute-tokens-in",
+      "x-omniroute-tokens-out",
+      "x-omniroute-version",
+      "x-request-id"
+    ],
+    "header_shape_hash": "1ecc52cd4675ddd8"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"temperature: must be between 0 and 2\",\"type\":\"invalid_request_error\",\"code\":\"bad_request\"}}"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"max_tokens: must be a positive integer\",\"type\":\"invalid_request_error\",\"code\":\"bad_request\"}}"
+      },
+      {
+        "probe": "bad_model",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Unable to determine provider for model '__nonexistent_model_probe__'. Use a provider/model prefix (e.g. openai/__nonexistent_model_probe__) or ensure the model is added as a combo entry.\",\"type\":\"invalid_request_error\",\"code\":\"bad_request\"}}"
+      },
+      {
+        "probe": "bad_role",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "type": "str"
+          },
+          "upstream_details": {
+            "error": {
+              "code": "str",
+              "message": "str",
+              "param": "NoneType",
+              "type": "str"
+            }
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"[400]: Error from provider (DeepSeek): Failed to deserialize the JSON body into the target type: messages[0].role: unknown variant `wizard`, expected one of `system`, `user`, `assistant`, `tool`, `latest_reminder` at line 1 column 57\",\"type\":\"invalid_request_error\",\"code\":\"inval"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 400,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "type": "str"
+          },
+          "upstream_details": {
+            "error": {
+              "code": "str",
+              "message": "str",
+              "param": "NoneType",
+              "type": "str"
+            }
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"[400]: Error from provider (DeepSeek): Stop string array too long: 64\",\"type\":\"invalid_request_error\",\"code\":\"invalid_request_error\"},\"upstream_details\":{\"error\":{\"message\":\"Error from provider (DeepSeek): Stop string array too long: 64\",\"type\":\"invalid_request_error\",\"param\":nu"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 200,
+        "schema": {
+          "choices": [
+            {
+              "finish_reason": "str",
+              "index": "int",
+              "logprobs": "NoneType",
+              "message": {
+                "content": "...",
+                "reasoning_content": "...",
+                "role": "..."
+              }
+            }
+          ],
+          "created": "int",
+          "id": "str",
+          "model": "str",
+          "object": "str",
+          "system_fingerprint": "str",
+          "usage": {
+            "completion_tokens": "int",
+            "completion_tokens_details": {
+              "reasoning_tokens": "int"
+            },
+            "prompt_tokens": "int",
+            "prompt_tokens_details": {
+              "cached_tokens": "int"
+            },
+            "total_tokens": "int"
+          }
+        },
+        "excerpt": "{\"id\":\"1938ae3e-4ade-4fad-a4fc-d1b4fe80e67c\",\"object\":\"chat.completion\",\"created\":1785430741,\"model\":\"deepseek-v4-flash-free\",\"choices\":[{\"index\":0,\"finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":\"Thinking\"},\"logprobs\":null}],\"usage\":{\"prompt_tokens\":2084,\"com"
+      }
+    ],
+    "error_signature": "57b9cc1262d862a7"
+  },
+  "streaming": {
+    "chunk_count": 4,
+    "chunk_fields": [
+      "__DONE_sentinel__",
+      "choices",
+      "created",
+      "id",
+      "model",
+      "object",
+      "usage"
+    ],
+    "final_usage_chunk": true,
+    "finish_reason": "stop",
+    "ttft_s": 0.0715
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.0552,
+      "median": 0.017,
+      "p10": 0.009,
+      "p90": 0.0231,
+      "stdev": 0.1276
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.1442,
+      "median": 0.0173,
+      "p10": 0.0091,
+      "p90": 0.0234,
+      "stdev": 0.4218
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.0058,
+      "median": 0.0043,
+      "p10": 0.0023,
+      "p90": 0.0058,
+      "stdev": 0.0053
+    }
+  },
+  "network": {
+    "host": "localhost",
+    "addresses": [],
+    "findings": [
+      {
+        "type": "blocked_host",
+        "severity": "info",
+        "detail": "localhost resolved to private/reserved 127.0.0.1; skipped."
+      },
+      {
+        "type": "blocked_host",
+        "severity": "info",
+        "detail": "localhost resolved to private/reserved ::1; skipped."
+      }
+    ],
+    "jurisdiction": "unknown",
+    "operator": null,
+    "confidence": 0.0
+  },
+  "fingerprint_id": "40196691c559b7d0ab96e5b5",
+  "timestamp": "2026-07-30T16:58:59+00:00",
+  "target": {
+    "name": "omniroute-deepseek-local",
+    "base_url": "http://localhost:20128/v1",
+    "model": "oc/deepseek-v4-flash-free",
+    "api_style": "openai"
+  },
+  "score": {
+    "signals": [
+      {
+        "signal": "model_name_cn",
+        "layer": "wire",
+        "evidence": "API echoed model id 'deepseek-v4-flash-free' -> DeepSeek"
+      },
+      {
+        "signal": "catalog_cn",
+        "layer": "wire",
+        "evidence": "10 PRC-origin model(s) offered by endpoint: auto/glm, auto/minimax, aug/kimi-k2.6, oc/deepseek-v4-flash-free, oc/minimax-m3-free"
+      },
+      {
+        "signal": "tokenizer_match_cn",
+        "layer": "tokenizer",
+        "evidence": "Best tokenizer match DeepSeek-V3 (DeepSeek, origin=CN) score=1.0, 20/20 exact"
+      }
+    ],
+    "jurisdictional_risk": {
+      "likelihood": 0.182,
+      "logodds": 0,
+      "verdict": "UNLIKELY",
+      "meaning": "Inference executed by a PRC-domiciled operator or on PRC soil (PIPL/DSL/CSL/NIL Art.7 exposure)."
+    },
+    "provenance_risk": {
+      "likelihood": 0.987,
+      "logodds": 5.8,
+      "verdict": "CONFIRMED",
+      "meaning": "Model weights are Chinese-origin regardless of where served (bias/integrity/procurement-policy exposure)."
+    },
+    "evidence_coverage": {
+      "network": false,
+      "tokenizer": true,
+      "tokenizer_reference": true,
+      "wire": true,
+      "behavioral": false,
+      "logprobs": false,
+      "artifacts": false,
+      "client_source": false,
+      "deception": false
+    },
+    "confidence": "moderate"
+  },
+  "user_warning": {
+    "level": "orange",
+    "level_label": "Use with caution \u2014 verify before trusting it",
+    "headline": "This app uses an AI model built in China.",
+    "facts": [
+      "The model itself was built in China. Depending on how it is hosted, your messages may or may not leave your country \u2014 but the model's answers may be shaped by rules set in China."
+    ],
+    "actions": [
+      "Do not put confidential work, personal, or client information into this app.",
+      "Check with your IT or security team before using it for anything work-related.",
+      "Consider a provider whose location and ownership you can verify."
+    ],
+    "app": "omniroute-deepseek-local",
+    "url": "http://localhost:20128/v1"
+  },
+  "tokenizer_match": [
+    {
+      "model": "DeepSeek-V3",
+      "family": "DeepSeek",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2083,
+      "exact_matches": 20,
+      "norm_l1": 0.0,
+      "score": 1.0,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.4841
+    },
+    {
+      "model": "Moonshot",
+      "family": "Moonshot",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2083,
+      "exact_matches": 5,
+      "norm_l1": 0.08082,
+      "score": 0.3826,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.4762
+    },
+    {
+      "model": "OpenAI-o200k",
+      "family": "OpenAI",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2084,
+      "exact_matches": 1,
+      "norm_l1": 0.068,
+      "score": 0.321,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.6825
+    },
+    {
+      "model": "Llama-3",
+      "family": "Llama-3",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2083,
+      "exact_matches": 4,
+      "norm_l1": 0.09837,
+      "score": 0.3049,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.7302
+    },
+    {
+      "model": "GLM-4.5",
+      "family": "GLM/Zhipu",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2082,
+      "exact_matches": 1,
+      "norm_l1": 0.12346,
+      "score": 0.1546,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.4921
+    },
+    {
+      "model": "GLM-4-9B",
+      "family": "GLM/Zhipu",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2082,
+      "exact_matches": 1,
+      "norm_l1": 0.12346,
+      "score": 0.1546,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.4921
+    },
+    {
+      "model": "StarCoder",
+      "family": "StarCoder",
+      "origin": "EU",
+      "shared_probes": 20,
+      "template_overhead": 2076,
+      "exact_matches": 1,
+      "norm_l1": 0.13283,
+      "score": 0.1265,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.8254
+    },
+    {
+      "model": "Refact",
+      "family": "Refact",
+      "origin": "EU",
+      "shared_probes": 20,
+      "template_overhead": 2076,
+      "exact_matches": 1,
+      "norm_l1": 0.13529,
+      "score": 0.1191,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.8254
+    },
+    {
+      "model": "Command-R",
+      "family": "Cohere",
+      "origin": "CA",
+      "shared_probes": 20,
+      "template_overhead": 2082,
+      "exact_matches": 1,
+      "norm_l1": 0.13706,
+      "score": 0.1138,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.6111
+    },
+    {
+      "model": "Qwen2/Qwen2.5",
+      "family": "Qwen",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2081,
+      "exact_matches": 2,
+      "norm_l1": 0.16749,
+      "score": 0.05,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.5317
+    },
+    {
+      "model": "Qwen3",
+      "family": "Qwen",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2081,
+      "exact_matches": 2,
+      "norm_l1": 0.16749,
+      "score": 0.05,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.5317
+    },
+    {
+      "model": "Phi-3.5",
+      "family": "Phi",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2043,
+      "exact_matches": 2,
+      "norm_l1": 0.20207,
+      "score": 0.05,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 1.4444
+    },
+    {
+      "model": "DeepSeek-LLM",
+      "family": "DeepSeek",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2044,
+      "exact_matches": 1,
+      "norm_l1": 0.18444,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.5476
+    },
+    {
+      "model": "DeepSeek-Coder",
+      "family": "DeepSeek",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2031,
+      "exact_matches": 1,
+      "norm_l1": 0.18903,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.6746
+    },
+    {
+      "model": "GPT-2",
+      "family": "GPT-2/OpenAI",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2032,
+      "exact_matches": 1,
+      "norm_l1": 0.26379,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 2.3175
+    },
+    {
+      "model": "Falcon",
+      "family": "Falcon/TII",
+      "origin": "AE",
+      "shared_probes": 20,
+      "template_overhead": 2043,
+      "exact_matches": 1,
+      "norm_l1": 0.17528,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 1.1984
+    },
+    {
+      "model": "MPT",
+      "family": "MPT",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2059,
+      "exact_matches": 1,
+      "norm_l1": 0.18951,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 1.3968
+    },
+    {
+      "model": "GPT-NeoX",
+      "family": "GPT-NeoX",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2059,
+      "exact_matches": 1,
+      "norm_l1": 0.18951,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 1.3968
+    },
+    {
+      "model": "OpenAI-cl100k",
+      "family": "OpenAI",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2077,
+      "exact_matches": 1,
+      "norm_l1": 0.1686,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 1.1825
+    },
+    {
+      "model": "Yi-1.5",
+      "family": "Yi/01.AI",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2047,
+      "exact_matches": 1,
+      "norm_l1": 0.24882,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.5159
+    },
+    {
+      "model": "MiniCPM3",
+      "family": "MiniCPM",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2057,
+      "exact_matches": 1,
+      "norm_l1": 0.25306,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.5317
+    },
+    {
+      "model": "InternLM2.5",
+      "family": "InternLM",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2079,
+      "exact_matches": 1,
+      "norm_l1": 0.24631,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.5238
+    },
+    {
+      "model": "Mistral-v0.3",
+      "family": "Mistral",
+      "origin": "EU",
+      "shared_probes": 20,
+      "template_overhead": 2053,
+      "exact_matches": 1,
+      "norm_l1": 0.18919,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 1.0873
+    },
+    {
+      "model": "Baichuan2",
+      "family": "Baichuan",
+      "origin": "CN",
+      "shared_probes": 20,
+      "template_overhead": 2064,
+      "exact_matches": 1,
+      "norm_l1": 0.31604,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.4921
+    },
+    {
+      "model": "Gemma-2",
+      "family": "Gemma",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2086,
+      "exact_matches": 1,
+      "norm_l1": 0.21033,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.5952
+    },
+    {
+      "model": "Claude",
+      "family": "Claude/Anthropic",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2037,
+      "exact_matches": 1,
+      "norm_l1": 0.17657,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 1.1429
+    },
+    {
+      "model": "Gemini",
+      "family": "Gemini/Google",
+      "origin": "US",
+      "shared_probes": 20,
+      "template_overhead": 2086,
+      "exact_matches": 1,
+      "norm_l1": 0.16714,
+      "score": 0.025,
+      "han_tok_per_char_obs": 17.0159,
+      "han_tok_per_char_ref": 0.5794
+    }
+  ],
+  "drift_seen": false,
+  "measurement_path": "direct",
+  "verdict": {
+    "provenance": "CONFIRMED",
+    "jurisdiction": "UNLIKELY",
+    "confidence": "moderate"
+  }
+}
