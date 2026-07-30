@@ -2,8 +2,10 @@
   "schema_version": "0.1.0",
   "date": "2026-07-30",
   "entries": {
+    "chat-z-ai-webapp/2026-07-30/transcript.json": "4428ca294c204321867285b33f1adadf30f5d1b74843993e56ec4167f2509e7d",
     "control-deepseek-positive/2026-07-30/verdict.json": "da57bcfc98c9785849222bc34581de111de27a3b1203c17627b5d2af48c3b81a",
-    "control-openai-negative/2026-07-30/verdict.json": "54a3816cad8a9deef90084bf9d60ce60c7322057516c0e7f85c26840a2225f96"
+    "control-openai-negative/2026-07-30/verdict.json": "54a3816cad8a9deef90084bf9d60ce60c7322057516c0e7f85c26840a2225f96",
+    "omniroute-deepseek-local/2026-07-30/verdict.json": "87b27201a2eaaf620515f55ab79a570b3e6af504a106300733cda1ce2381e0a8"
   },
-  "manifest_root": "19da2f45ef02c321a4999d143f95adbd833c66fc9802020ee7db9e127a69fc57"
+  "manifest_root": "95fc33bc3ae44c5d68c41f7cffb3b672d04fc23b5e900669a9501b127a3ba3df"
 }
