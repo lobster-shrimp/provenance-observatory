@@ -2,8 +2,14 @@
   "schema_version": "0.1.0",
   "date": "2026-08-04",
   "entries": {
+    "anthropic-frontier/2026-08-04/verdict.json": "2aa27b0f196362c6d9c8433f5e44a1be15f3afd31836cdd16ac0cbfbecbde8c7",
+    "chat-z-ai-webapp/2026-08-04/transcript.json": "4428ca294c204321867285b33f1adadf30f5d1b74843993e56ec4167f2509e7d",
+    "chat-z-ai-webapp/2026-08-04/verdict.json": "ea7882c1217f88e3d2f96c1e7216a78737bd05ca06935c083ea6ac357c612f03",
     "control-deepseek-positive/2026-08-04/verdict.json": "dadffa9f45a1e5d27682f7edac3c72c54b1e7b605694857f689b07ce891da5ea",
-    "control-openai-negative/2026-08-04/verdict.json": "94f711d597871971df2745f0d9eccef68dec2261ef4652b97f9833c452266133"
+    "control-openai-negative/2026-08-04/verdict.json": "94f711d597871971df2745f0d9eccef68dec2261ef4652b97f9833c452266133",
+    "deepseek-direct/2026-08-04/verdict.json": "3602b53fa1c07d55421fa24cbbcca6529c08165c5d4d3fae0e16666378be3b78",
+    "moonshot-direct/2026-08-04/verdict.json": "b556a1f44777e29374e8d74da49dfc778a56be517837303779ae80ee28467d78",
+    "openai-frontier/2026-08-04/verdict.json": "0d40c2fe6571eb9a19ac0bdd5b09ba621ccddcb0d8665f5a2df793ed55f71e9a"
   },
-  "manifest_root": "c74574a6a39127ba2f2479b35d151171881e55962ed67374a3a1dd6f4302810f"
+  "manifest_root": "9ffe6ff52ab0a69bfd4bcbcab041a78ed226135c733b7834219415b635fa25db"
 }
