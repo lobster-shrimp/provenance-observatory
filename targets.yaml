@@ -195,8 +195,8 @@ targets:
     response_model_path: "model"
     confront_as: "Zhipu GLM"
     public: true
-    authorized: false      # flip only with written authorization to probe it
-    notes: "GLM-behind-Gemini-persona web app. Nightly = neutral drift watch (deception OFF); expect degraded coverage if usage is suppressed."
+    authorized: true       # operator attests written authorization to probe z.ai (2026-08-04); continuous nightly drift watch
+    notes: "GLM-behind-Gemini-persona web app. Continuous nightly drift/model-switch watch (deception OFF); a switch promotes an MPA advisory + opens a GitHub alert issue. Requires the ZAI_COOKIE secret + a request_template that matches z.ai's live API; a stale cookie/template 401s -> no-verdict. Expect degraded coverage if usage.prompt_tokens is suppressed."
 
   # --- Requested AI web apps / agent platforms (watch list) -----------------
   # Added to the watch list per request. These are third-party authenticated web

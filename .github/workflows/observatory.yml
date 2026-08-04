@@ -28,6 +28,7 @@ jobs:
     permissions:
       contents: write                 # commit data/
       id-token: write                 # cosign keyless OIDC identity
+      issues: write                   # open a model-switch alert issue on drift
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -44,14 +45,47 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}       # live US negative control
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
-          ZAI_COOKIE: ${{ secrets.ZAI_COOKIE }}   # chat.z.ai web-app session (operator-set; unused until authorized=true)
+          ZAI_COOKIE: ${{ secrets.ZAI_COOKIE }}   # chat.z.ai web-app session (operator-set; REQUIRED now that z.ai is authorized:true — a stale/absent cookie 401s -> no-verdict)
           STAGING_PAT: ${{ secrets.STAGING_PAT }}
           COSIGN_YES: "true"
+          OBSERVATORY_PROBE_COMMERCIAL: "1"   # probe authorized commercial/web-app targets (z.ai). Controls run regardless.
         run: python runner/run.py --targets targets.yaml
       - name: Ingest session transcripts (mid-session model-switch detection)
         run: python runner/ingest_transcripts.py --data data --public control-deepseek-positive,control-openai-negative
       - name: Refresh engine eval summary (assurance badge auto-tracks the engine)
         run: bash scripts/refresh-engine-eval.sh
+      - name: Alert on model switch (fast alerting)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A served-model switch on a monitored target promotes a new advisory
+          # record (runner/advisory.py, immediate under full-transparency). Detect
+          # any new/changed advisory this run and open a GitHub issue so the
+          # operator is notified fast (nightly cadence, loud on switch). Never
+          # fails the run.
+          CHANGED=$(git status --porcelain data/advisories/ 2>/dev/null | awk '{print $2}')
+          if [ -n "$CHANGED" ]; then
+            {
+              echo "## ⚠️ Model switch detected — $(date -u +%F)"
+              echo ""
+              echo "A monitored target changed its served-model fingerprint. New/updated advisory record(s):"
+              echo ""
+              for f in $CHANGED; do echo "- \`$f\`"; done
+              echo ""
+              echo "Public log: https://lobster-shrimp.github.io/provenance-observatory/"
+            } > /tmp/switch-alert.md
+            cat /tmp/switch-alert.md >> "$GITHUB_STEP_SUMMARY" || true
+            echo "::warning title=Model switch detected::$(echo $CHANGED | tr '\n' ' ')"
+            gh label create model-switch --color B60205 \
+              --description "Automated: a monitored target's served model changed" 2>/dev/null || true
+            gh issue create --title "⚠️ Model switch detected $(date -u +%F)" \
+              --body-file /tmp/switch-alert.md --label model-switch 2>&1 \
+              || gh issue create --title "⚠️ Model switch detected $(date -u +%F)" --body-file /tmp/switch-alert.md 2>&1 \
+              || echo "issue create failed (non-fatal)"
+          else
+            echo "No model-switch advisory this run." >> "$GITHUB_STEP_SUMMARY" || true
+          fi
       - name: Commit neutral evidence + signed manifest
         run: |
           git config user.name "observatory-bot"
