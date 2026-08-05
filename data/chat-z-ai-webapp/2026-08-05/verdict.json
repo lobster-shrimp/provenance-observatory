@@ -1,0 +1,227 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {},
+    "errors": {
+      "cjk_dense": "no usage field (HTTP 404)",
+      "cjk_mixed": "no usage field (HTTP 404)",
+      "jp_kana": "no usage field (HTTP 404)",
+      "ko_hangul": "no usage field (HTTP 404)",
+      "ws_runs": "no usage field (HTTP 404)",
+      "tabs_deep": "no usage field (HTTP 404)",
+      "digits_long": "no usage field (HTTP 404)",
+      "punct_repeat": "no usage field (HTTP 404)",
+      "emoji_zwj": "no usage field (HTTP 404)",
+      "rare_unicode": "no usage field (HTTP 404)",
+      "diacritics": "no usage field (HTTP 404)",
+      "arabic_hebrew": "no usage field (HTTP 404)",
+      "cyrillic": "no usage field (HTTP 404)",
+      "code_json": "no usage field (HTTP 404)",
+      "code_regex": "no usage field (HTTP 404)",
+      "url_paths": "no usage field (HTTP 404)",
+      "base64ish": "no usage field (HTTP 404)",
+      "md_table": "no usage field (HTTP 404)",
+      "mixed_script_cjk_code": "no usage field (HTTP 404)",
+      "newline_storm": "no usage field (HTTP 404)"
+    },
+    "meta": {},
+    "usable": false
+  },
+  "headers": {
+    "status": 404,
+    "server": "ESA",
+    "echoed_model": null,
+    "vendor_headers": [],
+    "header_names": [
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "eagleid",
+      "server",
+      "set-cookie",
+      "timing-allow-origin",
+      "via",
+      "x-process-time",
+      "x-site-cache-status",
+      "x-trace-id"
+    ],
+    "header_shape_hash": "d7e43b2121f67b29"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 404,
+        "schema": {
+          "detail": "str"
+        },
+        "excerpt": "{\"detail\":\"Not Found\"}"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 404,
+        "schema": {
+          "detail": "str"
+        },
+        "excerpt": "{\"detail\":\"Not Found\"}"
+      },
+      {
+        "probe": "bad_model",
+        "status": 404,
+        "schema": {
+          "detail": "str"
+        },
+        "excerpt": "{\"detail\":\"Not Found\"}"
+      },
+      {
+        "probe": "bad_role",
+        "status": 404,
+        "schema": {
+          "detail": "str"
+        },
+        "excerpt": "{\"detail\":\"Not Found\"}"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 404,
+        "schema": {
+          "detail": "str"
+        },
+        "excerpt": "{\"detail\":\"Not Found\"}"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 404,
+        "schema": {
+          "detail": "str"
+        },
+        "excerpt": "{\"detail\":\"Not Found\"}"
+      }
+    ],
+    "error_signature": "8194bbeb34bb56ef"
+  },
+  "streaming": {
+    "chunk_count": 1,
+    "chunk_fields": [],
+    "final_usage_chunk": false,
+    "finish_reason": null,
+    "ttft_s": 0.4132
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.3263,
+      "median": 0.3015,
+      "p10": 0.2897,
+      "p90": 0.4123,
+      "stdev": 0.0503
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.3263,
+      "median": 0.3015,
+      "p10": 0.2897,
+      "p90": 0.4123,
+      "stdev": 0.0503
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.3263,
+      "median": 0.3015,
+      "p10": 0.2897,
+      "p90": 0.4123,
+      "stdev": 0.0503
+    }
+  },
+  "network": {
+    "host": "chat.z.ai",
+    "addresses": [
+      {
+        "ip": "155.102.177.17",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      }
+    ],
+    "findings": [
+      {
+        "type": "prc_endpoint",
+        "severity": "critical",
+        "detail": "Hostname matches known PRC-operated inference endpoint: Zhipu AI (GLM) - international front"
+      }
+    ],
+    "jurisdiction": "PRC-operator",
+    "operator": "Zhipu AI (GLM) - international front",
+    "confidence": 0.9
+  },
+  "fingerprint_id": "509ad9519d9e272b8c964fb6",
+  "timestamp": "2026-08-05T06:07:08+00:00",
+  "target": {
+    "name": "chat-z-ai-webapp",
+    "base_url": "https://chat.z.ai",
+    "model": "",
+    "api_style": "template"
+  },
+  "score": {
+    "signals": [
+      {
+        "signal": "prc_endpoint",
+        "layer": "network",
+        "evidence": "Hostname matches known PRC-operated inference endpoint: Zhipu AI (GLM) - international front"
+      }
+    ],
+    "jurisdictional_risk": {
+      "likelihood": 0.881,
+      "logodds": 3.5,
+      "verdict": "CONFIRMED",
+      "meaning": "Inference executed by a PRC-domiciled operator or on PRC soil (PIPL/DSL/CSL/NIL Art.7 exposure)."
+    },
+    "provenance_risk": {
+      "likelihood": 0.182,
+      "logodds": 0,
+      "verdict": "INDETERMINATE",
+      "meaning": "Model weights are Chinese-origin regardless of where served (bias/integrity/procurement-policy exposure).",
+      "note": "Primary provenance layer (tokenizer fingerprint) returned no data \u2014 usage suppressed, requests failed, or model unfingerprinted. This is NOT a clean bill; provenance was not actually measured."
+    },
+    "evidence_coverage": {
+      "network": true,
+      "tokenizer": false,
+      "tokenizer_reference": false,
+      "wire": true,
+      "behavioral": false,
+      "logprobs": false,
+      "artifacts": false,
+      "client_source": false,
+      "deception": false
+    },
+    "confidence": "low - insufficient evidence layers; do not report a verdict on this alone"
+  },
+  "user_warning": {
+    "level": "orange",
+    "level_label": "Use with caution \u2014 verify before trusting it",
+    "headline": "Your messages are being sent to servers operated from China.",
+    "facts": [
+      "The company running this service is based in China.",
+      "Under Chinese law, companies based there can be required to hand over data to the government, and are not allowed to tell you when they do.",
+      "Anything you typed here should be treated as no longer private: work documents, personal details, passwords, client information, code."
+    ],
+    "actions": [
+      "Do not put confidential work, personal, or client information into this app.",
+      "Check with your IT or security team before using it for anything work-related.",
+      "Consider a provider whose location and ownership you can verify."
+    ],
+    "app": "chat-z-ai-webapp",
+    "url": "https://chat.z.ai"
+  },
+  "drift_seen": false,
+  "measurement_path": "direct",
+  "verdict": {
+    "provenance": "INDETERMINATE",
+    "jurisdiction": "CONFIRMED",
+    "confidence": "low - insufficient evidence layers; do not report a verdict on this alone"
+  }
+}
