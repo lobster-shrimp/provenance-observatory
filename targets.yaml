@@ -180,23 +180,24 @@ targets:
   - name: chat-z-ai-webapp
     kind: webapp
     base_url: "https://chat.z.ai"
-    chat_path: "/api/paas/v4/chat/completions"
-    models_path: "/api/paas/v4/models"
+    chat_path: "/api/v2/chat/completions"
+    models_path: "/api/v2/models"
     api_style: template
     cookie_env: "ZAI_COOKIE"
+    stream_mode: sse
+    stream_delta_path: "choices.0.delta.content"
     request_template:
-      model: "glm-4.6"
+      model: "glm-5.2"
       messages:
         - {role: user, content: "__PROMPT__"}
-      max_tokens: "__MAX_TOKENS__"
-      temperature: "__TEMPERATURE__"
+      stream: true
     response_text_path: "choices.0.message.content"
     response_prompt_tokens_path: "usage.prompt_tokens"
     response_model_path: "model"
     confront_as: "Zhipu GLM"
     public: true
-    authorized: true       # operator attests written authorization to probe z.ai (2026-08-04); continuous nightly drift watch
-    notes: "GLM-behind-Gemini-persona web app. Continuous nightly drift/model-switch watch (deception OFF); a switch promotes an MPA advisory + opens a GitHub alert issue. Requires the ZAI_COOKIE secret + a request_template that matches z.ai's live API; a stale cookie/template 401s -> no-verdict. Expect degraded coverage if usage.prompt_tokens is suppressed."
+    authorized: true       # operator attests written authorization to probe z.ai (2026-08-04)
+    notes: "GLM web app (now GLM-5.2, was GLM-4.6 — a real model bump). Updated 2026-08-05 to the /api/v2 SSE endpoint. CAVEAT: z.ai's live chat URL carries per-request SIGNED query params (timestamp/requestId/signature_timestamp/token); a static template can't reproduce them, so this cookie-only replay is BEST-EFFORT and may be rejected if z.ai enforces the signature (the builder.io/meta.ai replay wall). If it 401s/403s/errors -> no-verdict; treat as 'not replay-monitorable' and pause. Continuous nightly drift/model-switch watch (deception OFF); a switch promotes an MPA advisory + opens a GitHub alert issue. Expect degraded coverage if usage.prompt_tokens is suppressed."
 
   # --- Requested AI web apps / agent platforms (watch list) -----------------
   # Added to the watch list per request. These are third-party authenticated web
