@@ -196,8 +196,8 @@ targets:
     response_model_path: "model"
     confront_as: "Zhipu GLM"
     public: true
-    authorized: true       # operator attests written authorization to probe z.ai (2026-08-04)
-    notes: "GLM web app (now GLM-5.2, was GLM-4.6 — a real model bump). Updated 2026-08-05 to the /api/v2 SSE endpoint. CAVEAT: z.ai's live chat URL carries per-request SIGNED query params (timestamp/requestId/signature_timestamp/token); a static template can't reproduce them, so this cookie-only replay is BEST-EFFORT and may be rejected if z.ai enforces the signature (the builder.io/meta.ai replay wall). If it 401s/403s/errors -> no-verdict; treat as 'not replay-monitorable' and pause. Continuous nightly drift/model-switch watch (deception OFF); a switch promotes an MPA advisory + opens a GitHub alert issue. Expect degraded coverage if usage.prompt_tokens is suppressed."
+    authorized: false      # PAUSED 2026-08-05: not replay-monitorable (see notes). Operator authorization stands; re-enable if a replayable endpoint appears.
+    notes: "PAUSED 2026-08-05 — z.ai moved chat to a SIGNED per-request API (POST /api/v2/chat/completions with per-request timestamp/requestId/signature_timestamp query params). The gateway 404s any request without a valid signature, and a signature can't be precomputed in a static template (nor replayed later from a capture — it is time-bound). So the observatory's static-template replay cannot reach it (the same wall as builder.io/meta.ai). Empirically confirmed: cookie authenticated (no 401) but the bare path 404s. Last observed served model: GLM-5.2 (up from GLM-4.6) as of 2026-08-05 — itself the kind of switch this monitor exists to catch. Re-activating would require a z.ai-specific request-signing adapter (a separate, fragile effort). Kept configured (v2 path + SSE) so re-enabling is one flag flip if that ships. cookie_env ZAI_COOKIE unused while paused."
 
   # --- Requested AI web apps / agent platforms (watch list) -----------------
   # Added to the watch list per request. These are third-party authenticated web
