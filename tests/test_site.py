@@ -275,6 +275,10 @@ def test_footer_has_working_links_not_dead_spans():
         assert f'href="{href}"' in f
     # the old dead <span>Methodology</span> form must be gone
     assert "<span>Methodology</span>" not in f
+    # the footer "API" link now points at the on-site data dictionary, not a dead
+    # localhost API docs server
+    assert 'href="data-dictionary.html"' in f
+    assert "/api/docs" not in f and "127.0.0.1" not in f
 
 
 def test_build_generates_footer_pages_and_evidence(tmp_path):
@@ -327,7 +331,12 @@ def test_nav_and_controls_present(tmp_path):
     idx = (out / "index.html").read_text()
     assert 'class="nav"' in idx and 'id="stbadge"' in idx           # STATUS badge
     assert 'href="about.html"' in idx and 'href="feed.xml"' in idx  # ABOUT + RSS
-    assert "/api/docs" in idx                                       # API link
+    # API link points at the real machine-readable records (data/ tree), and the
+    # live-probe link is the hosted demo — no dead localhost links on the static site.
+    assert "tree/main/data" in idx                                  # API -> data records
+    assert "provenance-probe-513338163479.us-central1.run.app" in idx  # hosted live probe
+    assert "127.0.0.1" not in idx                                   # no localhost links
+    assert '<link rel="alternate" type="application/rss+xml"' in idx   # RSS autodiscovery
     assert 'class="controls"' in idx and 'id="q"' in idx            # SEARCH + filters
     assert 'id="vtable"' in idx and 'id="viewmore"' in idx          # table + VIEW MORE
     assert "<script>" in idx                                        # enhancement JS
@@ -359,14 +368,30 @@ def test_static_feed_and_about_generated(tmp_path):
 
 
 def test_api_url_is_configurable(tmp_path, monkeypatch):
+    # OBSERVATORY_API_URL still overrides the API link for anyone hosting a real
+    # API; the link now uses the URL verbatim (no hardcoded /api/docs suffix) since
+    # the default target is the static data-records tree, not a docs server.
     monkeypatch.setenv("OBSERVATORY_API_URL", "https://obs.example.org")
     data = tmp_path / "data"
     _write_verdict(str(data), "t1", "aggregator", {"fingerprint_id": "fp"})
     out = tmp_path / "out"
     build.build(str(data), str(out), now_iso="2026-07-24T00:00:00")
     idx = (out / "index.html").read_text()
-    assert "https://obs.example.org/api/docs" in idx                # nav link
+    assert 'href="https://obs.example.org"' in idx                  # nav link (verbatim)
     assert 'API="https://obs.example.org"' in idx                   # injected into JS
+
+
+def test_default_links_are_public_not_localhost(tmp_path):
+    # Regression guard for the static-site broken-link fix: the built index must
+    # ship the hosted probe + the data-records API link and zero localhost links.
+    data = tmp_path / "data"
+    _write_verdict(str(data), "t1", "aggregator", {"fingerprint_id": "fp"})
+    out = tmp_path / "out"
+    build.build(str(data), str(out), now_iso="2026-07-24T00:00:00")
+    idx = (out / "index.html").read_text()
+    assert "127.0.0.1" not in idx and "localhost" not in idx
+    assert build.DEFAULT_PROBE_URL in idx
+    assert build.DEFAULT_API_URL in idx
 
 
 # --- P3: content pages + Rekor transparency surfacing -----------------------
@@ -381,7 +406,7 @@ def test_content_pages_generated_and_linked(tmp_path):
     idx = (out / "index.html").read_text()
     for href in ("how-it-works.html", "faq.html", "data-dictionary.html"):
         assert f'href="{href}"' in idx                       # footer Resources links
-    assert "API Documentation" in idx
+    assert "API &amp; data records" in idx                   # footer API link (-> data dictionary)
 
 
 def test_rekor_index_parsed_and_surfaced():
