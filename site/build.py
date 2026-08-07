@@ -324,11 +324,20 @@ def _advisories_rail(promoted: dict[str, dict]) -> str:
 
 # --- shared chrome ----------------------------------------------------------
 
-def _footer(base: str = "", api_url: str = "") -> str:
+# Public link defaults. The site is a STATIC GitHub Pages build, so links must
+# resolve without any local service running:
+#  - The live probe is the hosted provenance-probe demo (Cloud Run), not localhost.
+#  - There is no hosted observatory API server; the machine-readable records ARE
+#    the append-only JSON in the repo's data/ tree, so the "API" link points there.
+#    Both stay overridable via env for anyone who does host a real API/probe.
+DEFAULT_PROBE_URL = "https://provenance-probe-513338163479.us-central1.run.app"
+DEFAULT_API_URL = ("https://github.com/lobster-shrimp/provenance-observatory/"
+                   "tree/main/data")
+
+
+def _footer(base: str = "") -> str:
     """Real footer with working links. `base` prefixes relative paths for pages
-    served from a subdirectory (t/, a/). `api_url` defaults to the configured
-    OBSERVATORY_API_URL so footer API links match the nav."""
-    api_url = api_url or os.environ.get("OBSERVATORY_API_URL", "http://127.0.0.1:8000")
+    served from a subdirectory (t/, a/)."""
     year = date.today().year
     return f"""<footer>
   <div class="fcols">
@@ -342,7 +351,7 @@ def _footer(base: str = "", api_url: str = "") -> str:
       <a href="{base}how-it-works.html">How It Works</a>
       <a href="{base}faq.html">FAQ</a>
       <a href="{base}data-dictionary.html">Data Dictionary</a>
-      <a href="{api_url}/api/docs">API Documentation</a></div>
+      <a href="{base}data-dictionary.html">API &amp; data records</a></div>
     <div class="fcol"><h4>Policies</h4>
       <a href="{base}disclosure.html">Publication Policy</a>
       <a href="{base}security.html">Security Policy</a>
@@ -1022,7 +1031,7 @@ def _nav(api_url: str, probe_url: str) -> str:
             f'<span class="txt">nightly</span></span>'
             f'<a href="#" onclick="var e=document.getElementById(\'q\');if(e)e.focus();return false">Search</a>'
             f'<a href="about.html">About</a>'
-            f'<a href="{html.escape(api_url)}/api/docs">API</a>'
+            f'<a href="{html.escape(api_url)}">API</a>'
             f'<a href="feed.xml">RSS</a>'
             f'<a href="{html.escape(probe_url)}">Live probe tool &rarr;</a></div>')
 
@@ -1133,8 +1142,8 @@ def _agent_panel(agent_records: dict) -> str:
 def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | None = None,
            manifests: list[dict] | None = None, transcripts: dict | None = None,
            agent_records: dict | None = None) -> str:
-    probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
-    api_url = os.environ.get("OBSERVATORY_API_URL", "http://127.0.0.1:8000")
+    probe_url = os.environ.get("OBSERVATORY_PROBE_URL", DEFAULT_PROBE_URL)
+    api_url = os.environ.get("OBSERVATORY_API_URL", DEFAULT_API_URL)
     app_js = _APP_JS.replace("__API_URL__", api_url).replace("__PAGE_SIZE__", str(PAGE_SIZE))
     manifests = manifests or []
     transcripts = transcripts or {}
@@ -1149,6 +1158,7 @@ def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | N
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Provenance Observatory</title>
+<link rel="alternate" type="application/rss+xml" title="Provenance Observatory" href="feed.xml">
 <style>{_CSS}</style></head><body><div class="wrap">
 {_nav(api_url, probe_url)}
 <header>
@@ -1263,7 +1273,7 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
             f.write(_advisory_page(adv))
 
     # Per-target detail pages (drift timeline + model-change events) under t/.
-    probe_url = os.environ.get("OBSERVATORY_PROBE_URL", "http://127.0.0.1:8770")
+    probe_url = os.environ.get("OBSERVATORY_PROBE_URL", DEFAULT_PROBE_URL)
     tdir = os.path.join(out_dir, "t")
     os.makedirs(tdir, exist_ok=True)
     for target, recs in records.items():
