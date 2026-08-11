@@ -1,17 +1,17 @@
 {
   "passed": true,
   "matrix": {
-    "TP": 5,
+    "TP": 10,
     "FP": 0,
-    "TN": 11,
+    "TN": 24,
     "FN": 0,
     "ERR": 0
   },
   "false_positive_rate": 0.0,
-  "vocab_families_exercised": 11,
+  "vocab_families_exercised": 29,
   "reference_families_total": 25,
-  "generated": "2026-08-10",
-  "engine_commit": "94d47fa",
+  "generated": "2026-08-11",
+  "engine_commit": "f229c90",
   "source": "provenance-probe eval/run_eval.py (hermetic consistency+accuracy gate)",
   "note": "Consistency/regression gate over open-weights GGUF vocabs + scoring bundles. NOT a live-endpoint accuracy claim; real named-vendor accuracy is validated privately."
 }
