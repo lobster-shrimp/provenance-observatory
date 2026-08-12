@@ -1,0 +1,257 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {},
+    "errors": {
+      "cjk_dense": "no usage field (HTTP 401)",
+      "cjk_mixed": "no usage field (HTTP 401)",
+      "jp_kana": "no usage field (HTTP 401)",
+      "ko_hangul": "no usage field (HTTP 401)",
+      "ws_runs": "no usage field (HTTP 401)",
+      "tabs_deep": "no usage field (HTTP 401)",
+      "digits_long": "no usage field (HTTP 401)",
+      "punct_repeat": "no usage field (HTTP 401)",
+      "emoji_zwj": "no usage field (HTTP 401)",
+      "rare_unicode": "no usage field (HTTP 401)",
+      "diacritics": "no usage field (HTTP 401)",
+      "arabic_hebrew": "no usage field (HTTP 401)",
+      "cyrillic": "no usage field (HTTP 401)",
+      "code_json": "no usage field (HTTP 401)",
+      "code_regex": "no usage field (HTTP 401)",
+      "url_paths": "no usage field (HTTP 401)",
+      "base64ish": "no usage field (HTTP 401)",
+      "md_table": "no usage field (HTTP 401)",
+      "mixed_script_cjk_code": "no usage field (HTTP 401)",
+      "newline_storm": "no usage field (HTTP 401)"
+    },
+    "meta": {},
+    "usable": false
+  },
+  "headers": {
+    "status": 401,
+    "server": "cloudflare",
+    "echoed_model": null,
+    "vendor_headers": [],
+    "header_names": [
+      "cf-cache-status",
+      "cf-ray",
+      "connection",
+      "content-encoding",
+      "content-security-policy",
+      "content-type",
+      "date",
+      "request-id",
+      "server",
+      "strict-transport-security",
+      "transfer-encoding",
+      "vary",
+      "x-robots-tag",
+      "x-should-retry"
+    ],
+    "header_shape_hash": "67bbb130e4a78d8f"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"authentication_error\",\"message\":\"x-api-key header is required\"},\"request_id\":\"req_011CdxGciD6Ji5X2iHrZkg5b\"}"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"authentication_error\",\"message\":\"x-api-key header is required\"},\"request_id\":\"req_011CdxGciXgtVUC6FGdW57zN\"}"
+      },
+      {
+        "probe": "bad_model",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"authentication_error\",\"message\":\"x-api-key header is required\"},\"request_id\":\"req_011CdxGcitmavmxK61D3g2EQ\"}"
+      },
+      {
+        "probe": "bad_role",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"authentication_error\",\"message\":\"x-api-key header is required\"},\"request_id\":\"req_011CdxGcjMoMQ2ZmQ2qzujVZ\"}"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"authentication_error\",\"message\":\"x-api-key header is required\"},\"request_id\":\"req_011CdxGcjh9Hii7BQPCmbMAH\"}"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          },
+          "request_id": "str",
+          "type": "str"
+        },
+        "excerpt": "{\"type\":\"error\",\"error\":{\"type\":\"authentication_error\",\"message\":\"x-api-key header is required\"},\"request_id\":\"req_011CdxGcjzk7NgKH6tAHrYmR\"}"
+      }
+    ],
+    "error_signature": "20cd9425d3ea8c93"
+  },
+  "streaming": {
+    "chunk_count": 1,
+    "chunk_fields": [],
+    "final_usage_chunk": false,
+    "finish_reason": null,
+    "ttft_s": 0.0842
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.0792,
+      "median": 0.0787,
+      "p10": 0.0417,
+      "p90": 0.0877,
+      "stdev": 0.0229
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.0793,
+      "median": 0.0788,
+      "p10": 0.0417,
+      "p90": 0.0878,
+      "stdev": 0.0229
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.0793,
+      "median": 0.0788,
+      "p10": 0.0417,
+      "p90": 0.0878,
+      "stdev": 0.0229
+    }
+  },
+  "network": {
+    "host": "api.anthropic.com",
+    "addresses": [
+      {
+        "ip": "160.79.104.10",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      },
+      {
+        "ip": "2607:6bc0::10",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      }
+    ],
+    "findings": [
+      {
+        "type": "first_party",
+        "severity": "info",
+        "detail": "Anthropic is a first-party US model developer serving its own weights; jurisdiction non-PRC. Verify the served model with the tokenizer/behavioral layers (a first-party can still reroute)."
+      }
+    ],
+    "jurisdiction": "non-PRC-firstparty",
+    "operator": "Anthropic",
+    "confidence": 0.85
+  },
+  "fingerprint_id": "571570929b778f298d664a88",
+  "timestamp": "2026-08-12T05:03:57+00:00",
+  "target": {
+    "name": "anthropic-frontier",
+    "base_url": "https://api.anthropic.com/v1",
+    "model": "claude-opus-4-8",
+    "api_style": "anthropic"
+  },
+  "score": {
+    "signals": [],
+    "jurisdictional_risk": {
+      "likelihood": 0.182,
+      "logodds": 0,
+      "verdict": "UNLIKELY",
+      "meaning": "Inference executed by a PRC-domiciled operator or on PRC soil (PIPL/DSL/CSL/NIL Art.7 exposure)."
+    },
+    "provenance_risk": {
+      "likelihood": 0.182,
+      "logodds": 0,
+      "verdict": "INDETERMINATE",
+      "meaning": "Model weights are Chinese-origin regardless of where served (bias/integrity/procurement-policy exposure).",
+      "note": "Primary provenance layer (tokenizer fingerprint) returned no data \u2014 usage suppressed, requests failed, or model unfingerprinted. This is NOT a clean bill; provenance was not actually measured."
+    },
+    "evidence_coverage": {
+      "network": true,
+      "tokenizer": false,
+      "tokenizer_reference": false,
+      "wire": true,
+      "behavioral": false,
+      "logprobs": false,
+      "artifacts": false,
+      "client_source": false,
+      "deception": false
+    },
+    "confidence": "low - insufficient evidence layers; do not report a verdict on this alone"
+  },
+  "user_warning": {
+    "level": "green",
+    "level_label": "No problems found in this check",
+    "headline": "No signs of a hidden or misrepresented AI model.",
+    "facts": [
+      "The checks did not find evidence that this app is disguising which AI model it uses or where your data goes."
+    ],
+    "actions": [
+      "No action needed based on this check.",
+      "Re-check periodically \u2014 services can change their AI provider without notice."
+    ],
+    "app": "anthropic-frontier",
+    "url": "https://api.anthropic.com/v1"
+  },
+  "drift_seen": false,
+  "measurement_path": "direct",
+  "verdict": {
+    "provenance": "INDETERMINATE",
+    "jurisdiction": "UNLIKELY",
+    "confidence": "low - insufficient evidence layers; do not report a verdict on this alone"
+  }
+}
