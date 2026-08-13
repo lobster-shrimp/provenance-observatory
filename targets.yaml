@@ -250,6 +250,36 @@ targets:
     authorized: false
     notes: "Base44 AI app builder. LLM-backed; needs a captured request + BASE44_COOKIE before probing."
 
+  # hix.ai: a Western-frontier-first multi-model aggregator (GPT-5 / Claude /
+  # Gemini dominate its catalog) that ALSO offers CN-origin models — squarely the
+  # mission (a Western-branded surface that can route to Chinese weights). Passive
+  # catalog read (2026-08-13, no probing): its public model list includes Alibaba
+  # Qwen-Image and WAN/Wanx and MiniMax Hailuo (image/video), with Qwen/Kimi/Ernie
+  # referenced in chat. Requests route through hix.ai's OWN tRPC proxy
+  # (hix.ai/api/trpc/...), so the per-request backend is server-side/opaque from
+  # the client — exactly why a black-box active probe is needed to see the Brain.
+  #
+  # NO VERDICT YET — active fingerprint attempted 2026-08-13 (tokenizer-only,
+  # operator-authorized) but BLOCKED at a login wall: an anonymous session hits a
+  # "Sign up to try for free" dialog on message submit, so no completion request
+  # fires. Needs the standard three (written auth + a captured chat request +
+  # HIX_COOKIE), and even then feasibility is open: a tRPC/streaming proxy may
+  # strip usage.prompt_tokens or sign requests per-call (the z.ai wall), in which
+  # case coverage degrades and provenance floors at INDETERMINATE.
+  - name: hix-ai-webapp
+    kind: webapp
+    base_url: "https://hix.ai"
+    chat_path: "CAPTURE_TBD"           # tRPC (hix.ai/api/trpc/...); capture from DevTools → Network
+    api_style: template
+    cookie_env: "HIX_COOKIE"
+    request_template: {}               # fill from a captured request
+    response_text_path: ""
+    response_prompt_tokens_path: ""
+    response_model_path: ""
+    public: true
+    authorized: false                  # third-party; login-gated. Needs written auth + capture + cookie.
+    notes: "hix.ai — Western-frontier-first aggregator (GPT-5/Claude/Gemini) that also offers CN models (Alibaba Qwen/WAN/Wanx, MiniMax Hailuo; Qwen/Kimi/Ernie in chat), served via its own tRPC proxy so the backend is opaque. NO VERDICT: active fingerprint blocked at a signup/login wall 2026-08-13 (anon session can't send a message). Feasibility open — tRPC/streaming may suppress usage.prompt_tokens or sign per-request (z.ai-style). Provide a captured chat request + HIX_COOKIE + written auth to probe."
+
   # Requested but OUT OF SCOPE for this method (no LLM text / prompt-token
   # surface to fingerprint): ElevenLabs (voice/TTS) and Runway (video gen). This
   # provenance method fingerprints an LLM text endpoint via tokenizer/wire/
