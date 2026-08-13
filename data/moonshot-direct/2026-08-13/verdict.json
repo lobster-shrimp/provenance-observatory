@@ -1,0 +1,267 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {},
+    "errors": {
+      "cjk_dense": "no usage field (HTTP 401)",
+      "cjk_mixed": "no usage field (HTTP 401)",
+      "jp_kana": "no usage field (HTTP 401)",
+      "ko_hangul": "no usage field (HTTP 401)",
+      "ws_runs": "no usage field (HTTP 401)",
+      "tabs_deep": "no usage field (HTTP 401)",
+      "digits_long": "no usage field (HTTP 401)",
+      "punct_repeat": "no usage field (HTTP 401)",
+      "emoji_zwj": "no usage field (HTTP 401)",
+      "rare_unicode": "no usage field (HTTP 401)",
+      "diacritics": "no usage field (HTTP 401)",
+      "arabic_hebrew": "no usage field (HTTP 401)",
+      "cyrillic": "no usage field (HTTP 401)",
+      "code_json": "no usage field (HTTP 401)",
+      "code_regex": "no usage field (HTTP 401)",
+      "url_paths": "no usage field (HTTP 401)",
+      "base64ish": "no usage field (HTTP 401)",
+      "md_table": "no usage field (HTTP 401)",
+      "mixed_script_cjk_code": "no usage field (HTTP 401)",
+      "newline_storm": "no usage field (HTTP 401)"
+    },
+    "meta": {},
+    "usable": false
+  },
+  "headers": {
+    "status": 401,
+    "server": "cloudflare",
+    "echoed_model": null,
+    "vendor_headers": [],
+    "header_names": [
+      "cf-cache-status",
+      "cf-ray",
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "msh-request-id",
+      "msh-trace-mode",
+      "server",
+      "set-cookie",
+      "strict-transport-security",
+      "vary",
+      "x-msh-trace-id"
+    ],
+    "header_shape_hash": "23f72d5345e0350e"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Incorrect API key provided\",\"type\":\"incorrect_api_key_error\"}}"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Incorrect API key provided\",\"type\":\"incorrect_api_key_error\"}}"
+      },
+      {
+        "probe": "bad_model",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Incorrect API key provided\",\"type\":\"incorrect_api_key_error\"}}"
+      },
+      {
+        "probe": "bad_role",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Incorrect API key provided\",\"type\":\"incorrect_api_key_error\"}}"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Incorrect API key provided\",\"type\":\"incorrect_api_key_error\"}}"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 401,
+        "schema": {
+          "error": {
+            "message": "str",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\"error\":{\"message\":\"Incorrect API key provided\",\"type\":\"incorrect_api_key_error\"}}"
+      }
+    ],
+    "error_signature": "84c5a66007a5f5af"
+  },
+  "streaming": {
+    "chunk_count": 1,
+    "chunk_fields": [],
+    "final_usage_chunk": false,
+    "finish_reason": null,
+    "ttft_s": 0.2082
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.1953,
+      "median": 0.1941,
+      "p10": 0.1878,
+      "p90": 0.1983,
+      "stdev": 0.0071
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.1953,
+      "median": 0.1942,
+      "p10": 0.1878,
+      "p90": 0.1983,
+      "stdev": 0.0071
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.1953,
+      "median": 0.1942,
+      "p10": 0.1878,
+      "p90": 0.1983,
+      "stdev": 0.0071
+    }
+  },
+  "network": {
+    "host": "api.moonshot.ai",
+    "addresses": [
+      {
+        "ip": "104.18.28.136",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      },
+      {
+        "ip": "104.18.29.136",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      },
+      {
+        "ip": "2606:4700::6812:1c88",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      },
+      {
+        "ip": "2606:4700::6812:1d88",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      }
+    ],
+    "findings": [
+      {
+        "type": "prc_endpoint",
+        "severity": "critical",
+        "detail": "Hostname matches known PRC-operated inference endpoint: Moonshot (Kimi)"
+      }
+    ],
+    "jurisdiction": "PRC-operator",
+    "operator": "Moonshot (Kimi)",
+    "confidence": 0.9
+  },
+  "fingerprint_id": "b4692ab92c4d728b52b282d3",
+  "timestamp": "2026-08-13T05:07:09+00:00",
+  "target": {
+    "name": "moonshot-direct",
+    "base_url": "https://api.moonshot.ai/v1",
+    "model": "kimi-k2.6",
+    "api_style": "openai"
+  },
+  "score": {
+    "signals": [
+      {
+        "signal": "prc_endpoint",
+        "layer": "network",
+        "evidence": "Hostname matches known PRC-operated inference endpoint: Moonshot (Kimi)"
+      }
+    ],
+    "jurisdictional_risk": {
+      "likelihood": 0.881,
+      "logodds": 3.5,
+      "verdict": "CONFIRMED",
+      "meaning": "Inference executed by a PRC-domiciled operator or on PRC soil (PIPL/DSL/CSL/NIL Art.7 exposure)."
+    },
+    "provenance_risk": {
+      "likelihood": 0.182,
+      "logodds": 0,
+      "verdict": "INDETERMINATE",
+      "meaning": "Model weights are Chinese-origin regardless of where served (bias/integrity/procurement-policy exposure).",
+      "note": "Primary provenance layer (tokenizer fingerprint) returned no data \u2014 usage suppressed, requests failed, or model unfingerprinted. This is NOT a clean bill; provenance was not actually measured."
+    },
+    "evidence_coverage": {
+      "network": true,
+      "tokenizer": false,
+      "tokenizer_reference": false,
+      "wire": true,
+      "behavioral": false,
+      "logprobs": false,
+      "artifacts": false,
+      "client_source": false,
+      "deception": false
+    },
+    "confidence": "low - insufficient evidence layers; do not report a verdict on this alone"
+  },
+  "user_warning": {
+    "level": "orange",
+    "level_label": "Use with caution \u2014 verify before trusting it",
+    "headline": "Your messages are being sent to servers operated from China.",
+    "facts": [
+      "The company running this service is based in China.",
+      "Under Chinese law, companies based there can be required to hand over data to the government, and are not allowed to tell you when they do.",
+      "Anything you typed here should be treated as no longer private: work documents, personal details, passwords, client information, code."
+    ],
+    "actions": [
+      "Do not put confidential work, personal, or client information into this app.",
+      "Check with your IT or security team before using it for anything work-related.",
+      "Consider a provider whose location and ownership you can verify."
+    ],
+    "app": "moonshot-direct",
+    "url": "https://api.moonshot.ai/v1"
+  },
+  "drift_seen": false,
+  "measurement_path": "direct",
+  "verdict": {
+    "provenance": "INDETERMINATE",
+    "jurisdiction": "CONFIRMED",
+    "confidence": "low - insufficient evidence layers; do not report a verdict on this alone"
+  }
+}

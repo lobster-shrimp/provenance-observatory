@@ -1,0 +1,419 @@
+{
+  "registry_version": "1",
+  "corpus_version": "2026.07.2",
+  "match": "exact-or-subdomain; most-specific (longest domain) wins",
+  "note": "generated from corpus.py \u2014 do not hand-edit; regenerate with `provenance-probe build-registry`. Sub-CONFIRMED static pointers (who a domain is registered to), never a measured provenance verdict.",
+  "entry_count": 58,
+  "excluded_nonhostname": [
+    "bedrock-runtime",
+    "openai-proxy"
+  ],
+  "entries": [
+    {
+      "domain": "aip.baidubce.com",
+      "operating_entity": "Baidu (Ernie)",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "aiplatform.googleapis.com",
+      "operating_entity": "Google Vertex",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "aliyuncs.com",
+      "operating_entity": "Alibaba Cloud",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.7
+    },
+    {
+      "domain": "api.302.ai",
+      "operating_entity": "302.AI aggregator (PRC-operated)",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.85
+    },
+    {
+      "domain": "api.ai21.com",
+      "operating_entity": "AI21 Labs",
+      "jurisdiction": "IL",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.anthropic.com",
+      "operating_entity": "Anthropic",
+      "jurisdiction": "US",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.baichuan-ai.com",
+      "operating_entity": "Baichuan",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "api.cerebras.ai",
+      "operating_entity": "Cerebras",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.cohere.ai",
+      "operating_entity": "Cohere",
+      "jurisdiction": "CA",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.cohere.com",
+      "operating_entity": "Cohere",
+      "jurisdiction": "CA",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.deepinfra.com",
+      "operating_entity": "DeepInfra",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.deepseek.ai",
+      "operating_entity": "DeepSeek (alt front)",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.deepseek.com",
+      "operating_entity": "DeepSeek",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "api.fireworks.ai",
+      "operating_entity": "Fireworks",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.gptsapi.net",
+      "operating_entity": "PRC-operated relay",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.75
+    },
+    {
+      "domain": "api.groq.com",
+      "operating_entity": "Groq",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.hyperbolic.xyz",
+      "operating_entity": "Hyperbolic",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.lingyiwanwu.com",
+      "operating_entity": "01.AI (Yi)",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "api.llama.com",
+      "operating_entity": "Meta (Llama)",
+      "jurisdiction": "US",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.minimax.chat",
+      "operating_entity": "MiniMax",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "api.minimaxi.com",
+      "operating_entity": "MiniMax",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.95
+    },
+    {
+      "domain": "api.mistral.ai",
+      "operating_entity": "Mistral AI",
+      "jurisdiction": "EU",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.moonshot.ai",
+      "operating_entity": "Moonshot (Kimi)",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.moonshot.cn",
+      "operating_entity": "Moonshot (Kimi)",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "api.novita.ai",
+      "operating_entity": "Novita",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.openai.com",
+      "operating_entity": "OpenAI",
+      "jurisdiction": "US",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.perplexity.ai",
+      "operating_entity": "Perplexity",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.reka.ai",
+      "operating_entity": "Reka",
+      "jurisdiction": "US",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.replicate.com",
+      "operating_entity": "Replicate",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.sambanova.ai",
+      "operating_entity": "SambaNova",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.sensenova.cn",
+      "operating_entity": "SenseTime",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "api.siliconflow.cn",
+      "operating_entity": "SiliconFlow",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "api.siliconflow.com",
+      "operating_entity": "SiliconFlow",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.stepfun.com",
+      "operating_entity": "StepFun",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.95
+    },
+    {
+      "domain": "api.studio.nebius.ai",
+      "operating_entity": "Nebius",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.together.ai",
+      "operating_entity": "Together AI",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.together.xyz",
+      "operating_entity": "Together AI",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "api.x.ai",
+      "operating_entity": "xAI (Grok)",
+      "jurisdiction": "US",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "api.z.ai",
+      "operating_entity": "Zhipu AI (GLM) - international front",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.95
+    },
+    {
+      "domain": "bigmodel.cn",
+      "operating_entity": "Zhipu AI (GLM)",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "chatglm.cn",
+      "operating_entity": "Zhipu AI (ChatGLM)",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "codestral.mistral.ai",
+      "operating_entity": "Mistral AI",
+      "jurisdiction": "EU",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "dashscope-intl.aliyuncs.com",
+      "operating_entity": "Alibaba DashScope Intl (Qwen)",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.9
+    },
+    {
+      "domain": "dashscope.aliyuncs.com",
+      "operating_entity": "Alibaba DashScope (Qwen)",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "generativelanguage.googleapis.com",
+      "operating_entity": "Google (Gemini)",
+      "jurisdiction": "US",
+      "kind": "first-party",
+      "confidence": 0.9
+    },
+    {
+      "domain": "hunyuan.tencentcloudapi.com",
+      "operating_entity": "Tencent Hunyuan",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "inference.baseten.co",
+      "operating_entity": "Baseten",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "intern-ai.org.cn",
+      "operating_entity": "Shanghai AI Lab (InternLM)",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "modelscope.cn",
+      "operating_entity": "Alibaba ModelScope",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.95
+    },
+    {
+      "domain": "myhuaweicloud.com",
+      "operating_entity": "Huawei Cloud",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.7
+    },
+    {
+      "domain": "open.bigmodel.cn",
+      "operating_entity": "Zhipu AI (GLM) - mainland",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "openai.azure.com",
+      "operating_entity": "Azure OpenAI",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "openrouter.ai",
+      "operating_entity": "OpenRouter",
+      "jurisdiction": "unresolved",
+      "kind": "aggregator",
+      "confidence": null
+    },
+    {
+      "domain": "qianfan.baidubce.com",
+      "operating_entity": "Baidu Qianfan",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "spark-api.xf-yun.com",
+      "operating_entity": "iFlytek Spark",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "tencentcloudapi.com",
+      "operating_entity": "Tencent Cloud",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.7
+    },
+    {
+      "domain": "volces.com",
+      "operating_entity": "ByteDance Volcano Engine (Doubao)",
+      "jurisdiction": "PRC",
+      "kind": "prc",
+      "confidence": 0.99
+    },
+    {
+      "domain": "z.ai",
+      "operating_entity": "Zhipu AI (GLM) - international front",
+      "jurisdiction": "PRC-operator",
+      "kind": "prc",
+      "confidence": 0.9
+    }
+  ]
+}
