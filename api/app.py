@@ -129,6 +129,17 @@ def manifest(date_str: str):
     return m
 
 
+@app.get("/api/registry", tags=["transparency"])
+def registry():
+    """The public provider-attribution registry (domain → operating entity →
+    jurisdiction), generated from the probe's corpus.py and signed by the runner.
+    Entries are sub-CONFIRMED static pointers, never a measured provenance verdict."""
+    r = store.registry()
+    if r is None:
+        raise HTTPException(status_code=404, detail="no registry published yet")
+    return r
+
+
 @app.get("/api/search", tags=["meta"])
 def search(q: str = Query("", description="match target name / model / kind")):
     return {"query": q, "results": store.search(q)}
