@@ -34,6 +34,7 @@ from datetime import date
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from lib import verdict, signing  # noqa: E402
 import advisory  # noqa: E402  (runner/ is on sys.path via __file__ dir)
+import build_catalog  # noqa: E402
 import build_registry  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -392,6 +393,12 @@ def main() -> int:
     reg = build_registry.build_signed_registry(DATA_DIR)
     print(f"[registry] built={reg.get('built')} verified={reg.get('verified')} "
           f"signed={reg.get('signed')}: {reg['reason']}")
+    # Refresh + sign the public LLM-API catalog (models.dev x corpus.py, via the
+    # probe CLI). Non-deterministic upstream, so a fail-closed non-empty gate — a
+    # models.dev outage is a clean no-op, never an empty publish.
+    cat = build_catalog.build_signed_catalog(DATA_DIR)
+    print(f"[catalog] built={cat.get('built')} verified={cat.get('verified')} "
+          f"signed={cat.get('signed')}: {cat['reason']}")
     return 0
 
 

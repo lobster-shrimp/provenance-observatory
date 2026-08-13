@@ -86,6 +86,41 @@ a released build-registry version, the runner step **degrades to a clean no-op w
 a stated reason** (never a hard failure) — so nightly runs on the current pin publish
 no registry yet. Bump the pin once the probe releases `build-registry`.
 
+## LLM-API catalog (public, signed, continuously refreshed)
+
+A searchable table of inference APIs × their models × model-card facts (context
+window, price, modalities, open-weights, dates), **joined with corpus.py provenance /
+jurisdiction** — the column no generic model catalog has. Like the registry, the
+probe GENERATES it (`provenance-probe build-catalog`, which fetches models.dev — MIT,
+`github.com/sst/models.dev` — and joins each provider's `api` host to corpus.py) and
+the observatory signs + publishes it. This is what makes the catalog *continuously
+updated*: the probe ships a point-in-time snapshot, the observatory refreshes it
+nightly.
+
+- **Runner** (`runner/build_catalog.py`, wired into `run.py`): each nightly run
+  regenerates the catalog to a TEMP file, **gates it fail-closed on well-formedness +
+  non-emptiness** (a models.dev outage makes `build-catalog` exit non-zero, or yields
+  an empty doc — either way it is a clean no-op, never an empty publish over a good
+  one), signs it (`lib/signing.sign_manifest`), then **atomically promotes** the
+  catalog + bundle into `data/catalog/`.
+- **Deterministic vs not:** unlike the registry (deterministic from corpus.py, so it
+  has a `verify-registry` drift gate and a no-change run keeps its signature), the
+  catalog tracks a **non-deterministic** upstream that changes daily — so there is no
+  drift gate; a byte-identical day still keeps the committed signature, and any real
+  change is re-signed and promoted.
+- **Served** at `/api/catalog` (with a `signed` flag); committed into `data/` like the
+  manifests + registry.
+- **Honesty**: each provenance pointer is sub-CONFIRMED (who a host is registered to),
+  never a measured verdict; aggregators are `jurisdiction: unresolved`. The signer
+  certifies the artifact (the join was done faithfully), not a verdict.
+
+**Release coordination (open):** same pin blocker as the registry — `build-catalog`
+needs a probe recent enough (it shipped after 0.4.1), so on the current
+`provenance-probe==0.4.1` pin the runner step is a **clean no-op with a stated
+reason**. Bump the pin once the probe releases `build-catalog` to activate the nightly
+catalog publish. **A public Pages table over `/api/catalog` is a planned follow-on**
+(the API + signed artifact land first).
+
 ## Launch gates (Gate 1 is the real blocker)
 
 1. Legal standing — counsel clears named-vendor verdicts (Together's benchmarking

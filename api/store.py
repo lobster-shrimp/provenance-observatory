@@ -163,6 +163,25 @@ class Store:
         doc["signed"] = os.path.exists(path + ".cosign.bundle")
         return doc
 
+    def catalog(self) -> dict | None:
+        """The published LLM-API catalog (models.dev x corpus.py, refreshed + signed
+        nightly). None if not published yet. Read fresh so /api/reload isn't required
+        after a nightly regenerate; a partial/non-object write degrades to None."""
+        import json
+        path = os.path.join(self.data_dir, "catalog", "catalog.json")
+        if not os.path.exists(path):
+            return None
+        try:
+            with open(path, encoding="utf-8") as fh:
+                loaded = json.load(fh)
+        except (OSError, ValueError):
+            return None
+        if not isinstance(loaded, dict) or "providers" not in loaded:
+            return None
+        doc = dict(loaded)
+        doc["signed"] = os.path.exists(path + ".cosign.bundle")
+        return doc
+
     def status(self) -> dict:
         latest = self._manifests[0] if self._manifests else {}
         n_aggr = sum(1 for r in self.records.values()

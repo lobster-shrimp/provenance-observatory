@@ -140,6 +140,19 @@ def registry():
     return r
 
 
+@app.get("/api/catalog", tags=["transparency"])
+def catalog():
+    """The public LLM-API catalog: inference APIs x models x model-card facts
+    (context, price, modalities, open-weights), JOINED with corpus.py provenance /
+    jurisdiction. Refreshed from models.dev (MIT) and signed by the nightly runner.
+    Each provenance pointer is sub-CONFIRMED (who a host is registered to), never a
+    measured verdict — run the probe for that."""
+    c = store.catalog()
+    if c is None:
+        raise HTTPException(status_code=404, detail="no catalog published yet")
+    return c
+
+
 @app.get("/api/search", tags=["meta"])
 def search(q: str = Query("", description="match target name / model / kind")):
     return {"query": q, "results": store.search(q)}
