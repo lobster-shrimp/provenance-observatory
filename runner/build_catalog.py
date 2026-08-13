@@ -32,6 +32,12 @@ from lib import signing
 
 CATALOG_SUBDIR = "catalog"
 CATALOG_FILENAME = "catalog.json"
+# A change that drops model_count below this fraction of the published catalog is
+# treated as a suspected partial/degraded models.dev fetch and REJECTED (kept for
+# review), not published. Closes the one gap a non-deterministic source leaves that
+# the registry's deterministic verify gate covers: without it, a truncated rc-0
+# fetch (e.g. 1 model) could silently replace a healthy 6000-model catalog.
+CATALOG_SHRINK_FLOOR = 0.5
 
 
 def _looks_unavailable(stderr: str) -> bool:
@@ -71,9 +77,19 @@ def _validate(text: str | None) -> str | None:
     provs = doc.get("providers")
     if not isinstance(provs, list) or not provs:
         return "no providers"
-    if not isinstance(doc.get("model_count"), int) or doc["model_count"] <= 0:
+    mc = doc.get("model_count")
+    if not isinstance(mc, int) or isinstance(mc, bool) or mc <= 0:
         return "no models"
     return None
+
+
+def _model_count(text: str | None) -> int:
+    """model_count of a catalog text blob, or 0 if unreadable."""
+    try:
+        n = json.loads(text or "").get("model_count")
+        return n if isinstance(n, int) and not isinstance(n, bool) and n > 0 else 0
+    except (json.JSONDecodeError, AttributeError, TypeError):
+        return 0
 
 
 def build_signed_catalog(data_dir: str, *, run=subprocess.run) -> dict:
@@ -127,6 +143,19 @@ def build_signed_catalog(data_dir: str, *, run=subprocess.run) -> dict:
                 "signed": os.path.exists(final_bundle),
                 "bundle": final_bundle if os.path.exists(final_bundle) else None,
                 "reason": "unchanged; catalog already published", "path": final}
+
+    # 3b. shrink floor: a well-formed but sharply smaller catalog is a suspected
+    #     partial upstream fetch, not a real change — reject and keep the prior
+    #     (fail-closed). Prior text was just read above (the no-change compare).
+    prior_count = _model_count(_read(final))
+    new_count = _model_count(text)
+    if prior_count > 0 and new_count < prior_count * CATALOG_SHRINK_FLOOR:
+        _rm(tmp)
+        return {"built": True, "verified": False, "signed": False,
+                "reason": f"catalog shrank {prior_count}->{new_count} models "
+                          f"(below {int(CATALOG_SHRINK_FLOOR * 100)}% of the published catalog; "
+                          "suspected partial models.dev fetch — kept prior, needs review)",
+                "path": final}
 
     # 4. content changed: sign the TEMP, then atomically promote. Remove the old
     #    bundle BEFORE swapping content, so a crash mid-promote leaves signed:false

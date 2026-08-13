@@ -106,6 +106,29 @@ def test_malformed_json_rejected(tmp_path):
     assert res["verified"] is False and "not valid JSON" in res["reason"]
 
 
+def test_shrink_floor_rejects_suspected_partial_fetch(tmp_path):
+    # a well-formed but sharply smaller catalog (suspected partial models.dev fetch)
+    # must NOT replace a healthy signed catalog.
+    data = str(tmp_path)
+    healthy = dict(_GOOD, model_count=6000)
+    path = _publish(data, healthy, signed=True)
+    tiny = dict(_GOOD, model_count=3)                         # rc-0, well-formed, but a fraction
+    res = build_catalog.build_signed_catalog(data, run=_fake_cli(content=tiny))
+    assert res["verified"] is False and res["signed"] is False
+    assert "shrank" in res["reason"]
+    assert json.load(open(path))["model_count"] == 6000       # prior kept
+    assert os.path.exists(path + ".cosign.bundle")            # signature intact
+
+
+def test_modest_change_passes_shrink_floor(tmp_path):
+    # a normal day (small delta, or growth) is published, not blocked by the floor.
+    data = str(tmp_path)
+    _publish(data, dict(_GOOD, model_count=100), signed=False)
+    grown = dict(_GOOD, model_count=140, providers=[dict(_GOOD["providers"][0], name="DeepSeek2")])
+    res = build_catalog.build_signed_catalog(data, run=_fake_cli(content=grown))
+    assert res["verified"] is True                            # promoted, not blocked
+
+
 def test_unchanged_run_keeps_committed_signature(tmp_path):
     data = str(tmp_path)
     path = _publish(data, _GOOD, signed=True)
