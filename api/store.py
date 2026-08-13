@@ -144,6 +144,25 @@ class Store:
     def manifest(self, date_str: str) -> dict | None:
         return self._mbd.get(date_str)
 
+    def registry(self) -> dict | None:
+        """The published provider-attribution registry (generated from the probe's
+        corpus.py, signed by the nightly runner). None if not published yet.
+        Read fresh so /api/reload isn't required after a nightly regenerate."""
+        import json
+        path = os.path.join(self.data_dir, "registry", "registry.json")
+        if not os.path.exists(path):
+            return None
+        try:
+            with open(path, encoding="utf-8") as fh:
+                loaded = json.load(fh)
+        except (OSError, ValueError):
+            return None
+        if not isinstance(loaded, dict):     # a bare scalar / partial write is not a registry
+            return None
+        doc = dict(loaded)
+        doc["signed"] = os.path.exists(path + ".cosign.bundle")
+        return doc
+
     def status(self) -> dict:
         latest = self._manifests[0] if self._manifests else {}
         n_aggr = sum(1 for r in self.records.values()

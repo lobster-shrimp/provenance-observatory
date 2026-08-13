@@ -34,6 +34,7 @@ from datetime import date
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from lib import verdict, signing  # noqa: E402
 import advisory  # noqa: E402  (runner/ is on sys.path via __file__ dir)
+import build_registry  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 DATA_DIR = os.environ.get("OBSERVATORY_DATA_DIR", os.path.join(ROOT, "data"))
@@ -386,6 +387,11 @@ def main() -> int:
     mpath = signing.write_manifest(DATA_DIR, date.today().isoformat())
     sig = signing.sign_manifest(mpath)
     print(f"[manifest] {mpath} (signed={sig['signed']}: {sig['reason']})")
+    # Regenerate + sign the public provider-attribution registry (from the probe's
+    # corpus.py, via its CLI). Degrades cleanly if the installed probe predates it.
+    reg = build_registry.build_signed_registry(DATA_DIR)
+    print(f"[registry] built={reg.get('built')} verified={reg.get('verified')} "
+          f"signed={reg.get('signed')}: {reg['reason']}")
     return 0
 
 
