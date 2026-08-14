@@ -253,7 +253,6 @@ def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None,
     tgt = latest.get("target") or {}
     kind = (tgt.get("kind") if isinstance(tgt, dict) else "") or ""
     model = html.escape(str(tgt.get("model", "") if isinstance(tgt, dict) else ""))
-    fp = html.escape((latest.get("fingerprint_id") or "")[:12])
     prov, juris, conf = _interpreted_cells(latest, promoted)
 
     # Raw values for client-side filtering (data-* attributes). Rows with no
@@ -388,6 +387,131 @@ def _page(title: str, inner: str, *, base: str = "") -> str:
             f'<div class="topnav"><a href="{base}index.html">&larr; Observatory</a></div>'
             f'<header><h1>{html.escape(title)}</h1></header>'
             f'<div class="prose">{inner}</div>{_footer(base)}</div></body></html>')
+
+
+# --- LLM-API catalog page (public running table) ----------------------------
+# Renders the signed catalog artifact (data/catalog/catalog.json — produced by the
+# probe's build-catalog, refreshed + signed nightly). The catalog is EXTERNAL data
+# (models.dev), so every field is html.escape()d. We read the published JSON only
+# (never import probe internals — T7); flattening providers->models here is just
+# projecting the artifact's own shape, the same as reading verdict.json.
+_CATALOG_ROW_CAP = 1500
+
+
+def _load_catalog(data_dir: str) -> dict | None:
+    path = os.path.join(data_dir, "catalog", "catalog.json")
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except (OSError, ValueError):
+        return None
+    if not isinstance(doc, dict) or "providers" not in doc:
+        return None
+    doc = dict(doc)
+    doc["signed"] = os.path.exists(path + ".cosign.bundle")
+    return doc
+
+
+def _catalog_rows(catalog: dict, kinds: tuple[str, ...]) -> list[dict]:
+    """Flatten providers->models for providers whose provenance kind is in `kinds`."""
+    rows: list[dict] = []
+    for p in catalog.get("providers") or []:
+        prov = p.get("provenance") or {}
+        if prov.get("kind") not in kinds:
+            continue
+        for m in p.get("models") or []:
+            rows.append({"jur": prov.get("jurisdiction") or "", "kind": prov.get("kind") or "",
+                         "provider": p.get("name") or "", "host": p.get("api_host") or "",
+                         "api": p.get("api_url") or "", "model": m.get("id") or "",
+                         "context": m.get("context"), "ci": m.get("cost_input"),
+                         "co": m.get("cost_output"), "ow": m.get("open_weights")})
+    return rows
+
+
+def _num_or_dash(v) -> str:
+    return str(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else "—"
+
+
+def _catalog_table_html(rows: list[dict]) -> str:
+    out = []
+    for r in rows[:_CATALOG_ROW_CAP]:
+        cn = str(r["jur"]).upper().startswith("PRC") or str(r["jur"]).upper() == "CN"
+        pill_cls = "cn" if cn else "muted"
+        ctx = r.get("context")
+        ctx_s = f"{ctx // 1000}k" if isinstance(ctx, int) and not isinstance(ctx, bool) and ctx else "—"
+        ci, co = _num_or_dash(r.get("ci")), _num_or_dash(r.get("co"))
+        ow = r.get("ow")
+        ow_s = "open" if ow is True else ("closed" if ow is False else "—")
+        hay = html.escape(f"{r['jur']} {r['provider']} {r['host']} {r['model']}".lower())
+        out.append(
+            f'<tr data-h="{hay}">'
+            f'<td><span class="{pill_cls}">{html.escape(str(r["jur"]) or "—")}</span></td>'
+            f'<td>{html.escape(r["provider"])}'
+            f'<div class="mono small">{html.escape(r["host"])}</div></td>'
+            f'<td>{html.escape(r["model"])}</td>'
+            f'<td>{ctx_s}</td><td>${html.escape(ci)} / ${html.escape(co)}</td>'
+            f'<td>{ow_s}</td></tr>')
+    return "".join(out)
+
+
+_CATALOG_FILTER_JS = """
+(function(){
+  var q=document.getElementById('cq'), rows=document.querySelectorAll('#ctable tbody tr'),
+      cnt=document.getElementById('ccount');
+  function apply(){
+    var t=(q.value||'').trim().toLowerCase(), n=0;
+    rows.forEach(function(r){
+      var show = !t || (r.getAttribute('data-h')||'').indexOf(t)>=0;
+      r.style.display = show ? '' : 'none'; if(show) n++;
+    });
+    if(cnt) cnt.textContent = n + ' of ' + rows.length + ' shown';
+  }
+  if(q){ q.addEventListener('input', apply); apply(); }
+})();
+"""
+
+
+def _catalog_page(catalog: dict | None, *, probe_url: str, api_url: str) -> str:
+    if catalog is None:
+        inner = ('<p>No catalog has been published yet. The nightly runner refreshes it '
+                 'from <a href="https://models.dev">models.dev</a> and signs it; until then, '
+                 f'search the full catalog in the <a href="{html.escape(probe_url)}/catalog">'
+                 'probe tool</a>.</p>')
+        return _page("LLM-API catalog", inner)
+    # Mission-focused public table: the Chinese-origin (PRC) inference APIs the
+    # observatory exists to surface. The complete multi-thousand-model catalog
+    # (incl. aggregators + first-party) is at /api/catalog and searchable in the probe.
+    rows = _catalog_rows(catalog, ("prc",))
+    rows.sort(key=lambda r: (r["provider"], r["model"]))
+    total_models = catalog.get("model_count", 0)
+    total_providers = catalog.get("provider_count", 0)
+    signed = catalog.get("signed")
+    sig_badge = ('<span class="cn">signed</span>' if signed
+                 else '<span class="muted">snapshot (unsigned; nightly refresh signs it)</span>')
+    cap_note = (f' Showing the first {_CATALOG_ROW_CAP} — see the API for all.'
+                if len(rows) > _CATALOG_ROW_CAP else "")
+    inner = f"""
+<p class="lead">Which inference APIs serve which models — and who runs them. Built from
+<a href="https://models.dev">models.dev</a> (MIT) and joined with this project's
+provenance / jurisdiction attribution: <b>{total_providers} providers · {total_models}
+models</b> · corpus {html.escape(str(catalog.get("corpus_version") or ""))} · {sig_badge}.</p>
+<p>This table shows the <b>Chinese-origin (PRC-operated) APIs</b> — the ones this
+observatory exists to surface ({len(rows)} model rows).{cap_note} The complete catalog
+(aggregators + first-party included) is at <a href="{html.escape(api_url)}">the API</a>
+(<code>/api/catalog</code>, signed) and fully searchable in the
+<a href="{html.escape(probe_url)}/catalog">probe tool</a>.</p>
+<p class="muted small">Each row's provenance is a <b>sub-confirmed pointer</b> (who an API
+host is registered to), never a measured verdict — run the probe for that. Aggregators
+resolve jurisdiction but not provenance, so they are not shown here.</p>
+<div class="controls"><input id="cq" type="search" placeholder="Filter provider / host / model…"
+ aria-label="Filter the catalog"><span id="ccount" class="muted small"></span></div>
+<table id="ctable"><thead><tr><th>Jurisdiction</th><th>Provider / API</th><th>Model</th>
+<th>Context</th><th>$ in / out</th><th>Weights</th></tr></thead>
+<tbody>{_catalog_table_html(rows)}</tbody></table>
+<script>{_CATALOG_FILTER_JS}</script>"""
+    return _page("LLM-API catalog", inner)
 
 
 # --- footer content pages (real, static) ------------------------------------
@@ -1030,6 +1154,7 @@ def _nav(api_url: str, probe_url: str) -> str:
             f'<span class="stbadge" id="stbadge"><span class="stdot"></span>'
             f'<span class="txt">nightly</span></span>'
             f'<a href="#" onclick="var e=document.getElementById(\'q\');if(e)e.focus();return false">Search</a>'
+            f'<a href="catalog.html">Catalog</a>'
             f'<a href="about.html">About</a>'
             f'<a href="{html.escape(api_url)}">API</a>'
             f'<a href="feed.xml">RSS</a>'
@@ -1215,6 +1340,9 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     manifests = _manifests(data_dir)
     transcripts = _load_transcripts(data_dir)
     agent_records = _records.load_agent_records(data_dir)
+    catalog = _load_catalog(data_dir)
+    probe_url = os.environ.get("OBSERVATORY_PROBE_URL", DEFAULT_PROBE_URL)
+    api_url = os.environ.get("OBSERVATORY_API_URL", DEFAULT_API_URL)
     now_iso = now_iso or datetime.utcnow().isoformat()
     os.makedirs(out_dir, exist_ok=True)
 
@@ -1225,6 +1353,7 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
 
     # Footer + nav content pages (real links, not dead spans).
     for fname, doc in (
+        ("catalog.html", _catalog_page(catalog, probe_url=probe_url, api_url=api_url)),
         ("methodology.html", _methodology_page()),
         ("disclosure.html", _disclosure_page()),
         ("verify.html", _verify_page()),
