@@ -4,7 +4,7 @@
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
   "provider_count": 185,
-  "model_count": 6319,
+  "model_count": 6328,
   "providers": [
     {
       "provider_id": "302ai",
@@ -18995,6 +18995,27 @@
           "last_updated": "2026-04-24"
         },
         {
+          "id": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "name": "Deepseek V4 Pro 0813",
+          "family": "deepseek-thinking",
+          "context": 1000000,
+          "max_output": 262144,
+          "cost_input": 1.32,
+          "cost_output": 3.96,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-12",
+          "knowledge": "",
+          "last_updated": "2026-08-12"
+        },
+        {
           "id": "moonshotai/Kimi-K2.5",
           "name": "Kimi K2.5",
           "family": "kimi-k2",
@@ -26366,8 +26387,8 @@
           "family": "deepseek-flash",
           "context": 1000000,
           "max_output": 384000,
-          "cost_input": 0.16,
-          "cost_output": 0.32,
+          "cost_input": 0.45,
+          "cost_output": 1.35,
           "modalities_in": [
             "text"
           ],
@@ -26387,8 +26408,8 @@
           "family": "deepseek-thinking",
           "context": 1000000,
           "max_output": 384000,
-          "cost_input": 0.47,
-          "cost_output": 0.94,
+          "cost_input": 1.35,
+          "cost_output": 4.05,
           "modalities_in": [
             "text"
           ],
@@ -51947,6 +51968,28 @@
           "last_updated": "2025-08-26"
         },
         {
+          "id": "dots-studio/dots-3-note-preview:free",
+          "name": "Dots Studio: Dots3-Note Preview (free)",
+          "family": "",
+          "context": 512000,
+          "max_output": 512000,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "google/gemini-2.5-flash",
           "name": "Gemini 2.5 Flash",
           "family": "gemini-flash",
@@ -52985,7 +53028,7 @@
           "name": "LiquidAI: LFM2.5-2.6B (free)",
           "family": "liquid",
           "context": 128000,
-          "max_output": 32768,
+          "max_output": 8192,
           "cost_input": 0,
           "cost_output": 0,
           "modalities_in": [
@@ -58078,10 +58121,10 @@
           "id": "z-ai/glm-4.6",
           "name": "GLM-4.6",
           "family": "glm",
-          "context": 204800,
+          "context": 202752,
           "max_output": 131072,
-          "cost_input": 0.55,
-          "cost_output": 2.2,
+          "cost_input": 0.5,
+          "cost_output": 2,
           "modalities_in": [
             "text"
           ],
@@ -92055,6 +92098,31 @@
           "last_updated": "2026-05-19"
         },
         {
+          "id": "google/gemini-3.5-flash-lite",
+          "name": "Gemini 3.5 Flash Lite",
+          "family": "gemini-flash-lite",
+          "context": 1048576,
+          "max_output": 65536,
+          "cost_input": 0.3,
+          "cost_output": 2.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "video",
+            "audio",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-21",
+          "knowledge": "2026-03",
+          "last_updated": "2026-07-21"
+        },
+        {
           "id": "google/gemini-3.6-flash",
           "name": "Gemini 3.6 Flash",
           "family": "gemini-flash",
@@ -92078,6 +92146,27 @@
           "release_date": "2026-07-21",
           "knowledge": "2026-03",
           "last_updated": "2026-07-21"
+        },
+        {
+          "id": "minimax/minimax-m2.7",
+          "name": "MiniMax-M2.7",
+          "family": "minimax",
+          "context": 204800,
+          "max_output": 131072,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-03-18",
+          "knowledge": "",
+          "last_updated": "2026-03-18"
         },
         {
           "id": "moonshotai/kimi-k2.5",
@@ -92124,6 +92213,29 @@
           "release_date": "2026-04-21",
           "knowledge": "2025-01",
           "last_updated": "2026-04-21"
+        },
+        {
+          "id": "moonshotai/kimi-k2.7-code",
+          "name": "Kimi K2.7 Code",
+          "family": "kimi-k2",
+          "context": 262144,
+          "max_output": 262144,
+          "cost_input": 0.95,
+          "cost_output": 4,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-06-12",
+          "knowledge": "2025-01",
+          "last_updated": "2026-06-12"
         },
         {
           "id": "moonshotai/kimi-k2.7-code-highspeed",
@@ -92461,6 +92573,28 @@
           "release_date": "2026-03-17",
           "knowledge": "2025-08-31",
           "last_updated": "2026-03-17"
+        },
+        {
+          "id": "openai/gpt-5.4-pro",
+          "name": "GPT-5.4 Pro",
+          "family": "gpt-pro",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 30,
+          "cost_output": 180,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-03-05",
+          "knowledge": "2025-08-31",
+          "last_updated": "2026-03-05"
         },
         {
           "id": "openai/gpt-5.5",
@@ -96098,6 +96232,31 @@
           "last_updated": "2026-05-31"
         },
         {
+          "id": "muse-spark-1.2",
+          "name": "Muse Spark 1.2",
+          "family": "muse",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 1.25,
+          "cost_output": 4.25,
+          "modalities_in": [
+            "text",
+            "image",
+            "video",
+            "pdf",
+            "audio"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-05",
+          "knowledge": "",
+          "last_updated": "2026-08-05"
+        },
+        {
           "id": "nemotron-3-super-free",
           "name": "Nemotron 3 Super Free",
           "family": "nemotron-free",
@@ -98170,6 +98329,28 @@
           "last_updated": "2026-08-12"
         },
         {
+          "id": "dots-studio/dots-3-note-preview:free",
+          "name": "Dots3-Note Preview (free)",
+          "family": "",
+          "context": 512000,
+          "max_output": 512000,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "google/gemini-2.5-flash",
           "name": "Gemini 2.5 Flash",
           "family": "gemini-flash",
@@ -99138,7 +99319,7 @@
           "name": "LFM2.5-2.6B (free)",
           "family": "liquid",
           "context": 128000,
-          "max_output": 32768,
+          "max_output": 8192,
           "cost_input": 0,
           "cost_output": 0,
           "modalities_in": [
@@ -104146,8 +104327,8 @@
           "family": "glm",
           "context": 204800,
           "max_output": 131072,
-          "cost_input": 0.55,
-          "cost_output": 2.2,
+          "cost_input": 0.5,
+          "cost_output": 2,
           "modalities_in": [
             "text"
           ],
@@ -126323,6 +126504,30 @@
           "last_updated": "2026-07-21"
         },
         {
+          "id": "gemini-3-7-flash",
+          "name": "Gemini 3.7 Flash",
+          "family": "gemini-flash",
+          "context": 1000000,
+          "max_output": 65536,
+          "cost_input": 1.875,
+          "cost_output": 9.375,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "2026-03",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "gemini-3-flash-preview",
           "name": "Gemini 3 Flash Preview",
           "family": "gemini",
@@ -130056,8 +130261,8 @@
           "family": "deepseek",
           "context": 1000000,
           "max_output": 384000,
-          "cost_input": 0.435,
-          "cost_output": 0.87,
+          "cost_input": 1.32,
+          "cost_output": 3.96,
           "modalities_in": [
             "text"
           ],
@@ -130067,7 +130272,7 @@
           "open_weights": false,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-04-23",
+          "release_date": "2026-08-12",
           "knowledge": "",
           "last_updated": "2026-08-12"
         },
