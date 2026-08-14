@@ -19,6 +19,8 @@ open http://127.0.0.1:8000/api/docs # interactive OpenAPI docs
 | GET | `/api/targets/{name}` | one target + full drift history (404 if unknown) |
 | GET | `/api/advisories` | promoted advisories |
 | GET | `/api/manifests`, `/api/manifests/{date}` | signed daily manifest chain (roots verifiable via Rekor) |
+| GET | `/api/registry` | signed provider-attribution registry (domain → operating entity → jurisdiction); sub-CONFIRMED pointers, not measured verdicts |
+| GET | `/api/catalog` | signed LLM-API catalog (inference APIs × models × model-card facts, joined with corpus.py provenance); refreshed nightly from models.dev |
 | GET | `/api/search?q=` | match target / model / kind |
 | GET | `/api/feed.xml` | RSS 2.0 of advisories + drift |
 | GET | `/api/openapi.json`, `/api/docs` | machine + human API docs |
