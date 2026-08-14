@@ -59,6 +59,7 @@ class Store:
         self.promoted = _records.load_promoted_advisories(self.data_dir)
         self._manifests = _records.load_manifests(self.data_dir)
         self.transcripts = _records.load_transcripts(self.data_dir)
+        self._announcements = _records.load_announcements(self.data_dir)
         self._mbd = {m.get("date"): m for m in self._manifests}
 
     # -- item shaping --------------------------------------------------------
@@ -137,6 +138,10 @@ class Store:
     def advisories(self) -> list:
         return sorted(self.promoted.values(),
                       key=lambda a: a.get("promoted_at", ""), reverse=True)
+
+    def announcements(self) -> list:
+        """Release/method news items (distinct from numbered MPA advisories)."""
+        return list(self._announcements)
 
     def manifests(self) -> list:
         return self._manifests

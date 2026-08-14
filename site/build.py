@@ -1398,7 +1398,8 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     # Static RSS feed (shared builder) so the RSS nav works without the API up.
     drift_items = [{"target": t, "last_checked": recs[-1][0]}
                    for t, recs in records.items() if recs and recs[-1][1].get("drift_seen")]
-    entries = _feed.entries_from(list(promoted.values()), drift_items)
+    entries = _feed.entries_from(list(promoted.values()), drift_items,
+                                 _records.load_announcements(data_dir))
     with open(os.path.join(out_dir, "feed.xml"), "w") as f:
         f.write(_feed.build_rss(entries))
 

@@ -21,9 +21,17 @@ def build_rss(entries: list[tuple[str, str, str]]) -> str:
             f'<link>{LINK}</link>{items}</channel></rss>')
 
 
-def entries_from(advisories: list[dict], drift_items: list[dict]) -> list[tuple[str, str, str]]:
-    """Normalise advisories + drift rows into feed entries (shared shape)."""
+def entries_from(advisories: list[dict], drift_items: list[dict],
+                 announcements: "list[dict] | None" = None) -> list[tuple[str, str, str]]:
+    """Normalise announcements + advisories + drift rows into feed entries (shared
+    shape). Announcements are news (releases/method notes), prefixed and kept
+    DISTINCT from the numbered MPA provenance advisories."""
     out = []
+    for n in announcements or []:
+        body = n.get("body") or n.get("summary") or ""
+        if n.get("url"):
+            body = (body + "  " + n["url"]).strip()
+        out.append((f"Announcement: {n.get('title', 'release')}", body, n.get("date", "")))
     for a in advisories:
         out.append((f"{a.get('advisory_id','advisory')}: {a.get('target','')}",
                     a.get("summary") or a.get("title") or "Verdict change advisory.",
