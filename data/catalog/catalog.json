@@ -44567,7 +44567,7 @@
           "family": "gemma",
           "context": 256000,
           "max_output": 25600,
-          "cost_input": 0.126,
+          "cost_input": 0.124,
           "cost_output": 0.42,
           "modalities_in": [
             "text"
@@ -44630,8 +44630,8 @@
           "family": "gpt-oss",
           "context": 131072,
           "max_output": 13107,
-          "cost_input": 0.188,
-          "cost_output": 0.7,
+          "cost_input": 0.178,
+          "cost_output": 0.71,
           "modalities_in": [
             "text"
           ],
@@ -44651,8 +44651,8 @@
           "family": "kimi-k2",
           "context": 262144,
           "max_output": 26214,
-          "cost_input": 0.532,
-          "cost_output": 2.8,
+          "cost_input": 0.558,
+          "cost_output": 2.94,
           "modalities_in": [
             "text"
           ],
@@ -44738,8 +44738,8 @@
           "family": "llama",
           "context": 128000,
           "max_output": 12800,
-          "cost_input": 0.598,
-          "cost_output": 0.738,
+          "cost_input": 0.608,
+          "cost_output": 0.838,
           "modalities_in": [
             "text"
           ],
@@ -44780,8 +44780,8 @@
           "family": "minimax",
           "context": 262100,
           "max_output": 6553,
-          "cost_input": 0.47,
-          "cost_output": 1.76,
+          "cost_input": 0.426,
+          "cost_output": 1.62,
           "modalities_in": [
             "text"
           ],
