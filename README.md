@@ -42,8 +42,8 @@ Nightly, it probes a watch list and commits results to git as an **append-only, 
 
 It surfaces the evidence three ways:
 
-- **🌐 A public site** — a dense verdict table with search / filter / pagination, per-target drift timelines, an assurance panel (live control FP rate + the engine's hermetic eval), a transparency log with Rekor inclusion links, methodology / FAQ / verify pages, and RSS.
-- **🔌 A JSON API** (`api/`, FastAPI) — `/api/verdicts`, `/api/targets/{name}`, `/api/advisories`, `/api/manifests`, `/api/model-changes`, `/api/status`, `/api/search`, an SSE stream, and auto OpenAPI at `/api/docs`.
+- **🌐 A public site** — a dense verdict table with search / filter / pagination, per-target drift timelines, an assurance panel (live control FP rate + the engine's hermetic eval), a **catalog** page (searchable running table of Chinese-origin inference APIs × models × model-card facts), a transparency log with Rekor inclusion links, methodology / FAQ / verify pages, and RSS.
+- **🔌 A JSON API** (`api/`, FastAPI) — `/api/verdicts`, `/api/targets/{name}`, `/api/advisories`, `/api/manifests`, `/api/model-changes`, `/api/status`, `/api/search`, **`/api/registry`** (signed provider attribution), **`/api/catalog`** (signed LLM-API catalog), an SSE stream, and auto OpenAPI at `/api/docs`.
 - **📋 Numbered advisories** (MPA-YYYY-NNN) practitioners can cite in ATO packages and procurement memos.
 
 **🔀 Model-switch detection.** Beyond day-over-day drift, it catches a served model changing identity mid-run (`session_boundary`) and ingests captured session transcripts to surface mid-session identity flips — e.g. the live site's `chat-z-ai-webapp` alert: **Google Gemini persona → GLM (Zhipu)**, flagged as a misrepresentation.
