@@ -1,8 +1,8 @@
 # Probe version for reproducible installs. NOTE: the nightly workflow currently
 # installs the probe from git@main (see .github/workflows/observatory.yml), so this
 # pin is the intended/target version, not yet the CI install source. Switch the
-# workflow to `pip install provenance-probe==<pin>` once the probe is on PyPI.
-provenance-probe==0.28.0
+# workflow to `pip install llm-provenance-probe==<pin>` once the probe is on PyPI.
+llm-provenance-probe==0.28.0
 pyyaml>=6.0
 # Live JSON API (api/). uvicorn to serve; httpx pulled in for TestClient.
 fastapi>=0.110
