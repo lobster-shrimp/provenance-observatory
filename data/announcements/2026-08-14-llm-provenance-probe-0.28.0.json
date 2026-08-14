@@ -1,0 +1,7 @@
+{
+  "id": "ANN-2026-08-14-llm-provenance-probe-0.28.0",
+  "date": "2026-08-14",
+  "title": "provenance-probe 0.28.0 on PyPI — pip install llm-provenance-probe",
+  "body": "First PyPI release of the engine the Observatory runs on. Install with `pip install llm-provenance-probe` (the CLI command stays `provenance-probe`). New in 0.28.0: the LLM-API catalog (a searchable running table of inference APIs x their models x model-card facts, joined with this project's provenance/jurisdiction attribution) served here at /api/catalog and the Catalog page; an interactive assessment guide; and a friendlier local web UI. The Observatory now runs on this pinned release and refreshes + signs the catalog nightly. This is a release announcement, not a numbered MPA provenance advisory.",
+  "url": "https://pypi.org/project/llm-provenance-probe/"
+}

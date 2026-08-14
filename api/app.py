@@ -109,6 +109,13 @@ def advisories():
     return {"items": store.advisories()}
 
 
+@app.get("/api/announcements", tags=["meta"])
+def announcements():
+    """Release / method announcements (news) — distinct from the numbered MPA
+    provenance advisories. Also surfaced in the RSS feed."""
+    return {"items": store.announcements()}
+
+
 @app.get("/api/model-changes", tags=["verdicts"])
 def model_changes():
     """Targets observed switching model identity mid-session (transcript analysis)."""
@@ -161,7 +168,8 @@ def search(q: str = Query("", description="match target name / model / kind")):
 @app.get("/api/feed.xml", tags=["meta"])
 def feed():
     """RSS 2.0 feed of advisories + latest drift events (shared builder)."""
-    entries = _feed.entries_from(store.advisories(), store.verdicts(drift=True, limit=20)["items"])
+    entries = _feed.entries_from(store.advisories(), store.verdicts(drift=True, limit=20)["items"],
+                                 store.announcements())
     return Response(content=_feed.build_rss(entries), media_type="application/rss+xml")
 
 

@@ -69,6 +69,23 @@ def load_promoted_advisories(data_dir: str) -> dict[str, dict]:
     return latest
 
 
+def load_announcements(data_dir: str) -> list[dict]:
+    """Release / method announcements for the RSS feed — plain news items, DISTINCT
+    from numbered MPA provenance advisories (which are evidence-backed findings about
+    a target). Append-only JSON in data/announcements/; newest first."""
+    out: list[dict] = []
+    for p in sorted(glob.glob(os.path.join(data_dir, "announcements", "*.json"))):
+        try:
+            with open(p) as f:
+                loaded = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if isinstance(loaded, dict):
+            out.append(loaded)
+    out.sort(key=lambda a: a.get("date", ""), reverse=True)
+    return out
+
+
 def load_transcripts(data_dir: str) -> dict[str, dict]:
     """target -> latest transcript-analysis record (mid-session model-switch
     detection). First-party misrepresentation findings publish under full
