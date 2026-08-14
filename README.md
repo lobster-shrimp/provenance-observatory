@@ -70,7 +70,7 @@ python site/build.py --data data --out site/dist   # render the site from commit
 ```powershell
 git clone https://github.com/lobster-shrimp/provenance-observatory; cd provenance-observatory
 py -3 -m venv .venv; .\.venv\Scripts\Activate.ps1
-pip install provenance-probe pyyaml pytest
+pip install llm-provenance-probe pyyaml pytest
 pytest
 python site\build.py --data data --out site\dist
 ```
