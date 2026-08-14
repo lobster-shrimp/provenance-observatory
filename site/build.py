@@ -415,16 +415,29 @@ def _load_catalog(data_dir: str) -> dict | None:
 
 
 def _catalog_rows(catalog: dict, kinds: tuple[str, ...]) -> list[dict]:
-    """Flatten providers->models for providers whose provenance kind is in `kinds`."""
+    """Flatten providers->models for providers whose provenance kind is in `kinds`.
+    External data — tolerate malformed shapes (non-list containers, non-dict / non-string
+    members) without crashing the site build; text fields are coerced to str so the
+    escape at render never sees a non-string."""
     rows: list[dict] = []
-    for p in catalog.get("providers") or []:
-        prov = p.get("provenance") or {}
-        if prov.get("kind") not in kinds:
+    provs = catalog.get("providers")
+    if not isinstance(provs, list):
+        return rows
+    for p in provs:
+        if not isinstance(p, dict):
             continue
-        for m in p.get("models") or []:
-            rows.append({"jur": prov.get("jurisdiction") or "", "kind": prov.get("kind") or "",
-                         "provider": p.get("name") or "", "host": p.get("api_host") or "",
-                         "api": p.get("api_url") or "", "model": m.get("id") or "",
+        prov = p.get("provenance") or {}
+        if not isinstance(prov, dict) or prov.get("kind") not in kinds:
+            continue
+        models = p.get("models")
+        if not isinstance(models, list):
+            continue
+        for m in models:
+            if not isinstance(m, dict):
+                continue
+            rows.append({"jur": str(prov.get("jurisdiction") or ""), "kind": str(prov.get("kind") or ""),
+                         "provider": str(p.get("name") or ""), "host": str(p.get("api_host") or ""),
+                         "api": str(p.get("api_url") or ""), "model": str(m.get("id") or ""),
                          "context": m.get("context"), "ci": m.get("cost_input"),
                          "co": m.get("cost_output"), "ow": m.get("open_weights")})
     return rows
@@ -485,8 +498,10 @@ def _catalog_page(catalog: dict | None, *, probe_url: str, api_url: str) -> str:
     # (incl. aggregators + first-party) is at /api/catalog and searchable in the probe.
     rows = _catalog_rows(catalog, ("prc",))
     rows.sort(key=lambda r: (r["provider"], r["model"]))
-    total_models = catalog.get("model_count", 0)
-    total_providers = catalog.get("provider_count", 0)
+    # Escaped like every other external field (these are probe-computed ints, but the
+    # file's invariant is: nothing external reaches the DOM unescaped).
+    total_models = html.escape(str(catalog.get("model_count", 0)))
+    total_providers = html.escape(str(catalog.get("provider_count", 0)))
     signed = catalog.get("signed")
     sig_badge = ('<span class="cn">signed</span>' if signed
                  else '<span class="muted">snapshot (unsigned; nightly refresh signs it)</span>')

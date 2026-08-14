@@ -543,3 +543,25 @@ def test_catalog_page_empty_state(tmp_path):
     outp = build.build(str(data), str(tmp_path / "out"), now_iso="2026-07-21T12:00:00")
     cat = open(os.path.join(os.path.dirname(outp), "catalog.html")).read()
     assert "No catalog has been published yet" in cat
+
+
+def test_catalog_page_tolerates_malformed_and_escapes_counts(tmp_path):
+    # External data can be malformed; the site build must not crash, and the summary
+    # counts must be escaped like every other external field.
+    bad = {
+        "catalog_version": "1", "corpus_version": "x",
+        "provider_count": "<b>x</b>", "model_count": 1,
+        "providers": [
+            {"name": 123, "api_host": 456,
+             "provenance": {"jurisdiction": "PRC", "kind": "prc"},
+             "models": "not-a-list"},                        # truthy non-list -> skipped, no crash
+            {"name": "OkCo", "api_host": "h.example",
+             "provenance": {"kind": "prc", "jurisdiction": "PRC"},
+             "models": [{"id": 789}]},                       # numeric id -> coerced to str
+            "not-a-dict",                                    # non-dict provider -> skipped
+        ],
+    }
+    cat, _ = _catalog_html(tmp_path, bad)                    # must not raise
+    assert "OkCo" in cat and "789" in cat                    # coerced + rendered
+    assert "<b>x</b>" not in cat                             # provider_count escaped
+    assert "&lt;b&gt;x&lt;/b&gt;" in cat
