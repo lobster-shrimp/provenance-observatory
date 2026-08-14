@@ -80,11 +80,15 @@ machinery) and publication.
   to), never a measured provenance verdict; aggregators are `jurisdiction:
   unresolved`. The signer certifies the artifact, not a verdict.
 
-**Release coordination (open):** `build-registry` needs probe **≥0.27.0**, but
-`requirements.txt` pins `provenance-probe==0.4.1` (PyPI). Until the pin is bumped to
-a released build-registry version, the runner step **degrades to a clean no-op with
-a stated reason** (never a hard failure) — so nightly runs on the current pin publish
-no registry yet. Bump the pin once the probe releases `build-registry`.
+**Probe install / version (corrected):** the nightly workflow installs the probe from
+**`git+…@main`** (`.github/workflows/observatory.yml`), NOT from `requirements.txt` (no
+`pip install -r` runs in CI). So `build-registry` (and `build-catalog` below) are
+already present each night — the registry + catalog are **built and signed nightly
+today**, not gated on any pin. `requirements.txt` pins the intended version
+(`provenance-probe==0.27.0`) for reproducibility; the graceful-degrade no-op path still
+exists as a safety net if an older probe is ever installed. **Once the probe is on
+PyPI**, switch the workflow from `git@main` to `pip install provenance-probe==0.27.0`
+(pinned, non-moving) for reproducible builds.
 
 ## LLM-API catalog (public, signed, continuously refreshed)
 
@@ -114,14 +118,13 @@ nightly.
   never a measured verdict; aggregators are `jurisdiction: unresolved`. The signer
   certifies the artifact (the join was done faithfully), not a verdict.
 
-**Release coordination (open):** same pin blocker as the registry — `build-catalog`
-needs a probe recent enough (it shipped after 0.4.1), so on the current
-`provenance-probe==0.4.1` pin the runner step is a **clean no-op with a stated
-reason**. Bump the pin once the probe releases `build-catalog` to activate the nightly
-catalog *refresh*. A **seed** `data/catalog/catalog.json` is committed (unsigned,
+**Install / refresh (corrected):** because CI installs the probe from `git@main` (see
+the registry note above), `build-catalog` runs each night — the catalog is **refreshed
++ signed nightly today**. A **seed** `data/catalog/catalog.json` is committed (unsigned,
 generated once from the probe) so `/api/catalog` and the public **Pages table**
-(`catalog.html`) are live now; the nightly runner replaces it with a signed, refreshed
-copy once the pin is bumped.
+(`catalog.html`) are live immediately; the first nightly run replaces the seed with a
+signed, refreshed copy. Once the probe is on PyPI, the workflow switches to the pinned
+`provenance-probe==0.27.0` install for reproducibility.
 
 ## Public catalog page (`site/build.py` → `catalog.html`)
 
