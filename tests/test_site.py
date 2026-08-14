@@ -481,3 +481,87 @@ def test_session_boundary_note_renders():
                                    "switched": False, "confidence": "full"}}
     assert "stable across the session" in build._session_boundary_note(stable)
     assert build._session_boundary_note({}) == ""
+
+
+# --- LLM-API catalog page (public running table) ----------------------------
+
+def _write_catalog(data_dir, doc, *, signed=False):
+    d = os.path.join(data_dir, "catalog")
+    os.makedirs(d, exist_ok=True)
+    p = os.path.join(d, "catalog.json")
+    with open(p, "w") as f:
+        json.dump(doc, f)
+    if signed:
+        open(p + ".cosign.bundle", "w").close()
+    return p
+
+
+_CAT = {
+    "catalog_version": "1", "corpus_version": "2026.07.2",
+    "provider_count": 2, "model_count": 3,
+    "providers": [
+        {"provider_id": "deepseek", "name": "DeepSeek",
+         "api_url": "https://api.deepseek.com/v1", "api_host": "api.deepseek.com",
+         "provenance": {"jurisdiction": "PRC", "kind": "prc", "measured": False},
+         "models": [{"id": "<img src=x onerror=alert(1)>", "context": 128000,
+                     "cost_input": 0.27, "cost_output": 1.1, "open_weights": True}]},
+        {"provider_id": "openai", "name": "OpenAI",
+         "api_url": "https://api.openai.com/v1", "api_host": "api.openai.com",
+         "provenance": {"jurisdiction": "US", "kind": "first-party"},
+         "models": [{"id": "gpt-5", "context": 400000}, {"id": "gpt-5-mini"}]},
+    ],
+}
+
+
+def _catalog_html(tmp_path, doc, *, signed=False):
+    data = tmp_path / "data"
+    _write_catalog(str(data), doc, signed=signed)
+    outp = build.build(str(data), str(tmp_path / "out"), now_iso="2026-07-21T12:00:00")
+    cat = open(os.path.join(os.path.dirname(outp), "catalog.html")).read()
+    return cat, open(outp).read()
+
+
+def test_catalog_page_shows_prc_escapes_and_links(tmp_path):
+    cat, index = _catalog_html(tmp_path, _CAT)
+    assert "DeepSeek" in cat and "api.deepseek.com" in cat        # PRC provider shown
+    assert "gpt-5" not in cat                                     # first-party NOT in the CN table
+    assert "<img src=x onerror=alert(1)>" not in cat             # external model id escaped
+    assert "&lt;img src=x onerror=alert(1)&gt;" in cat
+    assert "/api/catalog" in cat                                  # link to full signed data
+    assert "snapshot (unsigned" in cat                           # honest unsigned badge
+    assert 'catalog.html">Catalog' in index                      # nav link
+
+
+def test_catalog_page_signed_badge(tmp_path):
+    cat, _ = _catalog_html(tmp_path, _CAT, signed=True)
+    assert ">signed<" in cat
+
+
+def test_catalog_page_empty_state(tmp_path):
+    data = tmp_path / "data"
+    os.makedirs(str(data), exist_ok=True)
+    outp = build.build(str(data), str(tmp_path / "out"), now_iso="2026-07-21T12:00:00")
+    cat = open(os.path.join(os.path.dirname(outp), "catalog.html")).read()
+    assert "No catalog has been published yet" in cat
+
+
+def test_catalog_page_tolerates_malformed_and_escapes_counts(tmp_path):
+    # External data can be malformed; the site build must not crash, and the summary
+    # counts must be escaped like every other external field.
+    bad = {
+        "catalog_version": "1", "corpus_version": "x",
+        "provider_count": "<b>x</b>", "model_count": 1,
+        "providers": [
+            {"name": 123, "api_host": 456,
+             "provenance": {"jurisdiction": "PRC", "kind": "prc"},
+             "models": "not-a-list"},                        # truthy non-list -> skipped, no crash
+            {"name": "OkCo", "api_host": "h.example",
+             "provenance": {"kind": "prc", "jurisdiction": "PRC"},
+             "models": [{"id": 789}]},                       # numeric id -> coerced to str
+            "not-a-dict",                                    # non-dict provider -> skipped
+        ],
+    }
+    cat, _ = _catalog_html(tmp_path, bad)                    # must not raise
+    assert "OkCo" in cat and "789" in cat                    # coerced + rendered
+    assert "<b>x</b>" not in cat                             # provider_count escaped
+    assert "&lt;b&gt;x&lt;/b&gt;" in cat

@@ -118,8 +118,21 @@ nightly.
 needs a probe recent enough (it shipped after 0.4.1), so on the current
 `provenance-probe==0.4.1` pin the runner step is a **clean no-op with a stated
 reason**. Bump the pin once the probe releases `build-catalog` to activate the nightly
-catalog publish. **A public Pages table over `/api/catalog` is a planned follow-on**
-(the API + signed artifact land first).
+catalog *refresh*. A **seed** `data/catalog/catalog.json` is committed (unsigned,
+generated once from the probe) so `/api/catalog` and the public **Pages table**
+(`catalog.html`) are live now; the nightly runner replaces it with a signed, refreshed
+copy once the pin is bumped.
+
+## Public catalog page (`site/build.py` → `catalog.html`)
+
+`build()` renders a public **running table** from the signed catalog artifact: the
+**Chinese-origin (PRC-operated) inference APIs** — the mission subset — one model row
+each (jurisdiction, provider, API host, model, context, price, weights), with a
+client-side text filter. The complete multi-thousand-model catalog (aggregators +
+first-party included) is at `/api/catalog` and fully searchable in the probe's
+`/catalog` tool; the page links to both. External models.dev fields are `html.escape`d;
+provenance is shown as a sub-CONFIRMED pointer with an unsigned/signed badge, never a
+measured verdict. Reads the published artifact only (T7 — no probe internals imported).
 
 ## Launch gates (Gate 1 is the real blocker)
 
