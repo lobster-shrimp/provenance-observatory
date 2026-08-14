@@ -1,0 +1,45 @@
+name: deploy-api
+
+# Auto-redeploy the Cloud Run Observatory API when the served content changes on
+# main — the nightly `data:` commit, or api/lib/Dockerfile changes — so the live API
+# tracks the latest evidence (the image bakes `data/` in at build time).
+#
+# Keyless auth via Workload Identity Federation (NO stored service-account key): the
+# WIF pool `github-pool` trusts ONLY this repo (attribute.repository condition), and
+# the `obs-api-deployer` SA has just the roles needed for `gcloud run deploy --source`.
+# One-time GCP setup lives in api/DEPLOY.md.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/**"
+      - "api/**"
+      - "lib/**"
+      - "Dockerfile"
+      - "requirements.txt"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  id-token: write        # OIDC token for Workload Identity Federation
+
+concurrency:
+  group: deploy-api      # collapse rapid pushes into one deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/513338163479/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+          service_account: "obs-api-deployer@gen-lang-client-0992245391.iam.gserviceaccount.com"
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Deploy to Cloud Run (bakes the latest data/ into the image)
+        run: |
+          gcloud run deploy provenance-observatory-api --source . \
+            --project gen-lang-client-0992245391 --region us-central1 \
+            --allow-unauthenticated --quiet
