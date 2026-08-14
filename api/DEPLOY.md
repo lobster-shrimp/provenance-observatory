@@ -7,6 +7,33 @@
 > so a redeploy refreshes it). Redeploy: `gcloud run deploy provenance-observatory-api
 > --source . --project gen-lang-client-0992245391 --region us-central1
 > --allow-unauthenticated`. The Fly.io / Render configs below remain valid alternatives.
+>
+> **Auto-redeploy on push to `main`** is wired via `.github/workflows/deploy-api.yml`
+> (keyless — Workload Identity Federation, no stored key), path-filtered to
+> `data/**`, `api/**`, `lib/**`, `Dockerfile`, `requirements.txt`. One-time GCP setup
+> (creates a repo-scoped deploy SA + WIF pool):
+>
+> ```bash
+> PROJECT=gen-lang-client-0992245391; SA=obs-api-deployer
+> SA_EMAIL="$SA@$PROJECT.iam.gserviceaccount.com"; POOL=github-pool; PROVIDER=github-provider
+> REPO=lobster-shrimp/provenance-observatory
+> PNUM=$(gcloud projects describe "$PROJECT" --format='value(projectNumber)')
+> gcloud services enable iamcredentials.googleapis.com sts.googleapis.com run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com --project "$PROJECT"
+> gcloud iam service-accounts create "$SA" --project "$PROJECT" --display-name "Observatory API Cloud Run deployer"
+> for R in roles/run.admin roles/cloudbuild.builds.editor roles/artifactregistry.writer roles/storage.admin roles/iam.serviceAccountUser; do
+>   gcloud projects add-iam-policy-binding "$PROJECT" --member="serviceAccount:$SA_EMAIL" --role="$R" --condition=None; done
+> gcloud iam workload-identity-pools create "$POOL" --project "$PROJECT" --location global --display-name "GitHub pool"
+> gcloud iam workload-identity-pools providers create-oidc "$PROVIDER" --project "$PROJECT" --location global \
+>   --workload-identity-pool "$POOL" --display-name "GitHub provider" \
+>   --attribute-mapping "google.subject=assertion.sub,attribute.repository=assertion.repository" \
+>   --attribute-condition "assertion.repository=='$REPO'" --issuer-uri "https://token.actions.githubusercontent.com"
+> gcloud iam service-accounts add-iam-policy-binding "$SA_EMAIL" --project "$PROJECT" --role roles/iam.workloadIdentityUser \
+>   --member "principalSet://iam.googleapis.com/projects/$PNUM/locations/global/workloadIdentityPools/$POOL/attribute.repository/$REPO"
+> ```
+>
+> The workflow's `workload_identity_provider` is
+> `projects/<PNUM>/locations/global/workloadIdentityPools/github-pool/providers/github-provider`
+> and `service_account` is `$SA_EMAIL`.
 
 The API (`api/app.py`) is a stateless FastAPI service that reads the committed
 `data/` tree. It ships a `Dockerfile`; `deploy/` has configs for two hosts. Pick
