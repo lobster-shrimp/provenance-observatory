@@ -80,15 +80,15 @@ machinery) and publication.
   to), never a measured provenance verdict; aggregators are `jurisdiction:
   unresolved`. The signer certifies the artifact, not a verdict.
 
-**Probe install / version (corrected):** the nightly workflow installs the probe from
-**`git+…@main`** (`.github/workflows/observatory.yml`), NOT from `requirements.txt` (no
-`pip install -r` runs in CI). So `build-registry` (and `build-catalog` below) are
-already present each night — the registry + catalog are **built and signed nightly
-today**, not gated on any pin. `requirements.txt` pins the intended version
-(`llm-provenance-probe==0.28.0`) for reproducibility; the graceful-degrade no-op path still
-exists as a safety net if an older probe is ever installed. **Once the probe is on
-PyPI**, switch the workflow from `git@main` to `pip install llm-provenance-probe==0.28.0`
-(pinned, non-moving) for reproducible builds.
+**Probe install / version:** the nightly workflow installs the probe from the
+**pinned PyPI release** — `pip install -r requirements.txt`
+(`llm-provenance-probe==0.28.0` + pyyaml) — a reproducible, non-moving build
+(`.github/workflows/observatory.yml`). So `build-registry` + `build-catalog` are
+present each night and the registry + catalog are **built and signed nightly**. Bump
+the pin in `requirements.txt` to adopt a new probe release. The graceful-degrade no-op
+path still exists as a safety net if an older probe is ever installed. (The
+eval-harness scripts — `refresh-engine-eval.sh` / `controls-selftest.sh` — still clone
+source, because `eval/` is not packaged in the wheel.)
 
 ## LLM-API catalog (public, signed, continuously refreshed)
 
@@ -123,8 +123,8 @@ the registry note above), `build-catalog` runs each night — the catalog is **r
 + signed nightly today**. A **seed** `data/catalog/catalog.json` is committed (unsigned,
 generated once from the probe) so `/api/catalog` and the public **Pages table**
 (`catalog.html`) are live immediately; the first nightly run replaces the seed with a
-signed, refreshed copy. Once the probe is on PyPI, the workflow switches to the pinned
-`llm-provenance-probe==0.28.0` install for reproducibility.
+signed, refreshed copy. The workflow installs the pinned `llm-provenance-probe==0.28.0`
+from PyPI (reproducible), so the refresh runs on a fixed probe version.
 
 ## Public catalog page (`site/build.py` → `catalog.html`)
 

@@ -34,10 +34,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install provenance-probe + deps
-        run: |
-          pip install "git+https://github.com/lobster-shrimp/provenance-probe.git@main"
-          pip install pyyaml
+      - name: Install pinned probe + deps (reproducible)
+        # Pinned PyPI install (requirements.txt: llm-provenance-probe==<version> +
+        # pyyaml) instead of git@main — a reproducible, non-moving build. Bump the
+        # pin in requirements.txt to adopt a new probe release. (The eval-harness
+        # scripts still clone source: eval/ is not packaged in the wheel.)
+        run: pip install -r requirements.txt
       - uses: sigstore/cosign-installer@v3   # cosign for keyless evidence signing
       - name: Run nightly probes (builds + signs the day's manifest)
         env:
