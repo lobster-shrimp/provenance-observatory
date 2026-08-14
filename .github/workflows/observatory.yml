@@ -116,6 +116,10 @@ jobs:
         with:
           python-version: "3.11"
       - name: Render site
+        # Point the site's "API" link / SSE at the live Cloud Run API (else it
+        # defaults to the raw data/ tree on GitHub).
+        env:
+          OBSERVATORY_API_URL: "https://provenance-observatory-api-513338163479.us-central1.run.app/api/docs"
         run: |
           pip install pyyaml
           python site/build.py --data data --out site/dist

@@ -1,5 +1,13 @@
 # Deploying the Observatory API
 
+> **Live (2026-08-14):** deployed to **Google Cloud Run** —
+> `https://provenance-observatory-api-513338163479.us-central1.run.app`
+> (project `gen-lang-client-0992245391`, region `us-central1`, `--allow-unauthenticated`,
+> scale-to-zero). No secrets (serves public `data/`; the image bakes `data/` in at build,
+> so a redeploy refreshes it). Redeploy: `gcloud run deploy provenance-observatory-api
+> --source . --project gen-lang-client-0992245391 --region us-central1
+> --allow-unauthenticated`. The Fly.io / Render configs below remain valid alternatives.
+
 The API (`api/app.py`) is a stateless FastAPI service that reads the committed
 `data/` tree. It ships a `Dockerfile`; `deploy/` has configs for two hosts. Pick
 one — **the account, secrets, and DNS are operator-provided** (I can't provision
