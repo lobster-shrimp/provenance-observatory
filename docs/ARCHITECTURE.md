@@ -85,9 +85,9 @@ machinery) and publication.
 `pip install -r` runs in CI). So `build-registry` (and `build-catalog` below) are
 already present each night — the registry + catalog are **built and signed nightly
 today**, not gated on any pin. `requirements.txt` pins the intended version
-(`provenance-probe==0.27.0`) for reproducibility; the graceful-degrade no-op path still
+(`provenance-probe==0.28.0`) for reproducibility; the graceful-degrade no-op path still
 exists as a safety net if an older probe is ever installed. **Once the probe is on
-PyPI**, switch the workflow from `git@main` to `pip install provenance-probe==0.27.0`
+PyPI**, switch the workflow from `git@main` to `pip install provenance-probe==0.28.0`
 (pinned, non-moving) for reproducible builds.
 
 ## LLM-API catalog (public, signed, continuously refreshed)
@@ -124,7 +124,7 @@ the registry note above), `build-catalog` runs each night — the catalog is **r
 generated once from the probe) so `/api/catalog` and the public **Pages table**
 (`catalog.html`) are live immediately; the first nightly run replaces the seed with a
 signed, refreshed copy. Once the probe is on PyPI, the workflow switches to the pinned
-`provenance-probe==0.27.0` install for reproducibility.
+`provenance-probe==0.28.0` install for reproducibility.
 
 ## Public catalog page (`site/build.py` → `catalog.html`)
 
