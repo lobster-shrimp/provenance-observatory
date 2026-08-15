@@ -1,8 +1,13 @@
 name: deploy-api
 
-# Auto-redeploy the Cloud Run Observatory API when the served content changes on
-# main — the nightly `data:` commit, or api/lib/Dockerfile changes — so the live API
-# tracks the latest evidence (the image bakes `data/` in at build time).
+# Auto-redeploy the Cloud Run Observatory API on push to main touching served
+# content (api/lib/Dockerfile/data) — e.g. a merged PR — so the live API tracks the
+# latest code/evidence (the image bakes `data/` in at build time).
+#
+# NOTE: the nightly `data:` commit pushes with GITHUB_TOKEN, which by GitHub's
+# anti-recursion rule does NOT trigger this workflow — so the nightly redeploys
+# DIRECTLY at the end of its probe job (see observatory.yml). This workflow covers
+# human/merge pushes and on-demand `workflow_dispatch`.
 #
 # Keyless auth via Workload Identity Federation (NO stored service-account key): the
 # WIF pool `github-pool` trusts ONLY this repo (attribute.repository condition), and
