@@ -4,7 +4,7 @@
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
   "provider_count": 185,
-  "model_count": 6581,
+  "model_count": 6583,
   "providers": [
     {
       "provider_id": "302ai",
@@ -56847,6 +56847,28 @@
           "last_updated": "2025-08-26"
         },
         {
+          "id": "dots-studio/dots-3-note-preview:free",
+          "name": "Dots Studio: Dots3-Note Preview (free)",
+          "family": "",
+          "context": 512000,
+          "max_output": 512000,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "google/gemini-2.5-flash",
           "name": "Gemini 2.5 Flash",
           "family": "gemini-flash",
@@ -62027,7 +62049,7 @@
           ],
           "open_weights": false,
           "reasoning": true,
-          "tool_call": false,
+          "tool_call": true,
           "release_date": "2026-08-14",
           "knowledge": "",
           "last_updated": "2026-08-14"
@@ -62918,8 +62940,8 @@
           "family": "mimo",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 0.4,
-          "cost_output": 1.5,
+          "cost_input": 0.435,
+          "cost_output": 0.87,
           "modalities_in": [
             "text"
           ],
@@ -63288,8 +63310,8 @@
           "family": "deepseek",
           "context": 1024000,
           "max_output": 384000,
-          "cost_input": 0.07966,
-          "cost_output": 0.15932,
+          "cost_input": 0.06846,
+          "cost_output": 0.13692,
           "modalities_in": [
             "text"
           ],
@@ -76859,6 +76881,28 @@
           "last_updated": "2026-04-21"
         },
         {
+          "id": "TEE/kimi-k2.7-code",
+          "name": "Kimi K2.7 Code TEE",
+          "family": "kimi-k2",
+          "context": 262144,
+          "max_output": 65536,
+          "cost_input": 0.95,
+          "cost_output": 4,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-06-12",
+          "knowledge": "2025-01",
+          "last_updated": "2026-06-12"
+        },
+        {
           "id": "TEE/kimi-k3",
           "name": "Kimi K3 TEE",
           "family": "kimi-k3",
@@ -79801,8 +79845,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.07,
-          "cost_output": 0.14,
+          "cost_input": 0.14,
+          "cost_output": 0.28,
           "modalities_in": [
             "text"
           ],
@@ -79927,8 +79971,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.07,
-          "cost_output": 0.14,
+          "cost_input": 0.14,
+          "cost_output": 0.28,
           "modalities_in": [
             "text"
           ],
@@ -85651,27 +85695,6 @@
           "release_date": "2025-07-21",
           "knowledge": "",
           "last_updated": "2025-07-21"
-        },
-        {
-          "id": "qwen/Qwen3-235B-A22B-Instruct-2507-TEE",
-          "name": "Qwen 3 235b A22B 2507 (TEE)",
-          "family": "qwen",
-          "context": 256000,
-          "max_output": 262144,
-          "cost_input": 0.13,
-          "cost_output": 0.5,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2025-07-25",
-          "knowledge": "",
-          "last_updated": "2025-07-25"
         },
         {
           "id": "qwen/Qwen3-235B-A22B-Thinking-2507",
@@ -103791,8 +103814,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.07966,
-          "cost_output": 0.15932,
+          "cost_input": 0.06566,
+          "cost_output": 0.13132,
           "modalities_in": [
             "text"
           ],
@@ -103868,6 +103891,28 @@
           "release_date": "2026-08-12",
           "knowledge": "",
           "last_updated": "2026-08-12"
+        },
+        {
+          "id": "dots-studio/dots-3-note-preview:free",
+          "name": "Dots3-Note Preview (free)",
+          "family": "",
+          "context": 512000,
+          "max_output": 512000,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
         },
         {
           "id": "google/gemini-2.5-flash",
@@ -105842,8 +105887,8 @@
           "family": "kimi-k2",
           "context": 262144,
           "max_output": 262144,
-          "cost_input": 0.65,
-          "cost_output": 3.41,
+          "cost_input": 0.5415,
+          "cost_output": 2.28,
           "modalities_in": [
             "text",
             "image"
@@ -109073,7 +109118,7 @@
           ],
           "open_weights": true,
           "reasoning": true,
-          "tool_call": false,
+          "tool_call": true,
           "release_date": "2026-08-14",
           "knowledge": "",
           "last_updated": "2026-08-14"
@@ -109387,8 +109432,8 @@
           "family": "Hy",
           "context": 262144,
           "max_output": 262144,
-          "cost_input": 0.063,
-          "cost_output": 0.21,
+          "cost_input": 0.18,
+          "cost_output": 0.6,
           "modalities_in": [
             "text"
           ],
@@ -110154,8 +110199,8 @@
           "family": "deepseek",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.07966,
-          "cost_output": 0.15932,
+          "cost_input": 0.06846,
+          "cost_output": 0.13692,
           "modalities_in": [
             "text"
           ],
