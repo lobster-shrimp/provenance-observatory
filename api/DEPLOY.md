@@ -8,10 +8,13 @@
 > --source . --project gen-lang-client-0992245391 --region us-central1
 > --allow-unauthenticated`. The Fly.io / Render configs below remain valid alternatives.
 >
-> **Auto-redeploy on push to `main`** is wired via `.github/workflows/deploy-api.yml`
-> (keyless — Workload Identity Federation, no stored key), path-filtered to
-> `data/**`, `api/**`, `lib/**`, `Dockerfile`, `requirements.txt`. One-time GCP setup
-> (creates a repo-scoped deploy SA + WIF pool):
+> **Auto-redeploy** (keyless — Workload Identity Federation, no stored key) happens
+> two ways: (1) `.github/workflows/deploy-api.yml` on human/merge pushes to `main`
+> touching `data/**`, `api/**`, `lib/**`, `Dockerfile`, `requirements.txt`; and (2) the
+> **nightly workflow redeploys directly** at the end of its probe job when the `data:`
+> commit changed something — because that commit is pushed with `GITHUB_TOKEN`, which
+> (GitHub anti-recursion) does NOT trigger `deploy-api.yml`. Both use the same WIF
+> provider + deploy SA. One-time GCP setup (creates a repo-scoped deploy SA + WIF pool):
 >
 > ```bash
 > PROJECT=gen-lang-client-0992245391; SA=obs-api-deployer

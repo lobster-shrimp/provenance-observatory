@@ -89,12 +89,37 @@ jobs:
             echo "No model-switch advisory this run." >> "$GITHUB_STEP_SUMMARY" || true
           fi
       - name: Commit neutral evidence + signed manifest
+        id: commit
         run: |
           git config user.name "observatory-bot"
           git config user.email "observatory-bot@users.noreply.github.com"
           git add data/
-          git diff --cached --quiet || git commit -m "data: nightly probe $(date -u +%F)"
-          git push
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "data: nightly probe $(date -u +%F)"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      # Redeploy the live Cloud Run API with the fresh data. The commit above pushes
+      # with GITHUB_TOKEN, which by GitHub's anti-recursion rule does NOT trigger
+      # deploy-api.yml — so the nightly redeploys DIRECTLY (keyless WIF), only when
+      # data actually changed. deploy-api.yml still covers human/merge pushes.
+      - name: Auth to GCP (Workload Identity Federation)
+        if: steps.commit.outputs.changed == 'true'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/513338163479/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+          service_account: "obs-api-deployer@gen-lang-client-0992245391.iam.gserviceaccount.com"
+      - name: Set up gcloud
+        if: steps.commit.outputs.changed == 'true'
+        uses: google-github-actions/setup-gcloud@v2
+      - name: Redeploy the live API with the fresh data
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          gcloud run deploy provenance-observatory-api --source . \
+            --project gen-lang-client-0992245391 --region us-central1 \
+            --allow-unauthenticated --quiet
 
   # Render the Variant C site from data/ and DEPLOY it to GitHub Pages.
   # Full-transparency posture: the site publishes measurements AND interpreted
