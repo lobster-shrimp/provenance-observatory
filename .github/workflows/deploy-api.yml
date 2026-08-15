@@ -18,8 +18,8 @@ on:
     branches: [main]
     paths:
       - "data/**"
-      - "api/**"
-      - "lib/**"
+      - "api/**.py"          # code only — docs (api/*.md) must not trigger a deploy
+      - "lib/**.py"
       - "Dockerfile"
       - "requirements.txt"
   workflow_dispatch: {}
