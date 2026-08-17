@@ -1,5 +1,13 @@
 name: link-check
 
+# ⚠️ SOFT GATE ONLY — do NOT make `internal links + anchors (offline)` a REQUIRED
+# status check on this repo's `main`. The nightly runner (observatory.yml) commits
+# `data/` and pushes DIRECTLY to `main` with GITHUB_TOKEN; a required status check
+# rejects that push (`GH006: Protected branch update failed … Required status check
+# "internal links + anchors (offline)" is expected`), which breaks the nightly.
+# (The probe repo IS hard-gated — it has no direct-push bot; all changes land via PR.)
+# Verified 2026-08-17: requiring the check here failed the nightly's push; reverted.
+#
 # Audit repo docs for broken links (relative files, in-page/cross-file anchors,
 # external URLs). Split so the PR gate is deterministic:
 #   - internal: OFFLINE — local files + anchor fragments only. No network, never
