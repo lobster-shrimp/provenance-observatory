@@ -14387,12 +14387,19 @@
       "provider_id": "anthropic",
       "name": "Anthropic",
       "api_url": "",
-      "api_host": "",
+      "api_host": "api.anthropic.com",
       "doc": "https://docs.anthropic.com/en/docs/about-claude/models",
       "auth_env": [
         "ANTHROPIC_API_KEY"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "Anthropic",
+        "jurisdiction": "US",
+        "kind": "first-party",
+        "confidence": 0.9,
+        "measured": false,
+        "source": "corpus:api.anthropic.com"
+      },
       "models": [
         {
           "id": "claude-fable-5",
@@ -23330,12 +23337,19 @@
       "provider_id": "cohere",
       "name": "Cohere",
       "api_url": "",
-      "api_host": "",
+      "api_host": "api.cohere.com",
       "doc": "https://docs.cohere.com/docs/models",
       "auth_env": [
         "COHERE_API_KEY"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "Cohere",
+        "jurisdiction": "CA",
+        "kind": "first-party",
+        "confidence": 0.9,
+        "measured": false,
+        "source": "corpus:api.cohere.com"
+      },
       "models": [
         {
           "id": "c4ai-aya-expanse-32b",
@@ -28914,12 +28928,19 @@
       "provider_id": "deepinfra",
       "name": "Deep Infra",
       "api_url": "",
-      "api_host": "",
+      "api_host": "api.deepinfra.com",
       "doc": "https://deepinfra.com/models",
       "auth_env": [
         "DEEPINFRA_API_KEY"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "DeepInfra",
+        "jurisdiction": "unresolved",
+        "kind": "aggregator",
+        "confidence": null,
+        "measured": false,
+        "source": "corpus:api.deepinfra.com"
+      },
       "models": [
         {
           "id": "ByteDance/Seed-2.0-code",
@@ -43494,14 +43515,21 @@
       "provider_id": "google",
       "name": "Google",
       "api_url": "",
-      "api_host": "",
+      "api_host": "generativelanguage.googleapis.com",
       "doc": "https://ai.google.dev/gemini-api/docs/models",
       "auth_env": [
         "GOOGLE_API_KEY",
         "GOOGLE_GENERATIVE_AI_API_KEY",
         "GEMINI_API_KEY"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "Google (Gemini)",
+        "jurisdiction": "US",
+        "kind": "first-party",
+        "confidence": 0.9,
+        "measured": false,
+        "source": "corpus:generativelanguage.googleapis.com"
+      },
       "models": [
         {
           "id": "deep-research-max-preview-04-2026",
@@ -44434,14 +44462,21 @@
       "provider_id": "google-vertex",
       "name": "Vertex",
       "api_url": "",
-      "api_host": "",
+      "api_host": "generativelanguage.googleapis.com",
       "doc": "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
       "auth_env": [
         "GOOGLE_VERTEX_PROJECT",
         "GOOGLE_VERTEX_LOCATION",
         "GOOGLE_APPLICATION_CREDENTIALS"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "Google (Gemini)",
+        "jurisdiction": "US",
+        "kind": "first-party",
+        "confidence": 0.9,
+        "measured": false,
+        "source": "corpus:generativelanguage.googleapis.com"
+      },
       "models": [
         {
           "id": "claude-haiku-4-5@20251001",
@@ -45423,14 +45458,21 @@
       "provider_id": "google-vertex-anthropic",
       "name": "Vertex (Anthropic)",
       "api_url": "",
-      "api_host": "",
+      "api_host": "generativelanguage.googleapis.com",
       "doc": "https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude",
       "auth_env": [
         "GOOGLE_VERTEX_PROJECT",
         "GOOGLE_VERTEX_LOCATION",
         "GOOGLE_APPLICATION_CREDENTIALS"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "Google (Gemini)",
+        "jurisdiction": "US",
+        "kind": "first-party",
+        "confidence": 0.9,
+        "measured": false,
+        "source": "corpus:generativelanguage.googleapis.com"
+      },
       "models": [
         {
           "id": "claude-haiku-4-5@20251001",
@@ -46520,12 +46562,19 @@
       "provider_id": "groq",
       "name": "Groq",
       "api_url": "",
-      "api_host": "",
+      "api_host": "api.groq.com",
       "doc": "https://console.groq.com/docs/models",
       "auth_env": [
         "GROQ_API_KEY"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "Groq",
+        "jurisdiction": "unresolved",
+        "kind": "aggregator",
+        "confidence": null,
+        "measured": false,
+        "source": "corpus:api.groq.com"
+      },
       "models": [
         {
           "id": "allam-2-7b",
@@ -63186,7 +63235,7 @@
           "name": "Qwen3.5 122B-A10B",
           "family": "qwen",
           "context": 262144,
-          "max_output": 262144,
+          "max_output": 81920,
           "cost_input": 0.26,
           "cost_output": 2.08,
           "modalities_in": [
@@ -75595,12 +75644,19 @@
       "provider_id": "mistral",
       "name": "Mistral",
       "api_url": "",
-      "api_host": "",
+      "api_host": "api.mistral.ai",
       "doc": "https://docs.mistral.ai/getting-started/models/",
       "auth_env": [
         "MISTRAL_API_KEY"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "Mistral AI",
+        "jurisdiction": "EU",
+        "kind": "first-party",
+        "confidence": 0.9,
+        "measured": false,
+        "source": "corpus:api.mistral.ai"
+      },
       "models": [
         {
           "id": "codestral-latest",
@@ -101136,12 +101192,19 @@
       "provider_id": "openai",
       "name": "OpenAI",
       "api_url": "",
-      "api_host": "",
+      "api_host": "api.openai.com",
       "doc": "https://platform.openai.com/docs/models",
       "auth_env": [
         "OPENAI_API_KEY"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "OpenAI",
+        "jurisdiction": "US",
+        "kind": "first-party",
+        "confidence": 0.9,
+        "measured": false,
+        "source": "corpus:api.openai.com"
+      },
       "models": [
         {
           "id": "chatgpt-image-latest",
@@ -106074,8 +106137,8 @@
           "family": "deepseek-thinking",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 1.32,
-          "cost_output": 3.96,
+          "cost_input": 0.66,
+          "cost_output": 1.98,
           "modalities_in": [
             "text"
           ],
@@ -106095,8 +106158,8 @@
           "family": "deepseek-thinking",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 1.32,
-          "cost_output": 3.96,
+          "cost_input": 0.66,
+          "cost_output": 1.98,
           "modalities_in": [
             "text"
           ],
@@ -110918,9 +110981,9 @@
           "name": "Qwen3.5 122B-A10B",
           "family": "qwen",
           "context": 262144,
-          "max_output": 262144,
-          "cost_input": 0.26,
-          "cost_output": 2.08,
+          "max_output": 81920,
+          "cost_input": 0.29,
+          "cost_output": 2.4,
           "modalities_in": [
             "text",
             "image",
@@ -132348,12 +132411,19 @@
       "provider_id": "togetherai",
       "name": "Together AI",
       "api_url": "",
-      "api_host": "",
+      "api_host": "api.together.xyz",
       "doc": "https://docs.together.ai/docs/serverless-models",
       "auth_env": [
         "TOGETHER_API_KEY"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "Together AI",
+        "jurisdiction": "unresolved",
+        "kind": "aggregator",
+        "confidence": null,
+        "measured": false,
+        "source": "corpus:api.together.xyz"
+      },
       "models": [
         {
           "id": "LiquidAI/LFM2-24B-A2B",
@@ -145714,12 +145784,19 @@
       "provider_id": "xai",
       "name": "xAI",
       "api_url": "",
-      "api_host": "",
+      "api_host": "api.x.ai",
       "doc": "https://docs.x.ai/docs/models",
       "auth_env": [
         "XAI_API_KEY"
       ],
-      "provenance": null,
+      "provenance": {
+        "operating_entity": "xAI (Grok)",
+        "jurisdiction": "US",
+        "kind": "first-party",
+        "confidence": 0.9,
+        "measured": false,
+        "source": "corpus:api.x.ai"
+      },
       "models": [
         {
           "id": "grok-4.20-0309-non-reasoning",

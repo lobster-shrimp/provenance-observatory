@@ -503,8 +503,9 @@ _CAT = {
         {"provider_id": "deepseek", "name": "DeepSeek",
          "api_url": "https://api.deepseek.com/v1", "api_host": "api.deepseek.com",
          "provenance": {"jurisdiction": "PRC", "kind": "prc", "measured": False},
-         "models": [{"id": "<img src=x onerror=alert(1)>", "context": 128000,
-                     "cost_input": 0.27, "cost_output": 1.1, "open_weights": True}]},
+         "models": [{"id": "deepseek-chat", "family": "deepseek", "context": 128000,
+                     "cost_input": 0.27, "cost_output": 1.1, "open_weights": True,
+                     "modalities_in": ["text"]}]},
         {"provider_id": "openai", "name": "OpenAI",
          "api_url": "https://api.openai.com/v1", "api_host": "api.openai.com",
          "provenance": {"jurisdiction": "US", "kind": "first-party"},
@@ -521,15 +522,51 @@ def _catalog_html(tmp_path, doc, *, signed=False):
     return cat, open(outp).read()
 
 
-def test_catalog_page_shows_prc_escapes_and_links(tmp_path):
+def test_catalog_page_shows_all_providers_and_links(tmp_path):
     cat, index = _catalog_html(tmp_path, _CAT)
     assert "DeepSeek" in cat and "api.deepseek.com" in cat        # PRC provider shown
-    assert "gpt-5" not in cat                                     # first-party NOT in the CN table
-    assert "<img src=x onerror=alert(1)>" not in cat             # external model id escaped
-    assert "&lt;img src=x onerror=alert(1)&gt;" in cat
+    assert "gpt-5" in cat                                         # first-party NOW included
+    assert "OpenAI" in cat
     assert "/api/catalog" in cat                                  # link to full signed data
     assert "snapshot (unsigned" in cat                           # honest unsigned badge
     assert 'catalog.html">Catalog' in index                      # nav link
+    # both jurisdictions present in the embedded data
+    assert '"PRC"' in cat and '"US"' in cat
+
+
+def test_catalog_page_has_data_script_and_pagination(tmp_path):
+    cat, _ = _catalog_html(tmp_path, _CAT)
+    assert '<script id="catalog-data" type="application/json">' in cat
+    assert 'id="cbody"' in cat                                    # paginated body target
+    assert 'id="cprev"' in cat and 'id="cnext"' in cat           # pagination controls
+    assert 'id="cinfo"' in cat                                    # "page X of Y" info
+    assert 'id="cjur"' in cat and 'id="ckind"' in cat            # jurisdiction + kind filters
+    assert "page '+(page+1)+' of '+pages" in cat                 # client renders page counter
+
+
+def test_catalog_page_xss_escapes_hostile_external_data(tmp_path):
+    # models.dev is external: a hostile provider name / model id must NOT reach the page
+    # as live markup — neither in the embedded JSON script block nor the fallback rows.
+    hostile = "</script><img src=x onerror=alert(1)>"
+    doc = {
+        "catalog_version": "1", "corpus_version": "x",
+        "provider_count": 1, "model_count": 1,
+        "providers": [
+            {"provider_id": "evil", "name": hostile,
+             "api_url": "https://evil.test", "api_host": "evil.test",
+             "provenance": {"jurisdiction": "PRC", "kind": "prc"},
+             "models": [{"id": hostile, "context": 1000}]},
+        ],
+    }
+    cat, _ = _catalog_html(tmp_path, doc)
+    # raw payload never present as live markup / a script-tag breakout
+    assert hostile not in cat
+    assert "<img src=x onerror=alert(1)>" not in cat
+    assert "</script><img" not in cat
+    # JSON script block carries it \\uXXXX-escaped (valid + lossless), not as raw tags
+    assert "\\u003c/script\\u003e\\u003cimg" in cat
+    # fallback server-rendered row carries it html-entity-escaped
+    assert "&lt;/script&gt;&lt;img" in cat
 
 
 def test_catalog_page_signed_badge(tmp_path):

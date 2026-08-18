@@ -1,8 +1,9 @@
-# Probe version for reproducible installs. NOTE: the nightly workflow currently
-# installs the probe from git@main (see .github/workflows/observatory.yml), so this
-# pin is the intended/target version, not yet the CI install source. Switch the
-# workflow to `pip install llm-provenance-probe==<pin>` once the probe is on PyPI.
-llm-provenance-probe==0.28.0
+# Probe version for reproducible installs. The nightly workflow installs the probe
+# from THIS pin (`pip install -r requirements.txt`, see observatory.yml), so bumping
+# the version here is what adopts a new probe release into the nightly + the catalog
+# regen. 0.29.0 carries the catalog first-party provenance join (hostless vendors
+# like openai/anthropic/google now resolve their origin).
+llm-provenance-probe==0.29.0
 pyyaml>=6.0
 # Live JSON API (api/). uvicorn to serve; httpx pulled in for TestClient.
 fastapi>=0.110
