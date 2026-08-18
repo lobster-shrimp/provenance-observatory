@@ -19590,7 +19590,7 @@
           "name": "Deepseek V4 Flash 0731",
           "family": "deepseek-flash",
           "context": 1048576,
-          "max_output": 1048576,
+          "max_output": 384000,
           "cost_input": 0.13,
           "cost_output": 0.26,
           "modalities_in": [
