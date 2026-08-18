@@ -10,8 +10,8 @@
   "false_positive_rate": 0.0,
   "vocab_families_exercised": 29,
   "reference_families_total": 25,
-  "generated": "2026-08-17",
-  "engine_commit": "5a50764",
+  "generated": "2026-08-18",
+  "engine_commit": "7b9f159",
   "source": "provenance-probe eval/run_eval.py (hermetic consistency+accuracy gate)",
   "note": "Consistency/regression gate over open-weights GGUF vocabs + scoring bundles. NOT a live-endpoint accuracy claim; real named-vendor accuracy is validated privately."
 }
