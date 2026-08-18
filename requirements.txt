@@ -1,9 +1,10 @@
 # Probe version for reproducible installs. The nightly workflow installs the probe
 # from THIS pin (`pip install -r requirements.txt`, see observatory.yml), so bumping
 # the version here is what adopts a new probe release into the nightly + the catalog
-# regen. 0.29.0 carries the catalog first-party provenance join (hostless vendors
-# like openai/anthropic/google now resolve their origin).
-llm-provenance-probe==0.29.0
+# regen. 0.31.0 adds the fleet Windows collector + Tier-2 attribution + MDM delivery
+# (not exercised by the observatory runner); it retains the 0.29.0 catalog
+# first-party provenance join the nightly catalog/registry regen depends on.
+llm-provenance-probe==0.31.0
 pyyaml>=6.0
 # Live JSON API (api/). uvicorn to serve; httpx pulled in for TestClient.
 fastapi>=0.110
