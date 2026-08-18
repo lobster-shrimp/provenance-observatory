@@ -395,7 +395,7 @@ def _page(title: str, inner: str, *, base: str = "") -> str:
 # (models.dev), so every field is html.escape()d. We read the published JSON only
 # (never import probe internals — T7); flattening providers->models here is just
 # projecting the artifact's own shape, the same as reading verdict.json.
-_CATALOG_ROW_CAP = 1500
+_CATALOG_PAGE_SIZE = 100  # client-side page size AND the no-JS server-rendered fallback slice
 
 
 def _load_catalog(data_dir: str) -> dict | None:
@@ -414,11 +414,19 @@ def _load_catalog(data_dir: str) -> dict | None:
     return doc
 
 
-def _catalog_rows(catalog: dict, kinds: tuple[str, ...]) -> list[dict]:
-    """Flatten providers->models for providers whose provenance kind is in `kinds`.
+def _num_or_none(v):
+    """Coerce to a JSON-clean number, else None (bools are not numbers here)."""
+    return v if isinstance(v, (int, float)) and not isinstance(v, bool) else None
+
+
+def _catalog_rows(catalog: dict, kinds: tuple[str, ...] | None = None) -> list[dict]:
+    """Flatten providers->models. If `kinds` is None, include EVERY provider (all
+    jurisdictions, including unresolved / first-party / aggregator); otherwise keep only
+    providers whose provenance kind is in `kinds`.
+
     External data — tolerate malformed shapes (non-list containers, non-dict / non-string
-    members) without crashing the site build; text fields are coerced to str so the
-    escape at render never sees a non-string."""
+    members) without crashing the site build; text fields are coerced to str and numeric
+    fields to number-or-None so downstream render/JSON never sees an unexpected type."""
     rows: list[dict] = []
     provs = catalog.get("providers")
     if not isinstance(provs, list):
@@ -426,8 +434,10 @@ def _catalog_rows(catalog: dict, kinds: tuple[str, ...]) -> list[dict]:
     for p in provs:
         if not isinstance(p, dict):
             continue
-        prov = p.get("provenance") or {}
-        if not isinstance(prov, dict) or prov.get("kind") not in kinds:
+        prov = p.get("provenance")
+        if not isinstance(prov, dict):
+            prov = {}
+        if kinds is not None and prov.get("kind") not in kinds:
             continue
         models = p.get("models")
         if not isinstance(models, list):
@@ -435,53 +445,134 @@ def _catalog_rows(catalog: dict, kinds: tuple[str, ...]) -> list[dict]:
         for m in models:
             if not isinstance(m, dict):
                 continue
+            mi_raw = m.get("modalities_in")
+            mi = ([str(x) for x in mi_raw if isinstance(x, (str, int, float)) and not isinstance(x, bool)]
+                  if isinstance(mi_raw, list) else [])
             rows.append({"jur": str(prov.get("jurisdiction") or ""), "kind": str(prov.get("kind") or ""),
-                         "provider": str(p.get("name") or ""), "host": str(p.get("api_host") or ""),
-                         "api": str(p.get("api_url") or ""), "model": str(m.get("id") or ""),
-                         "context": m.get("context"), "ci": m.get("cost_input"),
-                         "co": m.get("cost_output"), "ow": m.get("open_weights")})
+                         "prov": str(p.get("name") or ""), "host": str(p.get("api_host") or ""),
+                         "model": str(m.get("id") or ""), "fam": str(m.get("family") or ""),
+                         "ctx": _num_or_none(m.get("context")), "ci": _num_or_none(m.get("cost_input")),
+                         "co": _num_or_none(m.get("cost_output")),
+                         "ow": m.get("open_weights") if isinstance(m.get("open_weights"), bool) else None,
+                         "mi": mi})
     return rows
 
 
-def _num_or_dash(v) -> str:
-    return str(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else "—"
+def _catalog_embed_json(rows: list[dict]) -> str:
+    """Serialize rows for the ``<script id="catalog-data" type="application/json">`` block.
+
+    XSS: the rows carry EXTERNAL data (models.dev). A ``<script>`` element is raw-text —
+    the HTML parser does NOT decode character references inside it, so the ONLY way to
+    break out is a literal ``</script`` (or ``<!--`` / ``<script``). We neutralize that by
+    ``\\uXXXX``-escaping ``<``, ``>`` and ``&``: this keeps the JSON syntactically valid
+    AND lossless — ``JSON.parse`` restores the real character (unlike HTML-entity escaping,
+    which raw-text ``<script>`` content would surface literally, corrupting e.g.
+    "Weights & Biases"). Cell values are additionally rendered via ``textContent`` on the
+    client, so no value ever reaches the DOM as markup."""
+    payload = json.dumps(rows, separators=(",", ":"), ensure_ascii=False)
+    return payload.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
+
+
+def _ctx_label(ctx) -> str:
+    if not (isinstance(ctx, int) and not isinstance(ctx, bool) and ctx):
+        return "—"
+    return f"{round(ctx / 1000)}k" if ctx >= 1000 else str(ctx)
 
 
 def _catalog_table_html(rows: list[dict]) -> str:
+    """Server-rendered fallback rows (no-JS / first paint). Every field html.escape()d;
+    the client JS clears this and re-renders paginated pages via textContent."""
     out = []
-    for r in rows[:_CATALOG_ROW_CAP]:
-        cn = str(r["jur"]).upper().startswith("PRC") or str(r["jur"]).upper() == "CN"
-        pill_cls = "cn" if cn else "muted"
-        ctx = r.get("context")
-        ctx_s = f"{ctx // 1000}k" if isinstance(ctx, int) and not isinstance(ctx, bool) and ctx else "—"
-        ci, co = _num_or_dash(r.get("ci")), _num_or_dash(r.get("co"))
+    for r in rows:
+        j_up = str(r["jur"]).upper()
+        cn = j_up.startswith("PRC") or j_up == "CN"
+        pill = "badge cn" if cn else "badge muted"
+        ci = str(r["ci"]) if isinstance(r["ci"], (int, float)) and not isinstance(r["ci"], bool) else "—"
+        co = str(r["co"]) if isinstance(r["co"], (int, float)) and not isinstance(r["co"], bool) else "—"
         ow = r.get("ow")
         ow_s = "open" if ow is True else ("closed" if ow is False else "—")
-        hay = html.escape(f"{r['jur']} {r['provider']} {r['host']} {r['model']}".lower())
+        mi = ", ".join(r["mi"]) if r.get("mi") else "—"
         out.append(
-            f'<tr data-h="{hay}">'
-            f'<td><span class="{pill_cls}">{html.escape(str(r["jur"]) or "—")}</span></td>'
-            f'<td>{html.escape(r["provider"])}'
+            "<tr>"
+            f'<td><span class="{pill}">{html.escape(r["jur"] or "—")}</span></td>'
+            f'<td>{html.escape(r["prov"] or "—")}'
             f'<div class="mono small">{html.escape(r["host"])}</div></td>'
-            f'<td>{html.escape(r["model"])}</td>'
-            f'<td>{ctx_s}</td><td>${html.escape(ci)} / ${html.escape(co)}</td>'
-            f'<td>{ow_s}</td></tr>')
+            f'<td>{html.escape(r["model"] or "—")}</td>'
+            f"<td>{_ctx_label(r.get('ctx'))}</td>"
+            f'<td>${html.escape(ci)} / ${html.escape(co)}</td>'
+            f"<td>{ow_s}</td><td>{html.escape(mi)}</td></tr>")
     return "".join(out)
 
 
-_CATALOG_FILTER_JS = """
+_CATALOG_APP_JS = """
 (function(){
-  var q=document.getElementById('cq'), rows=document.querySelectorAll('#ctable tbody tr'),
-      cnt=document.getElementById('ccount');
-  function apply(){
-    var t=(q.value||'').trim().toLowerCase(), n=0;
-    rows.forEach(function(r){
-      var show = !t || (r.getAttribute('data-h')||'').indexOf(t)>=0;
-      r.style.display = show ? '' : 'none'; if(show) n++;
+  var PAGE=100;
+  var el=document.getElementById('catalog-data');
+  if(!el) return;
+  var rows; try{ rows=JSON.parse(el.textContent||'[]'); }catch(e){ return; }
+  if(!Array.isArray(rows)) return;
+  var q=document.getElementById('cq'), jsel=document.getElementById('cjur'),
+      ksel=document.getElementById('ckind'), wsel=document.getElementById('cow'),
+      tbody=document.getElementById('cbody'), info=document.getElementById('cinfo'),
+      prev=document.getElementById('cprev'), next=document.getElementById('cnext');
+  if(!tbody) return;
+  var page=0;
+  function ctxLabel(c){ if(typeof c!=='number'||!c) return '—'; return c>=1000? Math.round(c/1000)+'k' : String(c); }
+  function money(v){ return typeof v==='number'? String(v) : '—'; }
+  function owLabel(w){ return w===true?'open':(w===false?'closed':'—'); }
+  function miLabel(a){ return (Array.isArray(a)&&a.length)? a.join(', ') : '—'; }
+  function matchJur(j,s){ var J=(j||'').toUpperCase();
+    if(s==='prc') return J.indexOf('PRC')===0||J==='CN';
+    if(s==='us') return J==='US';
+    if(s==='eu') return J==='EU';
+    if(s==='unresolved') return !j||J==='UNRESOLVED';
+    return true; }
+  function td(text){ var d=document.createElement('td'); d.textContent=text; return d; }
+  function filtered(){
+    var t=(q&&q.value||'').trim().toLowerCase(),
+        js=jsel?jsel.value:'any', ks=ksel?ksel.value:'any', ws=wsel?wsel.value:'any';
+    return rows.filter(function(r){
+      if(js!=='any' && !matchJur(r.jur,js)) return false;
+      if(ks!=='any' && (r.kind||'')!==ks) return false;
+      if(ws==='open' && r.ow!==true) return false;
+      if(ws==='closed' && r.ow!==false) return false;
+      if(t){ var hay=((r.prov||'')+' '+(r.host||'')+' '+(r.model||'')+' '+(r.fam||'')).toLowerCase();
+             if(hay.indexOf(t)<0) return false; }
+      return true;
     });
-    if(cnt) cnt.textContent = n + ' of ' + rows.length + ' shown';
   }
-  if(q){ q.addEventListener('input', apply); apply(); }
+  function render(){
+    var f=filtered(), pages=Math.max(1, Math.ceil(f.length/PAGE));
+    if(page>=pages) page=pages-1; if(page<0) page=0;
+    var start=page*PAGE, slice=f.slice(start, start+PAGE), frag=document.createDocumentFragment();
+    slice.forEach(function(r){
+      var tr=document.createElement('tr');
+      var jtd=document.createElement('td'), sp=document.createElement('span');
+      var J=(r.jur||'').toUpperCase(), cn=J.indexOf('PRC')===0||J==='CN';
+      sp.className='badge '+(cn?'cn':'muted'); sp.textContent=r.jur||'—';
+      jtd.appendChild(sp); tr.appendChild(jtd);
+      var ptd=document.createElement('td');
+      ptd.appendChild(document.createTextNode(r.prov||'—'));
+      var hd=document.createElement('div'); hd.className='mono small'; hd.textContent=r.host||'';
+      ptd.appendChild(hd); tr.appendChild(ptd);
+      tr.appendChild(td(r.model||'—'));
+      tr.appendChild(td(ctxLabel(r.ctx)));
+      tr.appendChild(td('$'+money(r.ci)+' / $'+money(r.co)));
+      tr.appendChild(td(owLabel(r.ow)));
+      tr.appendChild(td(miLabel(r.mi)));
+      frag.appendChild(tr);
+    });
+    tbody.textContent=''; tbody.appendChild(frag);
+    if(info) info.textContent='page '+(page+1)+' of '+pages+' · '+f.length+' matches';
+    if(prev) prev.disabled = page<=0;
+    if(next) next.disabled = page>=pages-1;
+  }
+  [q,jsel,ksel,wsel].forEach(function(c){ if(!c) return;
+    c.addEventListener('input', function(){ page=0; render(); });
+    c.addEventListener('change', function(){ page=0; render(); }); });
+  if(prev) prev.addEventListener('click', function(){ page--; render(); });
+  if(next) next.addEventListener('click', function(){ page++; render(); });
+  render();
 })();
 """
 
@@ -493,39 +584,68 @@ def _catalog_page(catalog: dict | None, *, probe_url: str, api_url: str) -> str:
                  f'search the full catalog in the <a href="{html.escape(probe_url)}/catalog">'
                  'probe tool</a>.</p>')
         return _page("LLM-API catalog", inner)
-    # Mission-focused public table: the Chinese-origin (PRC) inference APIs the
-    # observatory exists to surface. The complete multi-thousand-model catalog
-    # (incl. aggregators + first-party) is at /api/catalog and searchable in the probe.
-    rows = _catalog_rows(catalog, ("prc",))
-    rows.sort(key=lambda r: (r["provider"], r["model"]))
+    # Full public table: EVERY provider/model in the catalog — Chinese-origin (PRC),
+    # first-party (US/EU), and aggregators — filtered + paginated client-side (100/page)
+    # so a ~6.7k-row table stays fast. The Chinese-origin subset is one filter away.
+    rows = _catalog_rows(catalog)  # None kinds -> all providers, all jurisdictions
+    rows.sort(key=lambda r: (r["prov"].lower(), r["model"].lower()))
     # Escaped like every other external field (these are probe-computed ints, but the
     # file's invariant is: nothing external reaches the DOM unescaped).
     total_models = html.escape(str(catalog.get("model_count", 0)))
     total_providers = html.escape(str(catalog.get("provider_count", 0)))
     signed = catalog.get("signed")
-    sig_badge = ('<span class="cn">signed</span>' if signed
+    sig_badge = ('<span class="badge cn">signed</span>' if signed
                  else '<span class="muted">snapshot (unsigned; nightly refresh signs it)</span>')
-    cap_note = (f' Showing the first {_CATALOG_ROW_CAP} — see the API for all.'
-                if len(rows) > _CATALOG_ROW_CAP else "")
+    payload = _catalog_embed_json(rows)
+    fallback = _catalog_table_html(rows[:_CATALOG_PAGE_SIZE])
     inner = f"""
 <p class="lead">Which inference APIs serve which models — and who runs them. Built from
 <a href="https://models.dev">models.dev</a> (MIT) and joined with this project's
 provenance / jurisdiction attribution: <b>{total_providers} providers · {total_models}
 models</b> · corpus {html.escape(str(catalog.get("corpus_version") or ""))} · {sig_badge}.</p>
-<p>This table shows the <b>Chinese-origin (PRC-operated) APIs</b> — the ones this
-observatory exists to surface ({len(rows)} model rows).{cap_note} The complete catalog
-(aggregators + first-party included) is at <a href="{html.escape(api_url)}">the API</a>
-(<code>/api/catalog</code>, signed) and fully searchable in the
-<a href="{html.escape(probe_url)}/catalog">probe tool</a>.</p>
+<p>This is the <b>complete catalog</b> — every provider and model, including Chinese-origin
+(PRC) APIs, first-party US/EU vendors, and aggregators. Use the <b>jurisdiction</b> filter
+to isolate the Chinese-origin APIs this observatory exists to surface. The same data is at
+<a href="{html.escape(api_url)}">the API</a> (<code>/api/catalog</code>, signed) and fully
+searchable in the <a href="{html.escape(probe_url)}/catalog">probe tool</a>.</p>
 <p class="muted small">Each row's provenance is a <b>sub-confirmed pointer</b> (who an API
-host is registered to), never a measured verdict — run the probe for that. Aggregators
-resolve jurisdiction but not provenance, so they are not shown here.</p>
-<div class="controls"><input id="cq" type="search" placeholder="Filter provider / host / model…"
- aria-label="Filter the catalog"><span id="ccount" class="muted small"></span></div>
+host is registered to), never a measured verdict — run the probe for that. Aggregators and
+first-party vendors resolve jurisdiction; only measurement resolves provenance.</p>
+<div class="controls">
+  <input id="cq" type="search" placeholder="Filter provider / host / model / family…"
+   aria-label="Search the catalog">
+  <select id="cjur" aria-label="Jurisdiction">
+    <option value="any">Any jurisdiction</option>
+    <option value="prc">Chinese-origin (PRC)</option>
+    <option value="us">US</option>
+    <option value="eu">EU</option>
+    <option value="unresolved">Unresolved</option>
+  </select>
+  <select id="ckind" aria-label="Operator kind">
+    <option value="any">Any kind</option>
+    <option value="prc">PRC operator</option>
+    <option value="first-party">First-party</option>
+    <option value="aggregator">Aggregator</option>
+  </select>
+  <select id="cow" aria-label="Weights">
+    <option value="any">Any weights</option>
+    <option value="open">Open</option>
+    <option value="closed">Closed</option>
+  </select>
+</div>
+<noscript><p class="muted small">Filtering and pagination need JavaScript. The first
+{_CATALOG_PAGE_SIZE} rows are shown below; the full signed data is at
+<a href="{html.escape(api_url)}"><code>/api/catalog</code></a>.</p></noscript>
 <table id="ctable"><thead><tr><th>Jurisdiction</th><th>Provider / API</th><th>Model</th>
-<th>Context</th><th>$ in / out</th><th>Weights</th></tr></thead>
-<tbody>{_catalog_table_html(rows)}</tbody></table>
-<script>{_CATALOG_FILTER_JS}</script>"""
+<th>Context</th><th>$ in / out</th><th>Weights</th><th>Input</th></tr></thead>
+<tbody id="cbody">{fallback}</tbody></table>
+<div class="controls" style="justify-content:space-between">
+  <span><button id="cprev" type="button">&lsaquo; Prev</button>
+  <button id="cnext" type="button">Next &rsaquo;</button></span>
+  <span id="cinfo" class="muted small"></span>
+</div>
+<script id="catalog-data" type="application/json">{payload}</script>
+<script>{_CATALOG_APP_JS}</script>"""
     return _page("LLM-API catalog", inner)
 
 
