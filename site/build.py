@@ -910,6 +910,47 @@ its own privacy terms. We use no advertising or analytics vendors.</p>
 <p>Questions or requests: <a href="{_CONTACT}">the project repository</a>.</p>""")
 
 
+def _extension_privacy_page() -> str:
+    # Required privacy-policy URL for the "provenance-probe capture" Chrome extension.
+    # Canonical source is extension/store/PRIVACY.md in the probe repo — keep in sync.
+    return _page("Capture Extension — Privacy Policy", f"""
+<p class="small muted">Privacy policy for the <b>provenance-probe capture</b> browser
+extension. Canonical text lives at <a href="{_CONTACT}/blob/main/extension/store/PRIVACY.md">extension/store/PRIVACY.md</a>. Last updated 2026-08-19.</p>
+<p>The extension helps you send one AI chat request from your own browser to your own
+self-hosted provenance-probe instance for analysis. It is built to collect as little as
+possible and to keep what it touches on your machine or on a server you control.</p>
+<h2>What the extension stores</h2>
+<p>Only <b>your instance URL and Basic-auth username/password</b>, which you enter in the
+popup. They are stored only in your browser's local extension storage
+(<code>chrome.storage.local</code>) on your device, sent only to the instance you configure
+over HTTPS, and never written to logs.</p>
+<h2>What it transmits, and to whom</h2>
+<ul>
+  <li><b>Only</b> to the provenance-probe instance <b>you configure</b>, and <b>only</b> the
+    one AI chat request you explicitly choose to capture and upload, over HTTPS.</li>
+  <li>If the captured request carries a <b>session cookie</b>, it is included only when you
+    tick a consent box that names the destination host, and it is used for a single
+    ephemeral analysis run — never stored on the instance.</li>
+  <li>Vendor API keys in a captured request (e.g. an <code>Authorization</code> or
+    <code>x-api-key</code> header) are <b>stripped before upload</b>.</li>
+</ul>
+<h2>What it does NOT do</h2>
+<p>No passive, background, or cross-tab collection (capture runs only after you click "Arm
+capture", for the inspected tab). It never records your login, never reads your browsing
+history, other tabs, or cookie jar, and has <b>no analytics and no telemetry</b> — it sends
+no data to the authors or any third party.</p>
+<h2>Data sharing, sale, and Limited Use</h2>
+<p>We do not sell or share your data. The only network destination is the instance you
+configure. Use of any data received adheres to the Chrome Web Store User Data Policy,
+including its <b>Limited Use</b> requirements.</p>
+<h2>Your control</h2>
+<p>Click <b>Forget</b> in the popup to erase your stored URL and credentials and revoke the
+host permission, or remove the extension from <code>chrome://extensions</code> to delete
+everything it stored.</p>
+<h2>Source and contact</h2>
+<p>The extension is open source: <a href="{_CONTACT}">the project repository</a>.</p>""")
+
+
 def _security_page() -> str:
     return _page("Security Policy", f"""
 <p>The published surface is static and read-only, holds no user data or secrets,
@@ -1500,6 +1541,7 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
         ("data-dictionary.html", _data_dictionary_page()),
         ("security.html", _security_page()),
         ("privacy.html", _privacy_page()),
+        ("extension-privacy.html", _extension_privacy_page()),
         ("terms.html", _terms_page()),
     ):
         with open(os.path.join(out_dir, fname), "w") as f:

@@ -451,6 +451,20 @@ def test_policy_pages_generated_and_linked(tmp_path):
     assert "Reporting a vulnerability" in (out / "security.html").read_text()
 
 
+def test_extension_privacy_page_generated(tmp_path):
+    # The Chrome Web Store requires a live privacy-policy URL for the capture
+    # extension (it handles Basic-auth creds); this page IS that URL.
+    out = tmp_path / "out"
+    build.build(str(tmp_path / "data"), str(out), now_iso="2026-07-24T00:00:00")
+    page = out / "extension-privacy.html"
+    assert page.exists()
+    body = page.read_text()
+    assert "provenance-probe capture" in body
+    assert "chrome.storage.local" in body            # names the actual storage
+    assert "Limited Use" in body                      # the store-required statement
+    assert "no analytics and no telemetry" in body.lower() or "no analytics" in body.lower()
+
+
 def test_security_txt_generated(tmp_path):
     out = tmp_path / "out"
     build.build(str(tmp_path / "data"), str(out), now_iso="2026-07-24T00:00:00")
