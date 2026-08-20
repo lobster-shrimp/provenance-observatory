@@ -4,7 +4,7 @@
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
   "provider_count": 192,
-  "model_count": 6841,
+  "model_count": 6839,
   "providers": [
     {
       "provider_id": "302ai",
@@ -23839,7 +23839,8 @@
           "cost_output": 14.945,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -23861,7 +23862,8 @@
           "cost_output": 15.94,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -23883,7 +23885,8 @@
           "cost_output": 4.982,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -23905,7 +23908,8 @@
           "cost_output": 27.498,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -23927,7 +23931,8 @@
           "cost_output": 26.568,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -23949,7 +23954,8 @@
           "cost_output": 26.561,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -23971,7 +23977,8 @@
           "cost_output": 27.186,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -23993,7 +24000,8 @@
           "cost_output": 27.186,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24015,7 +24023,8 @@
           "cost_output": 14.493,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24037,7 +24046,8 @@
           "cost_output": 11,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24207,7 +24217,8 @@
           "modalities_in": [
             "text",
             "image",
-            "audio"
+            "audio",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24253,7 +24264,8 @@
           "modalities_in": [
             "text",
             "image",
-            "audio"
+            "audio",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24299,7 +24311,8 @@
           "modalities_in": [
             "text",
             "image",
-            "audio"
+            "audio",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24345,7 +24358,8 @@
           "modalities_in": [
             "text",
             "image",
-            "audio"
+            "audio",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24581,7 +24595,8 @@
           "cost_output": 8.769,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24603,7 +24618,8 @@
           "cost_output": 1.704,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24625,7 +24641,8 @@
           "cost_output": 0.434,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24647,7 +24664,8 @@
           "cost_output": 10.635,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24669,7 +24687,8 @@
           "cost_output": 0.638,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24757,7 +24776,8 @@
           "cost_output": 10.96,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24779,7 +24799,8 @@
           "cost_output": 15.453,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24801,7 +24822,8 @@
           "cost_output": 6.599,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24823,7 +24845,8 @@
           "cost_output": 32.998,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24845,7 +24868,8 @@
           "cost_output": 16.498,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -24994,7 +25018,8 @@
           "cost_output": 3.38,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -25016,7 +25041,8 @@
           "cost_output": 3.5,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -25336,7 +25362,8 @@
           "cost_input": 0.159,
           "cost_output": 0.219,
           "modalities_in": [
-            "text"
+            "text",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -25378,7 +25405,8 @@
           "cost_input": 4.284,
           "cost_output": 12.952,
           "modalities_in": [
-            "text"
+            "text",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -25552,7 +25580,8 @@
           "cost_input": 0.488,
           "cost_output": 0.758,
           "modalities_in": [
-            "text"
+            "text",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -25596,7 +25625,8 @@
           "cost_output": 3.144,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -25618,7 +25648,8 @@
           "cost_output": 0.275,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -25662,7 +25693,8 @@
           "cost_output": 3.671,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -25748,7 +25780,8 @@
           "cost_output": 5.978,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -38064,8 +38097,8 @@
           "family": "deepseek-flash",
           "context": 1000000,
           "max_output": 393216,
-          "cost_input": 0.14,
-          "cost_output": 0.28,
+          "cost_input": 0.424,
+          "cost_output": 1.272,
           "modalities_in": [
             "text"
           ],
@@ -58540,7 +58573,7 @@
           "id": "deepseek/deepseek-v4-pro-0813",
           "name": "DeepSeek V4 Pro 0813",
           "family": "deepseek-thinking",
-          "context": 1048576,
+          "context": 1048575,
           "max_output": 384000,
           "cost_input": 1.32,
           "cost_output": 3.96,
@@ -59654,27 +59687,6 @@
           "release_date": "2026-08-11",
           "knowledge": "",
           "last_updated": "2026-08-11"
-        },
-        {
-          "id": "mancer/weaver",
-          "name": "Mancer: Weaver (alpha)",
-          "family": "alpha",
-          "context": 8000,
-          "max_output": 6000,
-          "cost_input": 0.5,
-          "cost_output": 0.75,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2023-08-02",
-          "knowledge": "",
-          "last_updated": "2023-08-02"
         },
         {
           "id": "meituan/longcat-2.0",
@@ -63591,7 +63603,7 @@
           "name": "Qwen3.6 27B",
           "family": "qwen",
           "context": 262144,
-          "max_output": 65536,
+          "max_output": 262144,
           "cost_input": 0.45,
           "cost_output": 2.7,
           "modalities_in": [
@@ -64233,8 +64245,8 @@
           "family": "Hy",
           "context": 262144,
           "max_output": 128000,
-          "cost_input": 0.132,
-          "cost_output": 0.528,
+          "cost_input": 0.14,
+          "cost_output": 0.58,
           "modalities_in": [
             "text"
           ],
@@ -65063,8 +65075,8 @@
           "family": "deepseek",
           "context": 262144,
           "max_output": 262144,
-          "cost_input": 0.0765,
-          "cost_output": 0.153,
+          "cost_input": 0.065,
+          "cost_output": 0.14,
           "modalities_in": [
             "text"
           ],
@@ -65721,28 +65733,6 @@
           "last_updated": "2024-01-01"
         },
         {
-          "id": "claude-3-opus",
-          "name": "Claude 3 Opus",
-          "family": "claude",
-          "context": 200000,
-          "max_output": 4096,
-          "cost_input": 15,
-          "cost_output": 75,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2024-03-04",
-          "knowledge": "",
-          "last_updated": "2024-03-04"
-        },
-        {
           "id": "claude-fable-5",
           "name": "Claude Fable 5",
           "family": "claude-fable",
@@ -66133,8 +66123,8 @@
           "family": "deepseek-flash",
           "context": 1050000,
           "max_output": 384000,
-          "cost_input": 0.05,
-          "cost_output": 0.09,
+          "cost_input": 0.076,
+          "cost_output": 0.153,
           "modalities_in": [
             "text"
           ],
@@ -66879,6 +66869,27 @@
           "max_output": 131072,
           "cost_input": 0.55,
           "cost_output": 1.784,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-06-13",
+          "knowledge": "",
+          "last_updated": "2026-06-13"
+        },
+        {
+          "id": "glm-5.2-fast",
+          "name": "GLM-5.2",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 1.99,
+          "cost_output": 6.16,
           "modalities_in": [
             "text"
           ],
@@ -99231,8 +99242,8 @@
           "family": "qwen",
           "context": 262144,
           "max_output": 65536,
-          "cost_input": 2,
-          "cost_output": 12,
+          "cost_input": 2.15,
+          "cost_output": 12.86,
           "modalities_in": [
             "text"
           ],
@@ -100633,8 +100644,8 @@
           "family": "seed",
           "context": 256000,
           "max_output": 256000,
-          "cost_input": 0.884,
-          "cost_output": 4.42,
+          "cost_input": 0.7072,
+          "cost_output": 3.536,
           "modalities_in": [
             "text",
             "image",
@@ -100656,8 +100667,8 @@
           "family": "seed",
           "context": 256000,
           "max_output": 256000,
-          "cost_input": 0.442,
-          "cost_output": 2.212,
+          "cost_input": 0.3536,
+          "cost_output": 1.7696,
           "modalities_in": [
             "text",
             "image",
@@ -100963,8 +100974,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 1.4,
-          "cost_output": 4.4,
+          "cost_input": 0.98,
+          "cost_output": 3.08,
           "modalities_in": [
             "text"
           ],
@@ -100984,8 +100995,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 1.4,
-          "cost_output": 4.4,
+          "cost_input": 1.26,
+          "cost_output": 3.96,
           "modalities_in": [
             "text"
           ],
@@ -106378,8 +106389,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.0798,
-          "cost_output": 0.1596,
+          "cost_input": 0.088606,
+          "cost_output": 0.177212,
           "modalities_in": [
             "text"
           ],
@@ -106441,8 +106452,8 @@
           "family": "deepseek-thinking",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.66,
-          "cost_output": 1.98,
+          "cost_input": 1.188,
+          "cost_output": 3.564,
           "modalities_in": [
             "text"
           ],
@@ -107464,27 +107475,6 @@
           "last_updated": "2026-08-11"
         },
         {
-          "id": "mancer/weaver",
-          "name": "Weaver (alpha)",
-          "family": "alpha",
-          "context": 8000,
-          "max_output": 6000,
-          "cost_input": 0.5,
-          "cost_output": 0.75,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2023-08-02",
-          "knowledge": "2023-06-30",
-          "last_updated": "2023-08-02"
-        },
-        {
           "id": "meituan/longcat-2.0",
           "name": "LongCat 2.0",
           "family": "longcat",
@@ -108451,8 +108441,8 @@
           "family": "kimi-k2",
           "context": 262144,
           "max_output": 262144,
-          "cost_input": 0.5415,
-          "cost_output": 2.28,
+          "cost_input": 0.95,
+          "cost_output": 4,
           "modalities_in": [
             "text",
             "image"
@@ -111469,9 +111459,9 @@
           "name": "Qwen3.6 27B",
           "family": "qwen",
           "context": 262144,
-          "max_output": 65536,
-          "cost_input": 0.3,
-          "cost_output": 2,
+          "max_output": 262144,
+          "cost_input": 0.6,
+          "cost_output": 3.6,
           "modalities_in": [
             "text",
             "image",
@@ -112805,8 +112795,8 @@
           "family": "deepseek",
           "context": 1310720,
           "max_output": 262144,
-          "cost_input": 0.0765,
-          "cost_output": 0.153,
+          "cost_input": 0.065,
+          "cost_output": 0.14,
           "modalities_in": [
             "text"
           ],
@@ -139721,13 +139711,14 @@
           "id": "alibaba/qwen3.8-27b",
           "name": "Qwen3.8 27B",
           "family": "qwen",
-          "context": 262144,
-          "max_output": 262133,
-          "cost_input": 0.1,
-          "cost_output": 0.4,
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 0.55,
+          "cost_output": 3.3,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "modalities_out": [
             "text"
