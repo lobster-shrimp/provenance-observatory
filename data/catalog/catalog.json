@@ -3,8 +3,8 @@
   "generated_from": "https://models.dev/api.json",
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
-  "provider_count": 207,
-  "model_count": 7483,
+  "provider_count": 211,
+  "model_count": 7488,
   "providers": [
     {
       "provider_id": "302ai",
@@ -4606,6 +4606,189 @@
       ]
     },
     {
+      "provider_id": "above",
+      "name": "above.dev",
+      "api_url": "https://api.above.dev/v1",
+      "api_host": "api.above.dev",
+      "doc": "https://above.dev/docs",
+      "auth_env": [
+        "ABOVE_API_KEY"
+      ],
+      "provenance": null,
+      "models": [
+        {
+          "id": "deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
+          "family": "deepseek-flash",
+          "context": 1000000,
+          "max_output": 384000,
+          "cost_input": 0.242,
+          "cost_output": 0.726,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-31",
+          "knowledge": "2025-05",
+          "last_updated": "2026-07-31"
+        },
+        {
+          "id": "deepseek-v4-flash-vision-exp",
+          "name": "DeepSeek V4 Flash Vision (Exp)",
+          "family": "deepseek-flash",
+          "context": 1000000,
+          "max_output": 384000,
+          "cost_input": 0.242,
+          "cost_output": 0.726,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-21",
+          "knowledge": "",
+          "last_updated": "2026-08-21"
+        },
+        {
+          "id": "deepseek-v4-pro",
+          "name": "DeepSeek V4 Pro",
+          "family": "deepseek-thinking",
+          "context": 1000000,
+          "max_output": 384000,
+          "cost_input": 0.726,
+          "cost_output": 2.178,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-12",
+          "knowledge": "",
+          "last_updated": "2026-08-22"
+        },
+        {
+          "id": "glm-5.2",
+          "name": "GLM 5.2",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 1.54,
+          "cost_output": 4.84,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-06-13",
+          "knowledge": "",
+          "last_updated": "2026-06-13"
+        },
+        {
+          "id": "glm-5.2-fast",
+          "name": "GLM 5.2 Fast",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 2.31,
+          "cost_output": 7.26,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-06-13",
+          "knowledge": "",
+          "last_updated": "2026-06-13"
+        },
+        {
+          "id": "mimo-v2.5-pro",
+          "name": "MiMo V2.5 Pro",
+          "family": "mimo",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 0.5077,
+          "cost_output": 1.0154,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-04-22",
+          "knowledge": "2024-12",
+          "last_updated": "2026-04-22"
+        },
+        {
+          "id": "mimo-v2.5-pro-ultraspeed",
+          "name": "MiMo V2.5 Pro UltraSpeed",
+          "family": "mimo",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 1.5231,
+          "cost_output": 3.0462,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-06-08",
+          "knowledge": "2024-12",
+          "last_updated": "2026-06-09"
+        },
+        {
+          "id": "qwen3.8-max",
+          "name": "Qwen 3.8 Max",
+          "family": "qwen",
+          "context": 1000000,
+          "max_output": 32768,
+          "cost_input": 2.2,
+          "cost_output": 6.6,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-03",
+          "knowledge": "",
+          "last_updated": "2026-08-03"
+        }
+      ]
+    },
+    {
       "provider_id": "agentrouter",
       "name": "AgentRouter",
       "api_url": "https://agentrouter.org/v1",
@@ -5084,6 +5267,30 @@
           "last_updated": "2026-04-22"
         },
         {
+          "id": "qwen/qwen3.8-27b",
+          "name": "Qwen3.8 27B",
+          "family": "qwen",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.4,
+          "cost_output": 3,
+          "modalities_in": [
+            "text",
+            "image",
+            "video",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "zai-org/glm-5.2",
           "name": "GLM-5.2",
           "family": "glm",
@@ -5103,6 +5310,27 @@
           "release_date": "2026-06-13",
           "knowledge": "",
           "last_updated": "2026-06-13"
+        },
+        {
+          "id": "zai-org/glm-5.3",
+          "name": "GLM-5.3",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 1,
+          "cost_output": 4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
         }
       ]
     },
@@ -20660,6 +20888,62 @@
       ]
     },
     {
+      "provider_id": "bothub",
+      "name": "Bothub",
+      "api_url": "https://openai.bothub.ru/v1",
+      "api_host": "openai.bothub.ru",
+      "doc": "https://bothub.ru/models",
+      "auth_env": [
+        "BOTHUB_API_KEY"
+      ],
+      "provenance": null,
+      "models": [
+        {
+          "id": "gemma-4-31b-it:free",
+          "name": "Gemma 4 31B IT (free)",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-04-02",
+          "knowledge": "",
+          "last_updated": "2026-04-02"
+        },
+        {
+          "id": "nemotron-3-ultra-550b-a55b:free",
+          "name": "Nemotron 3 Ultra (free)",
+          "family": "nemotron",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-06-04",
+          "knowledge": "",
+          "last_updated": "2026-06-04"
+        }
+      ]
+    },
+    {
       "provider_id": "cerebras",
       "name": "Cerebras",
       "api_url": "",
@@ -23338,7 +23622,7 @@
           "name": "Glm 5.3 Flash",
           "family": "glm",
           "context": 1310720,
-          "max_output": 1310720,
+          "max_output": 1048576,
           "cost_input": 0.15,
           "cost_output": 0.5,
           "modalities_in": [
@@ -26380,6 +26664,27 @@
           "release_date": "2026-06-13",
           "knowledge": "",
           "last_updated": "2026-06-13"
+        },
+        {
+          "id": "glm-5.3",
+          "name": "GLM-5.3",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 0.4,
+          "cost_output": 1.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
         },
         {
           "id": "glm-5.3-flash",
@@ -31366,6 +31671,27 @@
           "last_updated": "2026-06-13"
         },
         {
+          "id": "glm-5.3",
+          "name": "GLM5.3",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 1048576,
+          "cost_input": 1.4,
+          "cost_output": 4.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "glm-5.3-flash",
           "name": "GLM5.3 Flash",
           "family": "glm",
@@ -34402,7 +34728,7 @@
           "context": 131072,
           "max_output": 131072,
           "cost_input": 0.3,
-          "cost_output": 1.2,
+          "cost_output": 1.1,
           "modalities_in": [
             "text",
             "image"
@@ -41019,6 +41345,30 @@
           "last_updated": "2026-08-28"
         },
         {
+          "id": "accounts/fireworks/models/glm-5p3-flash",
+          "name": "GLM 5.3 Flash",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 0.15,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "video",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-26",
+          "knowledge": "",
+          "last_updated": "2026-08-26"
+        },
+        {
           "id": "accounts/fireworks/models/gpt-oss-120b",
           "name": "GPT OSS 120B",
           "family": "gpt-oss",
@@ -41661,6 +42011,27 @@
           "release_date": "2026-06-13",
           "knowledge": "",
           "last_updated": "2026-06-13"
+        },
+        {
+          "id": "zai-org/GLM-5.3",
+          "name": "GLM-5.3",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 1048576,
+          "cost_input": 1.4,
+          "cost_output": 4.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
         }
       ]
     },
@@ -58757,7 +59128,7 @@
           "name": "Trinity Large Thinking",
           "family": "trinity",
           "context": 262144,
-          "max_output": 235929,
+          "max_output": 80000,
           "cost_input": 0.22,
           "cost_output": 0.85,
           "modalities_in": [
@@ -60007,8 +60378,8 @@
           "family": "gemma",
           "context": 262144,
           "max_output": 16384,
-          "cost_input": 0.07,
-          "cost_output": 0.35,
+          "cost_input": 0.09,
+          "cost_output": 0.34,
           "modalities_in": [
             "image",
             "text",
@@ -64036,7 +64407,7 @@
           "name": "Qwen3-Next 80B-A3B Instruct",
           "family": "qwen",
           "context": 262144,
-          "max_output": 235929,
+          "max_output": 16384,
           "cost_input": 0.0975,
           "cost_output": 0.78,
           "modalities_in": [
@@ -65290,7 +65661,7 @@
           "name": "Inkling",
           "family": "ling",
           "context": 524288,
-          "max_output": 262144,
+          "max_output": 471859,
           "cost_input": 0.95,
           "cost_output": 4.05,
           "modalities_in": [
@@ -65840,8 +66211,8 @@
           "id": "z-ai/glm-5.1",
           "name": "GLM-5.1",
           "family": "glm",
-          "context": 202752,
-          "max_output": 182476,
+          "context": 200000,
+          "max_output": 128000,
           "cost_input": 1.4,
           "cost_output": 4.4,
           "modalities_in": [
@@ -66042,9 +66413,9 @@
           "name": "DeepSeek V4 Flash Latest",
           "family": "deepseek",
           "context": 1048576,
-          "max_output": 131072,
+          "max_output": 393216,
           "cost_input": 0.03,
-          "cost_output": 0.1,
+          "cost_output": 0.16,
           "modalities_in": [
             "text"
           ],
@@ -66204,10 +66575,10 @@
           "id": "~z-ai/glm-latest",
           "name": "Z.ai: GLM Latest",
           "family": "glm",
-          "context": 1048576,
-          "max_output": 943718,
-          "cost_input": 1.2,
-          "cost_output": 4,
+          "context": 262144,
+          "max_output": 131072,
+          "cost_input": 1.1875,
+          "cost_output": 4.18,
           "modalities_in": [
             "text"
           ],
@@ -66324,6 +66695,82 @@
           "release_date": "2026-06-12",
           "knowledge": "2025-01",
           "last_updated": "2026-06-12"
+        }
+      ]
+    },
+    {
+      "provider_id": "klokintegration",
+      "name": "klokintegration.se",
+      "api_url": "https://api-gw.klok.ipaas.se/proxy/kloker-key/v1",
+      "api_host": "api-gw.klok.ipaas.se",
+      "doc": "https://klokintegration.se/docs/ai-api",
+      "auth_env": [
+        "KLOKINTEGRATION_API_KEY"
+      ],
+      "provenance": null,
+      "models": [
+        {
+          "id": "Kloker",
+          "name": "Kloker",
+          "family": "",
+          "context": 200000,
+          "max_output": 50000,
+          "cost_input": 0.23,
+          "cost_output": 1.16,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": false,
+          "tool_call": true,
+          "release_date": "2026-08-29",
+          "knowledge": "",
+          "last_updated": "2026-08-29"
+        },
+        {
+          "id": "Kloker-Integration-Architect",
+          "name": "Kloker Integration Architect",
+          "family": "",
+          "context": 200000,
+          "max_output": 50000,
+          "cost_input": 0.23,
+          "cost_output": 1.16,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": false,
+          "tool_call": true,
+          "release_date": "2026-08-29",
+          "knowledge": "",
+          "last_updated": "2026-08-29"
+        },
+        {
+          "id": "Kloker-Integration-Developer",
+          "name": "Kloker Integration Developer",
+          "family": "",
+          "context": 200000,
+          "max_output": 50000,
+          "cost_input": 0.23,
+          "cost_output": 1.16,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": false,
+          "tool_call": true,
+          "release_date": "2026-08-29",
+          "knowledge": "",
+          "last_updated": "2026-08-29"
         }
       ]
     },
@@ -67899,8 +68346,8 @@
           "family": "glm",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 1.4,
-          "cost_output": 4.4,
+          "cost_input": 1.3,
+          "cost_output": 4,
           "modalities_in": [
             "text"
           ],
@@ -78052,6 +78499,27 @@
           "last_updated": "2026-06-13"
         },
         {
+          "id": "scx-ai-gp/glm-5.3",
+          "name": "GLM-5.3 (SCX.ai)",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 1.3,
+          "cost_output": 4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "scx-ai-gp/glm-5.3-flash",
           "name": "GLM-5.3 Flash (SCX.ai)",
           "family": "glm",
@@ -87975,7 +88443,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-26",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-26"
         },
@@ -87997,7 +88465,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-26",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-26"
         },
@@ -88107,7 +88575,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-23",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-23"
         },
@@ -88129,7 +88597,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-24",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-24"
         },
@@ -89623,7 +90091,7 @@
           "last_updated": "2025-08-02"
         },
         {
-          "id": "abliterated-model",
+          "id": "abliteration-ai/abliterated-model",
           "name": "Abliterated Model",
           "family": "",
           "context": 262144,
@@ -89645,7 +90113,7 @@
           "last_updated": "2026-08-27"
         },
         {
-          "id": "abliterated-model-large",
+          "id": "abliteration-ai/abliterated-model-large",
           "name": "Abliterated Model Large",
           "family": "",
           "context": 1000000,
@@ -89660,7 +90128,7 @@
           ],
           "open_weights": false,
           "reasoning": true,
-          "tool_call": false,
+          "tool_call": true,
           "release_date": "2026-08-27",
           "knowledge": "",
           "last_updated": "2026-08-27"
@@ -92255,27 +92723,6 @@
           "last_updated": "2026-04-24"
         },
         {
-          "id": "dmind/dmind-1-mini",
-          "name": "DMind-1-Mini",
-          "family": "gpt",
-          "context": 32768,
-          "max_output": 8192,
-          "cost_input": 0.2,
-          "cost_output": 0.4,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2025-06-01"
-        },
-        {
           "id": "dots-studio/dots-3-note-preview",
           "name": "Dots3-Note Preview",
           "family": "",
@@ -93166,6 +93613,358 @@
           "last_updated": "2026-08-01"
         },
         {
+          "id": "gemma-4-26b-a4b-it-chimerax",
+          "name": "Chimera X",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-26b-a4b-it-darksoul",
+          "name": "Dark Soul",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-26b-a4b-it-luminous",
+          "name": "Luminous Mirror",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": false,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-26b-a4b-it-moonlight",
+          "name": "Moonlight Dusk",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-26b-a4b-it-musica",
+          "name": "Musica",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-26b-a4b-it-opusdistill",
+          "name": "Opus Distill",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-26b-a4b-it-shadowsiren",
+          "name": "Shadow Siren",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-26b-a4b-uncensored",
+          "name": "Gemma 4 26B A4B Uncensored",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-26b-a4b-uncensored:thinking",
+          "name": "Gemma 4 26B A4B Uncensored Thinking",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-31b-it-darkidol",
+          "name": "DarkIdol",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-31b-it-fabled",
+          "name": "Fabled",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-31b-it-garnet",
+          "name": "Garnet",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-31b-it-gembrain",
+          "name": "Gembrain",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-31b-it-gemsicle",
+          "name": "Gemsicle",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-31b-it-isometry",
+          "name": "Isometry",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
+          "id": "gemma-4-31b-it-novelist",
+          "name": "Novelist",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.08,
+          "cost_output": 0.33,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-07-29"
+        },
+        {
           "id": "gemma-4-e2b-it",
           "name": "Gemma 4 E2B Instruct",
           "family": "gemma",
@@ -93214,48 +94013,6 @@
           "last_updated": "2026-04-02"
         },
         {
-          "id": "glm-4",
-          "name": "GLM-4",
-          "family": "glm",
-          "context": 128000,
-          "max_output": 4096,
-          "cost_input": 14.994,
-          "cost_output": 14.994,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-01-16"
-        },
-        {
-          "id": "glm-4-air",
-          "name": "GLM-4 Air",
-          "family": "glm",
-          "context": 128000,
-          "max_output": 4096,
-          "cost_input": 0.2006,
-          "cost_output": 0.2006,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-06-05"
-        },
-        {
           "id": "glm-4-air-0111",
           "name": "GLM 4 Air 0111",
           "family": "glm",
@@ -93277,48 +94034,6 @@
           "last_updated": "2025-01-11"
         },
         {
-          "id": "glm-4-airx",
-          "name": "GLM-4 AirX",
-          "family": "glm",
-          "context": 8000,
-          "max_output": 4096,
-          "cost_input": 2.006,
-          "cost_output": 2.006,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-06-05"
-        },
-        {
-          "id": "glm-4-flash",
-          "name": "GLM-4 Flash",
-          "family": "glm",
-          "context": 128000,
-          "max_output": 4096,
-          "cost_input": 0.1003,
-          "cost_output": 0.1003,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-08-01"
-        },
-        {
           "id": "glm-4-long",
           "name": "GLM-4 Long",
           "family": "glm",
@@ -93336,27 +94051,6 @@
           "reasoning": false,
           "tool_call": false,
           "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-08-01"
-        },
-        {
-          "id": "glm-4-plus",
-          "name": "GLM-4 Plus",
-          "family": "glm",
-          "context": 128000,
-          "max_output": 4096,
-          "cost_input": 7.497,
-          "cost_output": 7.497,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-09-20",
           "knowledge": "",
           "last_updated": "2024-08-01"
         },
@@ -93466,27 +94160,6 @@
           "release_date": "2025-04-15",
           "knowledge": "",
           "last_updated": "2025-04-15"
-        },
-        {
-          "id": "glm-zero-preview",
-          "name": "GLM Zero Preview",
-          "family": "glm",
-          "context": 8000,
-          "max_output": 4096,
-          "cost_input": 1.802,
-          "cost_output": 1.802,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-12-20",
-          "knowledge": "",
-          "last_updated": "2024-12-01"
         },
         {
           "id": "google/gemini-3-flash-preview",
@@ -93868,160 +94541,6 @@
           "last_updated": "2026-04-02"
         },
         {
-          "id": "google/gemma-4-26b-a4b-it-chimerax",
-          "name": "Chimera X",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-26b-a4b-it-darksoul",
-          "name": "Dark Soul",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-26b-a4b-it-luminous",
-          "name": "Luminous Mirror",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-26b-a4b-it-moonlight",
-          "name": "Moonlight Dusk",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-26b-a4b-it-musica",
-          "name": "Musica",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-26b-a4b-it-opusdistill",
-          "name": "Opus Distill",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-26b-a4b-it-shadowsiren",
-          "name": "Shadow Siren",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
           "id": "google/gemma-4-26b-a4b-it:thinking",
           "name": "Gemma 4 26B A4B Thinking",
           "family": "gemma",
@@ -94044,50 +94563,6 @@
           "last_updated": "2026-04-02"
         },
         {
-          "id": "google/gemma-4-26b-a4b-uncensored",
-          "name": "Gemma 4 26B A4B Uncensored",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-22",
-          "knowledge": "",
-          "last_updated": "2026-08-22"
-        },
-        {
-          "id": "google/gemma-4-26b-a4b-uncensored:thinking",
-          "name": "Gemma 4 26B A4B Uncensored Thinking",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-24",
-          "knowledge": "",
-          "last_updated": "2026-08-24"
-        },
-        {
           "id": "google/gemma-4-31b-it",
           "name": "Gemma 4 31B",
           "family": "gemma",
@@ -94108,160 +94583,6 @@
           "release_date": "2026-04-02",
           "knowledge": "",
           "last_updated": "2026-04-02"
-        },
-        {
-          "id": "google/gemma-4-31b-it-darkidol",
-          "name": "DarkIdol",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-31b-it-fabled",
-          "name": "Fabled",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-31b-it-garnet",
-          "name": "Garnet",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-31b-it-gembrain",
-          "name": "Gembrain",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-31b-it-gemsicle",
-          "name": "Gemsicle",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2026-08-29",
-          "knowledge": "",
-          "last_updated": "2026-08-29"
-        },
-        {
-          "id": "google/gemma-4-31b-it-isometry",
-          "name": "Isometry",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
-        },
-        {
-          "id": "google/gemma-4-31b-it-novelist",
-          "name": "Novelist",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.08,
-          "cost_output": 0.33,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-28",
-          "knowledge": "",
-          "last_updated": "2026-08-28"
         },
         {
           "id": "google/gemma-4-31b-it:thinking",
@@ -94477,27 +94798,6 @@
           "last_updated": "2025-01-06"
         },
         {
-          "id": "hunyuan-turbos-20250226",
-          "name": "Hunyuan Turbo S",
-          "family": "hunyuan",
-          "context": 24000,
-          "max_output": 8192,
-          "cost_input": 0.187,
-          "cost_output": 0.374,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-02-27",
-          "knowledge": "",
-          "last_updated": "2025-02-27"
-        },
-        {
           "id": "ibm-granite/granite-4.1-8b",
           "name": "Granite 4.1 8B",
           "family": "granite",
@@ -94580,153 +94880,6 @@
           "release_date": "2024-01-01",
           "knowledge": "",
           "last_updated": "2024-07-01"
-        },
-        {
-          "id": "inflection/inflection-3-productivity",
-          "name": "Inflection 3 Productivity",
-          "family": "gpt",
-          "context": 8000,
-          "max_output": 4096,
-          "cost_input": 2.499,
-          "cost_output": 9.996,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-11-21",
-          "knowledge": "",
-          "last_updated": "2024-10-11"
-        },
-        {
-          "id": "jamba-large",
-          "name": "Jamba Large",
-          "family": "jamba",
-          "context": 256000,
-          "max_output": 4096,
-          "cost_input": 1.989,
-          "cost_output": 7.99,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-07-09",
-          "knowledge": "",
-          "last_updated": "2025-07-09"
-        },
-        {
-          "id": "jamba-large-1.6",
-          "name": "Jamba Large 1.6",
-          "family": "jamba",
-          "context": 256000,
-          "max_output": 4096,
-          "cost_input": 1.989,
-          "cost_output": 7.99,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-03-12",
-          "knowledge": "",
-          "last_updated": "2025-03-12"
-        },
-        {
-          "id": "jamba-large-1.7",
-          "name": "Jamba Large 1.7",
-          "family": "jamba",
-          "context": 256000,
-          "max_output": 4096,
-          "cost_input": 1.989,
-          "cost_output": 7.99,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-07-09",
-          "knowledge": "",
-          "last_updated": "2025-07-09"
-        },
-        {
-          "id": "jamba-mini",
-          "name": "Jamba Mini",
-          "family": "jamba",
-          "context": 256000,
-          "max_output": 4096,
-          "cost_input": 0.1989,
-          "cost_output": 0.408,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-07-09",
-          "knowledge": "",
-          "last_updated": "2025-07-09"
-        },
-        {
-          "id": "jamba-mini-1.6",
-          "name": "Jamba Mini 1.6",
-          "family": "jamba",
-          "context": 256000,
-          "max_output": 4096,
-          "cost_input": 0.1989,
-          "cost_output": 0.408,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2025-03-01"
-        },
-        {
-          "id": "jamba-mini-1.7",
-          "name": "Jamba Mini 1.7",
-          "family": "jamba",
-          "context": 256000,
-          "max_output": 4096,
-          "cost_input": 0.1989,
-          "cost_output": 0.408,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-07-09",
-          "knowledge": "",
-          "last_updated": "2025-07-09"
         },
         {
           "id": "kimi-k2-instruct-fast",
@@ -94812,27 +94965,6 @@
           "release_date": "2026-07-14",
           "knowledge": "",
           "last_updated": "2026-07-14"
-        },
-        {
-          "id": "learnlm-1.5-pro-experimental",
-          "name": "Gemini LearnLM Experimental",
-          "family": "gemini",
-          "context": 32767,
-          "max_output": 8192,
-          "cost_input": 3.502,
-          "cost_output": 10.506,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-05-14"
         },
         {
           "id": "liquid/lfm-2.5-2.6b",
@@ -96111,8 +96243,8 @@
           "family": "kimi-k3",
           "context": 1048576,
           "max_output": 1048576,
-          "cost_input": 2.5,
-          "cost_output": 13.5,
+          "cost_input": 2,
+          "cost_output": 10,
           "modalities_in": [
             "text",
             "image",
@@ -96134,8 +96266,8 @@
           "family": "kimi",
           "context": 1048576,
           "max_output": 1048576,
-          "cost_input": 2.5,
-          "cost_output": 13.5,
+          "cost_input": 2,
+          "cost_output": 10,
           "modalities_in": [
             "text",
             "image",
@@ -97717,7 +97849,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-20",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-20"
         },
@@ -97739,53 +97871,9 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-20",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-20"
-        },
-        {
-          "id": "ornith-ai/ornith-1.5-397b",
-          "name": "Ornith 1.5 397B",
-          "family": "ornith",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.9,
-          "cost_output": 3.6,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-24",
-          "knowledge": "",
-          "last_updated": "2026-08-24"
-        },
-        {
-          "id": "ornith-ai/ornith-1.5-397b:thinking",
-          "name": "Ornith 1.5 397B Thinking",
-          "family": "ornith",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.9,
-          "cost_output": 3.6,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-24",
-          "knowledge": "",
-          "last_updated": "2026-08-24"
         },
         {
           "id": "ornith-ai/ornith-1.5-9b",
@@ -97805,7 +97893,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-23",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-23"
         },
@@ -97827,7 +97915,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-24",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-24"
         },
@@ -98669,7 +98757,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-21",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-21"
         },
@@ -98691,7 +98779,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-24",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-24"
         },
@@ -98737,7 +98825,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-28",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-28"
         },
@@ -98759,7 +98847,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-24",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-24"
         },
@@ -98781,7 +98869,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-24",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-24"
         },
@@ -98803,7 +98891,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-21",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-21"
         },
@@ -98825,7 +98913,7 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-25",
+          "release_date": "2026-07-29",
           "knowledge": "",
           "last_updated": "2026-08-25"
         },
@@ -99413,8 +99501,8 @@
           "family": "qwen",
           "context": 262144,
           "max_output": 32768,
-          "cost_input": 0.2,
-          "cost_output": 1.4,
+          "cost_input": 0.15,
+          "cost_output": 0.7,
           "modalities_in": [
             "text",
             "image"
@@ -99435,8 +99523,8 @@
           "family": "qwen",
           "context": 262144,
           "max_output": 32768,
-          "cost_input": 0.2,
-          "cost_output": 1.4,
+          "cost_input": 0.15,
+          "cost_output": 0.7,
           "modalities_in": [
             "text",
             "image"
@@ -99773,27 +99861,6 @@
           "release_date": "2025-05-23",
           "knowledge": "",
           "last_updated": "2025-05-23"
-        },
-        {
-          "id": "step-r1-v-mini",
-          "name": "Step R1 V Mini",
-          "family": "step",
-          "context": 128000,
-          "max_output": 65536,
-          "cost_input": 2.5,
-          "cost_output": 11,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2025-04-08"
         },
         {
           "id": "stepfun-ai/step-3.5-flash",
@@ -100533,6 +100600,132 @@
           "last_updated": "2024-03-01"
         },
         {
+          "id": "z-ai/GLM-4.5-Air",
+          "name": "GLM 4.5 Air",
+          "family": "glm-air",
+          "context": 128000,
+          "max_output": 98304,
+          "cost_input": 0.12,
+          "cost_output": 0.8,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": false,
+          "tool_call": true,
+          "release_date": "2025-07-28",
+          "knowledge": "2025-04",
+          "last_updated": "2025-07-28"
+        },
+        {
+          "id": "z-ai/GLM-4.5-Air:thinking",
+          "name": "GLM 4.5 Air (Thinking)",
+          "family": "glm-air",
+          "context": 128000,
+          "max_output": 98304,
+          "cost_input": 0.12,
+          "cost_output": 0.8,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2025-07-28",
+          "knowledge": "2025-04",
+          "last_updated": "2025-07-28"
+        },
+        {
+          "id": "z-ai/GLM-4.5:thinking",
+          "name": "GLM 4.5 (Thinking)",
+          "family": "glm",
+          "context": 128000,
+          "max_output": 65536,
+          "cost_input": 0.3,
+          "cost_output": 1.3,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": false,
+          "release_date": "2025-07-28",
+          "knowledge": "2025-04",
+          "last_updated": "2025-07-28"
+        },
+        {
+          "id": "z-ai/GLM-4.6-turbo",
+          "name": "GLM 4.6 Turbo",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 204800,
+          "cost_input": 1,
+          "cost_output": 3,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": false,
+          "tool_call": false,
+          "release_date": "2025-10-02",
+          "knowledge": "",
+          "last_updated": "2025-10-02"
+        },
+        {
+          "id": "z-ai/GLM-4.6-turbo:thinking",
+          "name": "GLM 4.6 Turbo (Thinking)",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 204800,
+          "cost_input": 1,
+          "cost_output": 3,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": false,
+          "release_date": "2025-10-02",
+          "knowledge": "",
+          "last_updated": "2025-10-02"
+        },
+        {
+          "id": "z-ai/glm-4.5",
+          "name": "GLM 4.5",
+          "family": "glm",
+          "context": 128000,
+          "max_output": 65536,
+          "cost_input": 0.3,
+          "cost_output": 1.3,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": false,
+          "tool_call": false,
+          "release_date": "2025-07-28",
+          "knowledge": "2025-04",
+          "last_updated": "2025-07-28"
+        },
+        {
           "id": "z-ai/glm-4.5v",
           "name": "GLM 4.5V",
           "family": "glm",
@@ -100598,6 +100791,27 @@
           "last_updated": "2025-09-30"
         },
         {
+          "id": "z-ai/glm-4.6-original",
+          "name": "GLM 4.6 Original",
+          "family": "glm",
+          "context": 256000,
+          "max_output": 65535,
+          "cost_input": 0.35,
+          "cost_output": 1.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2025-12-11",
+          "knowledge": "",
+          "last_updated": "2025-12-11"
+        },
+        {
           "id": "z-ai/glm-4.6:thinking",
           "name": "GLM 4.6 Thinking",
           "family": "glm",
@@ -100619,6 +100833,303 @@
           "last_updated": "2025-09-30"
         },
         {
+          "id": "z-ai/glm-4.6v",
+          "name": "GLM 4.6V",
+          "family": "glm",
+          "context": 128000,
+          "max_output": 24000,
+          "cost_input": 0.3,
+          "cost_output": 0.9,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": false,
+          "tool_call": false,
+          "release_date": "2025-12-08",
+          "knowledge": "2025-04",
+          "last_updated": "2025-12-08"
+        },
+        {
+          "id": "z-ai/glm-4.6v-flash-original",
+          "name": "GLM 4.6V Flash",
+          "family": "glm",
+          "context": 128000,
+          "max_output": 24000,
+          "cost_input": 0.1,
+          "cost_output": 0.4,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": false,
+          "tool_call": false,
+          "release_date": "2025-12-08",
+          "knowledge": "",
+          "last_updated": "2025-12-08"
+        },
+        {
+          "id": "z-ai/glm-4.6v-original",
+          "name": "GLM 4.6V Original",
+          "family": "glm",
+          "context": 128000,
+          "max_output": 24000,
+          "cost_input": 0.6,
+          "cost_output": 0.9,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": false,
+          "tool_call": false,
+          "release_date": "2025-12-08",
+          "knowledge": "",
+          "last_updated": "2025-12-08"
+        },
+        {
+          "id": "z-ai/glm-4.7",
+          "name": "GLM 4.7",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 65535,
+          "cost_input": 0.2,
+          "cost_output": 0.8,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2025-12-22",
+          "knowledge": "2025-04",
+          "last_updated": "2025-12-22"
+        },
+        {
+          "id": "z-ai/glm-4.7-flash",
+          "name": "GLM 4.7 Flash",
+          "family": "glm-flash",
+          "context": 200000,
+          "max_output": 128000,
+          "cost_input": 0.07,
+          "cost_output": 0.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-01-19",
+          "knowledge": "2025-04",
+          "last_updated": "2026-01-19"
+        },
+        {
+          "id": "z-ai/glm-4.7-flash-original",
+          "name": "GLM 4.7 Flash Original",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 128000,
+          "cost_input": 0.07,
+          "cost_output": 0.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-01-19",
+          "knowledge": "",
+          "last_updated": "2026-01-19"
+        },
+        {
+          "id": "z-ai/glm-4.7-flash-original:thinking",
+          "name": "GLM 4.7 Flash Original Thinking",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 128000,
+          "cost_input": 0.07,
+          "cost_output": 0.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-01-19",
+          "knowledge": "",
+          "last_updated": "2026-01-19"
+        },
+        {
+          "id": "z-ai/glm-4.7-flash:thinking",
+          "name": "GLM 4.7 Flash Thinking",
+          "family": "glm-flash",
+          "context": 200000,
+          "max_output": 128000,
+          "cost_input": 0.07,
+          "cost_output": 0.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-01-19",
+          "knowledge": "2025-04",
+          "last_updated": "2026-01-19"
+        },
+        {
+          "id": "z-ai/glm-4.7-original",
+          "name": "GLM 4.7 Original",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 65535,
+          "cost_input": 0.6,
+          "cost_output": 2.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2025-12-22",
+          "knowledge": "",
+          "last_updated": "2025-12-22"
+        },
+        {
+          "id": "z-ai/glm-4.7-original:thinking",
+          "name": "GLM 4.7 Original Thinking",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 65535,
+          "cost_input": 0.6,
+          "cost_output": 2.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2025-12-22",
+          "knowledge": "",
+          "last_updated": "2025-12-22"
+        },
+        {
+          "id": "z-ai/glm-4.7:thinking",
+          "name": "GLM 4.7 Thinking",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 65535,
+          "cost_input": 0.2,
+          "cost_output": 0.8,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2025-12-22",
+          "knowledge": "2025-04",
+          "last_updated": "2025-12-22"
+        },
+        {
+          "id": "z-ai/glm-5",
+          "name": "GLM 5",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 128000,
+          "cost_input": 0.5,
+          "cost_output": 2.55,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-02-12",
+          "knowledge": "",
+          "last_updated": "2026-02-12"
+        },
+        {
+          "id": "z-ai/glm-5-original",
+          "name": "GLM 5 Original",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 128000,
+          "cost_input": 1,
+          "cost_output": 3.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-02-11",
+          "knowledge": "",
+          "last_updated": "2026-02-11"
+        },
+        {
+          "id": "z-ai/glm-5-original:thinking",
+          "name": "GLM 5 Original Thinking",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 128000,
+          "cost_input": 1,
+          "cost_output": 3.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-02-11",
+          "knowledge": "",
+          "last_updated": "2026-02-11"
+        },
+        {
           "id": "z-ai/glm-5-turbo",
           "name": "GLM 5 Turbo",
           "family": "glm",
@@ -100638,6 +101149,111 @@
           "release_date": "2026-03-16",
           "knowledge": "",
           "last_updated": "2026-03-16"
+        },
+        {
+          "id": "z-ai/glm-5.1",
+          "name": "GLM 5.1",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 131072,
+          "cost_input": 0.75,
+          "cost_output": 2.6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-04-07",
+          "knowledge": "",
+          "last_updated": "2026-04-07"
+        },
+        {
+          "id": "z-ai/glm-5.1:thinking",
+          "name": "GLM 5.1 Thinking",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 131072,
+          "cost_input": 0.75,
+          "cost_output": 2.6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-04-07",
+          "knowledge": "",
+          "last_updated": "2026-04-07"
+        },
+        {
+          "id": "z-ai/glm-5.2",
+          "name": "GLM 5.2",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 0.42,
+          "cost_output": 1.32,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-06-13",
+          "knowledge": "",
+          "last_updated": "2026-06-13"
+        },
+        {
+          "id": "z-ai/glm-5.2:thinking",
+          "name": "GLM 5.2 Thinking",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 0.42,
+          "cost_output": 1.32,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-06-13",
+          "knowledge": "",
+          "last_updated": "2026-06-13"
+        },
+        {
+          "id": "z-ai/glm-5.3",
+          "name": "GLM 5.3",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 1,
+          "cost_output": 3.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
         },
         {
           "id": "z-ai/glm-5.3-flash",
@@ -100671,6 +101287,49 @@
           "cost_input": 0.125,
           "cost_output": 0.5,
           "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-29",
+          "knowledge": "",
+          "last_updated": "2026-08-27"
+        },
+        {
+          "id": "z-ai/glm-5.3:thinking",
+          "name": "GLM 5.3 Thinking",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 1,
+          "cost_output": 3.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
+          "id": "z-ai/glm-5:thinking",
+          "name": "GLM 5 Thinking",
+          "family": "glm",
+          "context": 200000,
+          "max_output": 128000,
+          "cost_input": 0.5,
+          "cost_output": 2.55,
+          "modalities_in": [
             "text"
           ],
           "modalities_out": [
@@ -100679,9 +101338,9 @@
           "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-27",
+          "release_date": "2026-02-12",
           "knowledge": "",
-          "last_updated": "2026-08-27"
+          "last_updated": "2026-02-12"
         },
         {
           "id": "z-ai/glm-5v-turbo",
@@ -100728,598 +101387,7 @@
           "last_updated": "2026-04-01"
         },
         {
-          "id": "zai-org/GLM-4.5-Air",
-          "name": "GLM 4.5 Air",
-          "family": "glm-air",
-          "context": 128000,
-          "max_output": 98304,
-          "cost_input": 0.12,
-          "cost_output": 0.8,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2025-07-28",
-          "knowledge": "2025-04",
-          "last_updated": "2025-07-28"
-        },
-        {
-          "id": "zai-org/GLM-4.5-Air:thinking",
-          "name": "GLM 4.5 Air (Thinking)",
-          "family": "glm-air",
-          "context": 128000,
-          "max_output": 98304,
-          "cost_input": 0.12,
-          "cost_output": 0.8,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2025-07-28",
-          "knowledge": "2025-04",
-          "last_updated": "2025-07-28"
-        },
-        {
-          "id": "zai-org/GLM-4.5:thinking",
-          "name": "GLM 4.5 (Thinking)",
-          "family": "glm",
-          "context": 128000,
-          "max_output": 65536,
-          "cost_input": 0.3,
-          "cost_output": 1.3,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": false,
-          "release_date": "2025-07-28",
-          "knowledge": "2025-04",
-          "last_updated": "2025-07-28"
-        },
-        {
-          "id": "zai-org/GLM-4.6-turbo",
-          "name": "GLM 4.6 Turbo",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 204800,
-          "cost_input": 1,
-          "cost_output": 3,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-10-02",
-          "knowledge": "",
-          "last_updated": "2025-10-02"
-        },
-        {
-          "id": "zai-org/GLM-4.6-turbo:thinking",
-          "name": "GLM 4.6 Turbo (Thinking)",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 204800,
-          "cost_input": 1,
-          "cost_output": 3,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": false,
-          "release_date": "2025-10-02",
-          "knowledge": "",
-          "last_updated": "2025-10-02"
-        },
-        {
-          "id": "zai-org/glm-4.5",
-          "name": "GLM 4.5",
-          "family": "glm",
-          "context": 128000,
-          "max_output": 65536,
-          "cost_input": 0.3,
-          "cost_output": 1.3,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-07-28",
-          "knowledge": "2025-04",
-          "last_updated": "2025-07-28"
-        },
-        {
-          "id": "zai-org/glm-4.6-original",
-          "name": "GLM 4.6 Original",
-          "family": "glm",
-          "context": 256000,
-          "max_output": 65535,
-          "cost_input": 0.35,
-          "cost_output": 1.4,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2025-12-11",
-          "knowledge": "",
-          "last_updated": "2025-12-11"
-        },
-        {
-          "id": "zai-org/glm-4.6v",
-          "name": "GLM 4.6V",
-          "family": "glm",
-          "context": 128000,
-          "max_output": 24000,
-          "cost_input": 0.3,
-          "cost_output": 0.9,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-12-08",
-          "knowledge": "2025-04",
-          "last_updated": "2025-12-08"
-        },
-        {
-          "id": "zai-org/glm-4.6v-flash-original",
-          "name": "GLM 4.6V Flash",
-          "family": "glm",
-          "context": 128000,
-          "max_output": 24000,
-          "cost_input": 0.1,
-          "cost_output": 0.4,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-12-08",
-          "knowledge": "",
-          "last_updated": "2025-12-08"
-        },
-        {
-          "id": "zai-org/glm-4.6v-original",
-          "name": "GLM 4.6V Original",
-          "family": "glm",
-          "context": 128000,
-          "max_output": 24000,
-          "cost_input": 0.6,
-          "cost_output": 0.9,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-12-08",
-          "knowledge": "",
-          "last_updated": "2025-12-08"
-        },
-        {
-          "id": "zai-org/glm-4.7",
-          "name": "GLM 4.7",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 65535,
-          "cost_input": 0.2,
-          "cost_output": 0.8,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2025-12-22",
-          "knowledge": "2025-04",
-          "last_updated": "2025-12-22"
-        },
-        {
-          "id": "zai-org/glm-4.7-flash",
-          "name": "GLM 4.7 Flash",
-          "family": "glm-flash",
-          "context": 200000,
-          "max_output": 128000,
-          "cost_input": 0.07,
-          "cost_output": 0.4,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-01-19",
-          "knowledge": "2025-04",
-          "last_updated": "2026-01-19"
-        },
-        {
-          "id": "zai-org/glm-4.7-flash-original",
-          "name": "GLM 4.7 Flash Original",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 128000,
-          "cost_input": 0.07,
-          "cost_output": 0.4,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-01-19",
-          "knowledge": "",
-          "last_updated": "2026-01-19"
-        },
-        {
-          "id": "zai-org/glm-4.7-flash-original:thinking",
-          "name": "GLM 4.7 Flash Original Thinking",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 128000,
-          "cost_input": 0.07,
-          "cost_output": 0.4,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-01-19",
-          "knowledge": "",
-          "last_updated": "2026-01-19"
-        },
-        {
-          "id": "zai-org/glm-4.7-flash:thinking",
-          "name": "GLM 4.7 Flash Thinking",
-          "family": "glm-flash",
-          "context": 200000,
-          "max_output": 128000,
-          "cost_input": 0.07,
-          "cost_output": 0.4,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-01-19",
-          "knowledge": "2025-04",
-          "last_updated": "2026-01-19"
-        },
-        {
-          "id": "zai-org/glm-4.7-original",
-          "name": "GLM 4.7 Original",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 65535,
-          "cost_input": 0.6,
-          "cost_output": 2.2,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2025-12-22",
-          "knowledge": "",
-          "last_updated": "2025-12-22"
-        },
-        {
-          "id": "zai-org/glm-4.7-original:thinking",
-          "name": "GLM 4.7 Original Thinking",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 65535,
-          "cost_input": 0.6,
-          "cost_output": 2.2,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2025-12-22",
-          "knowledge": "",
-          "last_updated": "2025-12-22"
-        },
-        {
-          "id": "zai-org/glm-4.7:thinking",
-          "name": "GLM 4.7 Thinking",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 65535,
-          "cost_input": 0.2,
-          "cost_output": 0.8,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2025-12-22",
-          "knowledge": "2025-04",
-          "last_updated": "2025-12-22"
-        },
-        {
-          "id": "zai-org/glm-5",
-          "name": "GLM 5",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 128000,
-          "cost_input": 0.5,
-          "cost_output": 2.55,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-02-12",
-          "knowledge": "",
-          "last_updated": "2026-02-12"
-        },
-        {
-          "id": "zai-org/glm-5-original",
-          "name": "GLM 5 Original",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 128000,
-          "cost_input": 1,
-          "cost_output": 3.2,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-02-11",
-          "knowledge": "",
-          "last_updated": "2026-02-11"
-        },
-        {
-          "id": "zai-org/glm-5-original:thinking",
-          "name": "GLM 5 Original Thinking",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 128000,
-          "cost_input": 1,
-          "cost_output": 3.2,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-02-11",
-          "knowledge": "",
-          "last_updated": "2026-02-11"
-        },
-        {
-          "id": "zai-org/glm-5.1",
-          "name": "GLM 5.1",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 131072,
-          "cost_input": 0.75,
-          "cost_output": 2.6,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-04-07",
-          "knowledge": "",
-          "last_updated": "2026-04-07"
-        },
-        {
-          "id": "zai-org/glm-5.1:thinking",
-          "name": "GLM 5.1 Thinking",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 131072,
-          "cost_input": 0.75,
-          "cost_output": 2.6,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-04-07",
-          "knowledge": "",
-          "last_updated": "2026-04-07"
-        },
-        {
-          "id": "zai-org/glm-5.2",
-          "name": "GLM 5.2",
-          "family": "glm",
-          "context": 1048576,
-          "max_output": 131072,
-          "cost_input": 0.42,
-          "cost_output": 1.32,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-06-13",
-          "knowledge": "",
-          "last_updated": "2026-06-13"
-        },
-        {
-          "id": "zai-org/glm-5.2:thinking",
-          "name": "GLM 5.2 Thinking",
-          "family": "glm",
-          "context": 1048576,
-          "max_output": 131072,
-          "cost_input": 0.42,
-          "cost_output": 1.32,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-06-13",
-          "knowledge": "",
-          "last_updated": "2026-06-13"
-        },
-        {
-          "id": "zai-org/glm-5.3",
-          "name": "GLM 5.3 Preview",
-          "family": "glm",
-          "context": 1048576,
-          "max_output": 131072,
-          "cost_input": 1,
-          "cost_output": 3.2,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-14",
-          "knowledge": "",
-          "last_updated": "2026-08-14"
-        },
-        {
-          "id": "zai-org/glm-5.3:thinking",
-          "name": "GLM 5.3 Preview Thinking",
-          "family": "glm",
-          "context": 1048576,
-          "max_output": 131072,
-          "cost_input": 1,
-          "cost_output": 3.2,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-14",
-          "knowledge": "",
-          "last_updated": "2026-08-14"
-        },
-        {
-          "id": "zai-org/glm-5:thinking",
-          "name": "GLM 5 Thinking",
-          "family": "glm",
-          "context": 200000,
-          "max_output": 128000,
-          "cost_input": 0.5,
-          "cost_output": 2.55,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-02-12",
-          "knowledge": "",
-          "last_updated": "2026-02-12"
-        },
-        {
-          "id": "zai-org/glm-latest",
+          "id": "z-ai/glm-latest",
           "name": "GLM Latest",
           "family": "glm",
           "context": 1048576,
@@ -111723,6 +111791,27 @@
           "last_updated": "2026-06-13"
         },
         {
+          "id": "glm-5.3",
+          "name": "GLM-5.3",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": null,
+          "cost_output": null,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "glm-5.3-flash",
           "name": "GLM-5.3-Flash",
           "family": "glm",
@@ -115481,12 +115570,12 @@
         },
         {
           "id": "hy3",
-          "name": "Hy3 (8x usage)",
+          "name": "Hy3",
           "family": "Hy",
           "context": 256000,
           "max_output": 64000,
-          "cost_input": 0.0175,
-          "cost_output": 0.0725,
+          "cost_input": 0.14,
+          "cost_output": 0.58,
           "modalities_in": [
             "text"
           ],
@@ -116681,9 +116770,9 @@
           "name": "Trinity Large Thinking",
           "family": "trinity",
           "context": 262144,
-          "max_output": 235929,
-          "cost_input": 0.22,
-          "cost_output": 0.85,
+          "max_output": 80000,
+          "cost_input": 0.25,
+          "cost_output": 0.8,
           "modalities_in": [
             "text"
           ],
@@ -117200,8 +117289,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.084,
-          "cost_output": 0.168,
+          "cost_input": 0.08064,
+          "cost_output": 0.16128,
           "modalities_in": [
             "text"
           ],
@@ -117221,8 +117310,8 @@
           "family": "deepseek-flash",
           "context": 1310720,
           "max_output": 943718,
-          "cost_input": 0.045,
-          "cost_output": 0.09,
+          "cost_input": 0.065,
+          "cost_output": 0.18,
           "modalities_in": [
             "text"
           ],
@@ -117264,8 +117353,8 @@
           "family": "deepseek-thinking",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.650412,
-          "cost_output": 1.300824,
+          "cost_input": 0.457794,
+          "cost_output": 0.915588,
           "modalities_in": [
             "text"
           ],
@@ -121854,8 +121943,8 @@
           "name": "Qwen3-Next 80B-A3B Instruct",
           "family": "qwen",
           "context": 262144,
-          "max_output": 235929,
-          "cost_input": 0.1,
+          "max_output": 16384,
+          "cost_input": 0.09,
           "cost_output": 1.1,
           "modalities_in": [
             "text"
@@ -122951,8 +123040,8 @@
           "name": "Inkling",
           "family": "ling",
           "context": 1048576,
-          "max_output": 262144,
-          "cost_input": 0.95,
+          "max_output": 471859,
+          "cost_input": 1,
           "cost_output": 4.05,
           "modalities_in": [
             "text",
@@ -123502,9 +123591,9 @@
           "name": "GLM-5.1",
           "family": "glm",
           "context": 204800,
-          "max_output": 182476,
-          "cost_input": 1.26,
-          "cost_output": 3.96,
+          "max_output": 128000,
+          "cost_input": 0.966,
+          "cost_output": 3.036,
           "modalities_in": [
             "text"
           ],
@@ -123724,9 +123813,9 @@
           "name": "DeepSeek V4 Flash Latest",
           "family": "deepseek",
           "context": 1310720,
-          "max_output": 131072,
+          "max_output": 393216,
           "cost_input": 0.03,
-          "cost_output": 0.1,
+          "cost_output": 0.16,
           "modalities_in": [
             "text"
           ],
@@ -123887,9 +123976,9 @@
           "name": "GLM Latest",
           "family": "glm",
           "context": 1310720,
-          "max_output": 943718,
-          "cost_input": 1.2,
-          "cost_output": 4,
+          "max_output": 131072,
+          "cost_input": 1.1875,
+          "cost_output": 4.18,
           "modalities_in": [
             "text"
           ],
@@ -127468,6 +127557,30 @@
           "release_date": "2026-08-14",
           "knowledge": "",
           "last_updated": "2026-08-14"
+        },
+        {
+          "id": "z-ai/glm-5.3-flash",
+          "name": "GLM-5.3-Flash",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 0.075,
+          "cost_output": 0.25,
+          "modalities_in": [
+            "text",
+            "image",
+            "video",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-26",
+          "knowledge": "",
+          "last_updated": "2026-08-26"
         }
       ]
     },
@@ -138167,30 +138280,6 @@
           "last_updated": "2026-08-26"
         },
         {
-          "id": "glm-5.3-flash@eu",
-          "name": "GLM-5.3-Flash (EU)",
-          "family": "glm",
-          "context": 1000000,
-          "max_output": 262144,
-          "cost_input": 0.2,
-          "cost_output": 0.5,
-          "modalities_in": [
-            "text",
-            "image",
-            "video",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-08-26",
-          "knowledge": "",
-          "last_updated": "2026-08-26"
-        },
-        {
           "id": "glm-5.3@eu",
           "name": "GLM-5.3 (EU)",
           "family": "glm",
@@ -146642,6 +146731,28 @@
           "release_date": "2026-06-13",
           "knowledge": "",
           "last_updated": "2026-06-13"
+        },
+        {
+          "id": "hf:zai-org/GLM-5.3-Flash",
+          "name": "GLM-5.3-Flash",
+          "family": "glm",
+          "context": 524288,
+          "max_output": 65536,
+          "cost_input": 0.15,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-26",
+          "knowledge": "",
+          "last_updated": "2026-08-26"
         }
       ]
     },
@@ -148749,6 +148860,27 @@
           "last_updated": "2026-06-16"
         },
         {
+          "id": "zai-org/GLM-5.3",
+          "name": "GLM-5.3",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 262144,
+          "cost_input": 1.4,
+          "cost_output": 4.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "zai-org/GLM-5.3-Flash",
           "name": "GLM-5.3-Flash",
           "family": "glm",
@@ -149066,6 +149198,40 @@
           "release_date": "2026-08-26",
           "knowledge": "",
           "last_updated": "2026-08-26"
+        }
+      ]
+    },
+    {
+      "provider_id": "tokenrouter",
+      "name": "TokenRouter",
+      "api_url": "https://api.tokenrouter.com/v1",
+      "api_host": "api.tokenrouter.com",
+      "doc": "https://www.tokenrouter.com/docs/tokenrouter-feature-guide/",
+      "auth_env": [
+        "TOKENROUTER_API_KEY"
+      ],
+      "provenance": null,
+      "models": [
+        {
+          "id": "z-ai/glm-5.3-free",
+          "name": "GLM-5.3 (free)",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
         }
       ]
     },
