@@ -4,7 +4,7 @@
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
   "provider_count": 212,
-  "model_count": 7478,
+  "model_count": 7502,
   "providers": [
     {
       "provider_id": "302ai",
@@ -12313,6 +12313,29 @@
           "last_updated": "2026-06-09"
         },
         {
+          "id": "anthropic.claude-fable-5-1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "anthropic.claude-haiku-4-5-20251001-v1:0",
           "name": "Claude Haiku 4.5",
           "family": "claude-haiku",
@@ -13018,6 +13041,29 @@
           "release_date": "2026-06-09",
           "knowledge": "2026-01-31",
           "last_updated": "2026-06-09"
+        },
+        {
+          "id": "global.anthropic.claude-fable-5-1",
+          "name": "Claude Fable 5.1 (Global)",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "global.anthropic.claude-haiku-4-5-20251001-v1:0",
@@ -14428,6 +14474,29 @@
           "last_updated": "2026-06-09"
         },
         {
+          "id": "us.anthropic.claude-fable-5-1",
+          "name": "Claude Fable 5.1 (US)",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 11,
+          "cost_output": 55,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
           "name": "Claude Haiku 4.5 (US)",
           "family": "claude-haiku",
@@ -15199,6 +15268,29 @@
           "release_date": "2026-06-07",
           "knowledge": "",
           "last_updated": "2026-06-09"
+        },
+        {
+          "id": "claude-fable-5-1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "claude-haiku-4-5",
@@ -16837,6 +16929,29 @@
           "release_date": "2026-06-09",
           "knowledge": "2026-01-31",
           "last_updated": "2026-06-09"
+        },
+        {
+          "id": "claude-fable-5-1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "claude-haiku-4-5",
@@ -18701,6 +18816,29 @@
           "release_date": "2026-06-09",
           "knowledge": "2026-01-31",
           "last_updated": "2026-06-09"
+        },
+        {
+          "id": "claude-fable-5-1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "claude-haiku-4-5",
@@ -21361,8 +21499,8 @@
           "family": "qwen",
           "context": 262144,
           "max_output": 65536,
-          "cost_input": 0.35,
-          "cost_output": 2.75,
+          "cost_input": 0.32,
+          "cost_output": 2.5,
           "modalities_in": [
             "text",
             "image"
@@ -25068,8 +25206,8 @@
           "family": "glm",
           "context": 1048576,
           "max_output": 1048576,
-          "cost_input": 1.75,
-          "cost_output": 4.499,
+          "cost_input": 1.4,
+          "cost_output": 4.399,
           "modalities_in": [
             "text"
           ],
@@ -27274,6 +27412,28 @@
           "release_date": "2026-06-09",
           "knowledge": "2026-01-31",
           "last_updated": "2026-06-09"
+        },
+        {
+          "id": "anthropic/claude-fable-5-1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "anthropic/claude-haiku-4-5",
@@ -31350,6 +31510,28 @@
           "last_updated": "2026-06-12"
         },
         {
+          "id": "anthropic-claude-fable-5.1",
+          "name": "Anthropic Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "anthropic-claude-haiku-4.5",
           "name": "Anthropic Claude Haiku 4.5",
           "family": "claude-haiku",
@@ -33593,8 +33775,8 @@
           "last_updated": "2026-06-09"
         },
         {
-          "id": "anthropic/claude-fable-latest",
-          "name": "Claude Fable 5",
+          "id": "anthropic/claude-fable-5-1",
+          "name": "Claude Fable 5.1",
           "family": "claude-fable",
           "context": 1000000,
           "max_output": 128000,
@@ -33611,9 +33793,32 @@
           "open_weights": false,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-06-09",
-          "knowledge": "2026-01-31",
-          "last_updated": "2026-06-09"
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
+          "id": "anthropic/claude-fable-latest",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "anthropic/claude-opus-4-5",
@@ -34209,6 +34414,48 @@
           "release_date": "2024-12-02",
           "knowledge": "2024-06-01",
           "last_updated": "2024-12-02"
+        },
+        {
+          "id": "databricks/databricks-deepseek-v4-flash-0731",
+          "name": "DeepSeek V4 Flash 0731",
+          "family": "deepseek-flash",
+          "context": 1000000,
+          "max_output": 384000,
+          "cost_input": 0.14,
+          "cost_output": 0.28,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-31",
+          "knowledge": "2025-05",
+          "last_updated": "2026-07-31"
+        },
+        {
+          "id": "databricks/databricks-deepseek-v4-pro-0813",
+          "name": "DeepSeek V4 Pro 0813",
+          "family": "deepseek-thinking",
+          "context": 1000000,
+          "max_output": 384000,
+          "cost_input": 1.31999,
+          "cost_output": 3.95997,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-12",
+          "knowledge": "",
+          "last_updated": "2026-08-22"
         },
         {
           "id": "databricks/databricks-gpt-oss-120b",
@@ -35453,8 +35700,8 @@
           "family": "gemini-flash",
           "context": 1048576,
           "max_output": 65536,
-          "cost_input": 1.5,
-          "cost_output": 7.5,
+          "cost_input": 0.75,
+          "cost_output": 3.75,
           "modalities_in": [
             "text",
             "image",
@@ -35478,8 +35725,8 @@
           "family": "gemini-flash",
           "context": 1048576,
           "max_output": 65536,
-          "cost_input": 1.5,
-          "cost_output": 7.5,
+          "cost_input": 0.75,
+          "cost_output": 3.75,
           "modalities_in": [
             "text",
             "image",
@@ -35570,8 +35817,8 @@
           "family": "llama",
           "context": 128000,
           "max_output": 4096,
-          "cost_input": 0.75374,
-          "cost_output": 0.75374,
+          "cost_input": 0.75335,
+          "cost_output": 0.75335,
           "modalities_in": [
             "text"
           ],
@@ -35591,8 +35838,8 @@
           "family": "gpt-oss",
           "context": 131072,
           "max_output": 32768,
-          "cost_input": 0.17394,
-          "cost_output": 0.75374,
+          "cost_input": 0.17385,
+          "cost_output": 0.75335,
           "modalities_in": [
             "text"
           ],
@@ -37625,8 +37872,8 @@
           "family": "deepseek-flash",
           "context": 256000,
           "max_output": 384000,
-          "cost_input": 0.46384,
-          "cost_output": 0.92768,
+          "cost_input": 0.4636,
+          "cost_output": 0.9272,
           "modalities_in": [
             "text"
           ],
@@ -37646,8 +37893,8 @@
           "family": "gpt-oss",
           "context": 128000,
           "max_output": 32768,
-          "cost_input": 0.17394,
-          "cost_output": 0.69576,
+          "cost_input": 0.17385,
+          "cost_output": 0.6954,
           "modalities_in": [
             "text"
           ],
@@ -37667,8 +37914,8 @@
           "family": "llama",
           "context": 128000,
           "max_output": 4096,
-          "cost_input": 1.04364,
-          "cost_output": 1.04364,
+          "cost_input": 1.0431,
+          "cost_output": 1.0431,
           "modalities_in": [
             "text"
           ],
@@ -38346,8 +38593,8 @@
           "family": "gemini-flash",
           "context": 1048576,
           "max_output": 65536,
-          "cost_input": 1.5,
-          "cost_output": 7.5,
+          "cost_input": 0.75,
+          "cost_output": 3.75,
           "modalities_in": [
             "text",
             "image",
@@ -38371,8 +38618,8 @@
           "family": "gemini-flash",
           "context": 1048576,
           "max_output": 65536,
-          "cost_input": 1.5,
-          "cost_output": 7.5,
+          "cost_input": 0.75,
+          "cost_output": 3.75,
           "modalities_in": [
             "text",
             "image",
@@ -38396,8 +38643,8 @@
           "family": "gemini-flash",
           "context": 1048576,
           "max_output": 65536,
-          "cost_input": 1.5,
-          "cost_output": 7.5,
+          "cost_input": 0.75,
+          "cost_output": 3.75,
           "modalities_in": [
             "text",
             "image",
@@ -38421,8 +38668,8 @@
           "family": "gemini-flash",
           "context": 1048576,
           "max_output": 65536,
-          "cost_input": 1.5,
-          "cost_output": 7.5,
+          "cost_input": 0.75,
+          "cost_output": 3.75,
           "modalities_in": [
             "text",
             "image",
@@ -41545,8 +41792,8 @@
           "family": "deepseek-flash",
           "context": 1000000,
           "max_output": 384000,
-          "cost_input": 0.14,
-          "cost_output": 0.28,
+          "cost_input": 0.22,
+          "cost_output": 0.66,
           "modalities_in": [
             "text"
           ],
@@ -45489,6 +45736,29 @@
       },
       "models": [
         {
+          "id": "claude-fable-5-1@default",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "claude-fable-5@default",
           "name": "Claude Fable 5",
           "family": "claude-fable",
@@ -46507,6 +46777,29 @@
         "source": "corpus:generativelanguage.googleapis.com"
       },
       "models": [
+        {
+          "id": "claude-fable-5-1@default",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
         {
           "id": "claude-fable-5@default",
           "name": "Claude Fable 5",
@@ -51980,8 +52273,8 @@
           "family": "gpt-oss",
           "context": 128072,
           "max_output": 13107,
-          "cost_input": 0.188,
-          "cost_output": 0.7,
+          "cost_input": 0.19,
+          "cost_output": 0.63,
           "modalities_in": [
             "text"
           ],
@@ -52001,8 +52294,8 @@
           "family": "kimi-k2",
           "context": 262144,
           "max_output": 26214,
-          "cost_input": 0.5444,
-          "cost_output": 2.855,
+          "cost_input": 0.5504,
+          "cost_output": 2.885,
           "modalities_in": [
             "text"
           ],
@@ -52130,8 +52423,8 @@
           "family": "minimax",
           "context": 262100,
           "max_output": 6553,
-          "cost_input": 0.424,
-          "cost_output": 1.612,
+          "cost_input": 0.404,
+          "cost_output": 1.496,
           "modalities_in": [
             "text"
           ],
@@ -59119,6 +59412,29 @@
           "last_updated": "2026-06-09"
         },
         {
+          "id": "anthropic/claude-fable-5.1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "anthropic/claude-haiku-4.5",
           "name": "Claude Haiku 4.5 (latest)",
           "family": "claude-haiku",
@@ -59257,29 +59573,6 @@
           "last_updated": "2026-04-16"
         },
         {
-          "id": "anthropic/claude-opus-4.7-fast",
-          "name": "Claude Opus 4.7",
-          "family": "claude-opus",
-          "context": 1000000,
-          "max_output": 128000,
-          "cost_input": 30,
-          "cost_output": 150,
-          "modalities_in": [
-            "text",
-            "image",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-04-16",
-          "knowledge": "2026-01-31",
-          "last_updated": "2026-04-16"
-        },
-        {
           "id": "anthropic/claude-opus-4.8",
           "name": "Claude Opus 4.8",
           "family": "claude-opus",
@@ -59303,29 +59596,6 @@
           "last_updated": "2026-05-28"
         },
         {
-          "id": "anthropic/claude-opus-4.8-fast",
-          "name": "Claude Opus 4.8",
-          "family": "claude-opus",
-          "context": 1000000,
-          "max_output": 128000,
-          "cost_input": 10,
-          "cost_output": 50,
-          "modalities_in": [
-            "text",
-            "image",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-05-28",
-          "knowledge": "2026-01",
-          "last_updated": "2026-05-28"
-        },
-        {
           "id": "anthropic/claude-opus-5",
           "name": "Claude Opus 5",
           "family": "claude-opus",
@@ -59333,29 +59603,6 @@
           "max_output": 128000,
           "cost_input": 5,
           "cost_output": 25,
-          "modalities_in": [
-            "text",
-            "image",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-07-24",
-          "knowledge": "2026-05",
-          "last_updated": "2026-07-24"
-        },
-        {
-          "id": "anthropic/claude-opus-5-fast",
-          "name": "Claude Opus 5",
-          "family": "claude-opus",
-          "context": 1000000,
-          "max_output": 128000,
-          "cost_input": 10,
-          "cost_output": 50,
           "modalities_in": [
             "text",
             "image",
@@ -59838,8 +60085,8 @@
           "id": "deepseek/deepseek-chat-v3.1",
           "name": "DeepSeek: DeepSeek V3.1",
           "family": "deepseek",
-          "context": 161000,
-          "max_output": 144900,
+          "context": 163840,
+          "max_output": 32768,
           "cost_input": 0.27,
           "cost_output": 1,
           "modalities_in": [
@@ -60049,8 +60296,8 @@
           "id": "deepseek/deepseek-v4-pro",
           "name": "DeepSeek V4 Pro",
           "family": "deepseek-thinking",
-          "context": 1048576,
-          "max_output": 393216,
+          "context": 1024000,
+          "max_output": 384000,
           "cost_input": 1.6,
           "cost_output": 3.2,
           "modalities_in": [
@@ -60887,6 +61134,27 @@
           "last_updated": "2026-03-04"
         },
         {
+          "id": "inception/mercury-2.5-preview",
+          "name": "Inception: Mercury 2.5 Preview",
+          "family": "mercury",
+          "context": 260000,
+          "max_output": 65536,
+          "cost_input": 0.2,
+          "cost_output": 0.75,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-31",
+          "knowledge": "",
+          "last_updated": "2026-08-31"
+        },
+        {
           "id": "inclusionai/ling-3.0-flash",
           "name": "Ling-3.0-flash",
           "family": "ling",
@@ -61628,7 +61896,7 @@
           "name": "MiniMax: MiniMax M2.7 (free)",
           "family": "minimax",
           "context": 196608,
-          "max_output": 196608,
+          "max_output": 176947,
           "cost_input": 0,
           "cost_output": 0,
           "modalities_in": [
@@ -61672,12 +61940,13 @@
           "name": "MiniMax: MiniMax M3 (free)",
           "family": "minimax",
           "context": 1048576,
-          "max_output": 1048576,
+          "max_output": 943718,
           "cost_input": 0,
           "cost_output": 0,
           "modalities_in": [
             "text",
-            "image"
+            "image",
+            "video"
           ],
           "modalities_out": [
             "text"
@@ -62523,8 +62792,8 @@
           "id": "nvidia/nemotron-3-ultra-550b-a55b",
           "name": "Nemotron 3 Ultra 550B A55B",
           "family": "nemotron",
-          "context": 262144,
-          "max_output": 16384,
+          "context": 256000,
+          "max_output": 32768,
           "cost_input": 0.5,
           "cost_output": 2.2,
           "modalities_in": [
@@ -65305,8 +65574,8 @@
           "id": "qwen/qwen3.8-2.4t-a95b",
           "name": "Qwen3.8 2.4T A95B",
           "family": "qwen",
-          "context": 1000000,
-          "max_output": 262144,
+          "context": 262144,
+          "max_output": 131072,
           "cost_input": 2,
           "cost_output": 6,
           "modalities_in": [
@@ -66552,7 +66821,7 @@
           "name": "GLM-5.2",
           "family": "glm",
           "context": 1048576,
-          "max_output": 262144,
+          "max_output": 131072,
           "cost_input": 1.4,
           "cost_output": 4.4,
           "modalities_in": [
@@ -66889,6 +67158,29 @@
           "release_date": "2026-07-08",
           "knowledge": "",
           "last_updated": "2026-07-08"
+        },
+        {
+          "id": "~z-ai/glm-flash-latest",
+          "name": "Z.ai: GLM Flash Latest",
+          "family": "glm-flash",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 0.075,
+          "cost_output": 0.25,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-27",
+          "knowledge": "",
+          "last_updated": "2026-08-27"
         },
         {
           "id": "~z-ai/glm-latest",
@@ -67488,6 +67780,29 @@
           "release_date": "2026-06-09",
           "knowledge": "2026-01-31",
           "last_updated": "2026-06-09"
+        },
+        {
+          "id": "claude-fable-5-1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "claude-haiku-4-5",
@@ -69357,8 +69672,8 @@
           "family": "gpt-oss",
           "context": 131072,
           "max_output": 32766,
-          "cost_input": 0.05,
-          "cost_output": 0.2,
+          "cost_input": 0.04,
+          "cost_output": 0.19,
           "modalities_in": [
             "text"
           ],
@@ -72044,6 +72359,29 @@
           "last_updated": "2026-06-09"
         },
         {
+          "id": "anthropic/claude-fable-5-1",
+          "name": "Claude Fable 5.1 (Anthropic)",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "anthropic/claude-haiku-4-5",
           "name": "Claude Haiku 4.5 (Anthropic)",
           "family": "claude-haiku",
@@ -74241,6 +74579,27 @@
           "release_date": "2026-04-24",
           "knowledge": "2025-05",
           "last_updated": "2026-04-24"
+        },
+        {
+          "id": "consensusprotocol/gpt-oss-20b",
+          "name": "GPT OSS 20B (Consensus Protocol)",
+          "family": "gpt-oss",
+          "context": 65536,
+          "max_output": 32768,
+          "cost_input": 0.04,
+          "cost_output": 0.19,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2025-08-05",
+          "knowledge": "",
+          "last_updated": "2025-08-05"
         },
         {
           "id": "deepinfra/deepseek-v3.2",
@@ -78101,7 +78460,10 @@
           "cost_input": 0.13,
           "cost_output": 0.4,
           "modalities_in": [
-            "text"
+            "text",
+            "image",
+            "video",
+            "pdf"
           ],
           "modalities_out": [
             "text"
@@ -80869,6 +81231,29 @@
           "release_date": "2026-06-09",
           "knowledge": "2026-01-31",
           "last_updated": "2026-06-09"
+        },
+        {
+          "id": "anthropic/claude-fable-5-1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "anthropic/claude-haiku-4-5-20251001",
@@ -83885,13 +84270,12 @@
           "id": "qwen/qwen3.5-27b",
           "name": "Qwen3.5 27B",
           "family": "qwen",
-          "context": 256000,
-          "max_output": 64000,
+          "context": 131072,
+          "max_output": 32768,
           "cost_input": 0.086,
           "cost_output": 0.688,
           "modalities_in": [
-            "text",
-            "image"
+            "text"
           ],
           "modalities_out": [
             "text"
@@ -89951,6 +90335,30 @@
           "last_updated": "2026-08-26"
         },
         {
+          "id": "alibaba/qwen3.8-max-0902",
+          "name": "Qwen3.8 Max 0902",
+          "family": "qwen3.8-max",
+          "context": 991808,
+          "max_output": 131072,
+          "cost_input": 2,
+          "cost_output": 6,
+          "modalities_in": [
+            "text",
+            "image",
+            "video",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-02",
+          "knowledge": "",
+          "last_updated": "2026-09-02"
+        },
+        {
           "id": "amazon/nova-2-lite-v1",
           "name": "Amazon Nova 2 Lite",
           "family": "nova",
@@ -90078,6 +90486,29 @@
           "release_date": "2026-06-09",
           "knowledge": "2026-01-31",
           "last_updated": "2026-06-09"
+        },
+        {
+          "id": "anthropic/claude-fable-5.1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "anthropic/claude-fable-latest",
@@ -94433,6 +94864,27 @@
           "release_date": "2026-08-31",
           "knowledge": "",
           "last_updated": "2026-08-31"
+        },
+        {
+          "id": "inception/mercury-2.5-preview",
+          "name": "Mercury 2.5 Preview",
+          "family": "mercury",
+          "context": 260000,
+          "max_output": 65536,
+          "cost_input": 0.04,
+          "cost_output": 0.15,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "",
+          "last_updated": "2026-09-01"
         },
         {
           "id": "inclusionai/ling-3.0-flash",
@@ -112923,6 +113375,29 @@
           "last_updated": "2026-06-09"
         },
         {
+          "id": "claude-fable-5-1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "claude-haiku-4-5",
           "name": "Claude Haiku 4.5",
           "family": "claude-haiku",
@@ -116058,6 +116533,29 @@
           "last_updated": "2026-06-09"
         },
         {
+          "id": "anthropic/claude-fable-5.1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "anthropic/claude-haiku-4.5",
           "name": "Claude Haiku 4.5 (latest)",
           "family": "claude-haiku",
@@ -116196,29 +116694,6 @@
           "last_updated": "2026-04-16"
         },
         {
-          "id": "anthropic/claude-opus-4.7-fast",
-          "name": "Claude Opus 4.7 (Fast)",
-          "family": "claude-opus",
-          "context": 1000000,
-          "max_output": 128000,
-          "cost_input": 30,
-          "cost_output": 150,
-          "modalities_in": [
-            "text",
-            "image",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-04-16",
-          "knowledge": "2026-01-31",
-          "last_updated": "2026-04-16"
-        },
-        {
           "id": "anthropic/claude-opus-4.8",
           "name": "Claude Opus 4.8",
           "family": "claude-opus",
@@ -116242,29 +116717,6 @@
           "last_updated": "2026-05-28"
         },
         {
-          "id": "anthropic/claude-opus-4.8-fast",
-          "name": "Claude Opus 4.8 (Fast)",
-          "family": "claude-opus",
-          "context": 1000000,
-          "max_output": 128000,
-          "cost_input": 10,
-          "cost_output": 50,
-          "modalities_in": [
-            "text",
-            "image",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-05-28",
-          "knowledge": "2026-01",
-          "last_updated": "2026-05-28"
-        },
-        {
           "id": "anthropic/claude-opus-5",
           "name": "Claude Opus 5",
           "family": "claude-opus",
@@ -116272,29 +116724,6 @@
           "max_output": 128000,
           "cost_input": 5,
           "cost_output": 25,
-          "modalities_in": [
-            "text",
-            "image",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-07-24",
-          "knowledge": "2026-05",
-          "last_updated": "2026-07-24"
-        },
-        {
-          "id": "anthropic/claude-opus-5-fast",
-          "name": "Claude Opus 5 (Fast)",
-          "family": "claude-opus",
-          "context": 1000000,
-          "max_output": 128000,
-          "cost_input": 10,
-          "cost_output": 50,
           "modalities_in": [
             "text",
             "image",
@@ -116778,9 +117207,9 @@
           "name": "DeepSeek V3.1",
           "family": "deepseek",
           "context": 163840,
-          "max_output": 144900,
-          "cost_input": 0.55,
-          "cost_output": 1.65,
+          "max_output": 32768,
+          "cost_input": 0.25,
+          "cost_output": 0.95,
           "modalities_in": [
             "text"
           ],
@@ -116926,8 +117355,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.08092,
-          "cost_output": 0.16184,
+          "cost_input": 0.088606,
+          "cost_output": 0.177212,
           "modalities_in": [
             "text"
           ],
@@ -116989,9 +117418,9 @@
           "name": "DeepSeek V4 Pro",
           "family": "deepseek-thinking",
           "context": 1048576,
-          "max_output": 393216,
-          "cost_input": 1.6,
-          "cost_output": 3.2,
+          "max_output": 384000,
+          "cost_input": 1.04226,
+          "cost_output": 2.08452,
           "modalities_in": [
             "text"
           ],
@@ -117864,6 +118293,27 @@
           "release_date": "2026-03-04",
           "knowledge": "",
           "last_updated": "2026-03-04"
+        },
+        {
+          "id": "inception/mercury-2.5-preview",
+          "name": "Mercury 2.5 Preview",
+          "family": "mercury",
+          "context": 260000,
+          "max_output": 65536,
+          "cost_input": 0.04,
+          "cost_output": 0.15,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-31",
+          "knowledge": "",
+          "last_updated": "2026-08-31"
         },
         {
           "id": "inclusionai/ling-3.0-flash",
@@ -119372,9 +119822,9 @@
           "name": "Nemotron 3 Ultra 550B A55B",
           "family": "nemotron",
           "context": 262144,
-          "max_output": 16384,
-          "cost_input": 0.5,
-          "cost_output": 2.2,
+          "max_output": 32768,
+          "cost_input": 0.625,
+          "cost_output": 3.125,
           "modalities_in": [
             "text"
           ],
@@ -122139,7 +122589,7 @@
           "name": "Qwen3.8 2.4T A95B",
           "family": "qwen",
           "context": 1048576,
-          "max_output": 262144,
+          "max_output": 131072,
           "cost_input": 2,
           "cost_output": 6,
           "modalities_in": [
@@ -123249,9 +123699,9 @@
           "name": "GLM-5.2",
           "family": "glm",
           "context": 1048576,
-          "max_output": 262144,
-          "cost_input": 1.19,
-          "cost_output": 3.74,
+          "max_output": 131072,
+          "cost_input": 0.966,
+          "cost_output": 3.036,
           "modalities_in": [
             "text"
           ],
@@ -123607,6 +124057,29 @@
           "release_date": "2026-07-08",
           "knowledge": "",
           "last_updated": "2026-07-08"
+        },
+        {
+          "id": "~z-ai/glm-flash-latest",
+          "name": "GLM Flash Latest",
+          "family": "glm-flash",
+          "context": 1310720,
+          "max_output": 131072,
+          "cost_input": 0.075,
+          "cost_output": 0.25,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-27",
+          "knowledge": "",
+          "last_updated": "2026-08-27"
         },
         {
           "id": "~z-ai/glm-latest",
@@ -137400,6 +137873,31 @@
           "last_updated": "2026-06-15"
         },
         {
+          "id": "gemini-2.5-flash-lite@eu",
+          "name": "Gemini 2.5 Flash-Lite (EU)",
+          "family": "gemini-flash-lite",
+          "context": 1048576,
+          "max_output": 65535,
+          "cost_input": 0.1,
+          "cost_output": 0.4,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio",
+            "video",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2025-06-17",
+          "knowledge": "2025-01",
+          "last_updated": "2025-06-17"
+        },
+        {
           "id": "gemini-2.5-flash@eu",
           "name": "Gemini 2.5 Flash (EU)",
           "family": "gemini-flash",
@@ -137407,6 +137905,31 @@
           "max_output": 65535,
           "cost_input": 0.3,
           "cost_output": 2.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio",
+            "video",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2025-06-17",
+          "knowledge": "2025-01",
+          "last_updated": "2025-06-17"
+        },
+        {
+          "id": "gemini-2.5-pro@eu",
+          "name": "Gemini 2.5 Pro (EU)",
+          "family": "gemini-pro",
+          "context": 1048576,
+          "max_output": 65535,
+          "cost_input": 1.25,
+          "cost_output": 10,
           "modalities_in": [
             "text",
             "image",
@@ -150466,6 +150989,28 @@
           "last_updated": "2026-06-11"
         },
         {
+          "id": "claude-fable-5-1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 12,
+          "cost_output": 60,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-29",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "claude-opus-4-5",
           "name": "Claude Opus 4.5",
           "family": "claude-opus",
@@ -153697,6 +154242,29 @@
           "last_updated": "2026-06-09"
         },
         {
+          "id": "anthropic/claude-fable-5.1",
+          "name": "Claude Fable 5.1",
+          "family": "claude-fable",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-01",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-01"
+        },
+        {
           "id": "anthropic/claude-haiku-4.5",
           "name": "Claude Haiku 4.5",
           "family": "claude-haiku",
@@ -154652,27 +155220,6 @@
           "last_updated": "2025-05-29"
         },
         {
-          "id": "deepseek/deepseek-v3",
-          "name": "DeepSeek V3 0324",
-          "family": "deepseek",
-          "context": 163840,
-          "max_output": 163840,
-          "cost_input": 0.27,
-          "cost_output": 1.12,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2024-12-26",
-          "knowledge": "",
-          "last_updated": "2024-12-26"
-        },
-        {
           "id": "deepseek/deepseek-v3.1",
           "name": "DeepSeek-V3.1",
           "family": "deepseek",
@@ -154802,8 +155349,8 @@
           "id": "deepseek/deepseek-v4-flash-vision-exp",
           "name": "DeepSeek V4 Flash Vision Exp",
           "family": "deepseek-flash",
-          "context": 1000000,
-          "max_output": 384000,
+          "context": 1048576,
+          "max_output": 1048576,
           "cost_input": 0.22,
           "cost_output": 0.66,
           "modalities_in": [
