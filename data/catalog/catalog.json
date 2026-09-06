@@ -4,7 +4,7 @@
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
   "provider_count": 213,
-  "model_count": 7560,
+  "model_count": 7563,
   "providers": [
     {
       "provider_id": "302ai",
@@ -28153,8 +28153,8 @@
           "family": "gpt-sol",
           "context": 1050000,
           "max_output": 128000,
-          "cost_input": 5,
-          "cost_output": 30,
+          "cost_input": 4,
+          "cost_output": 20,
           "modalities_in": [
             "text",
             "image"
@@ -28190,6 +28190,28 @@
           "release_date": "2026-07-09",
           "knowledge": "2026-02-16",
           "last_updated": "2026-07-09"
+        },
+        {
+          "id": "openai/gpt-6-astra",
+          "name": "GPT-6 Astra",
+          "family": "gpt-astra",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-04",
+          "knowledge": "",
+          "last_updated": "2026-09-04"
         },
         {
           "id": "qwen/qwen3.6-flash",
@@ -30575,7 +30597,7 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.08,
+          "cost_input": 0.06,
           "cost_output": 0.18,
           "modalities_in": [
             "text"
@@ -34637,6 +34659,28 @@
           "last_updated": "2025-08-05"
         },
         {
+          "id": "databricks/databricks-inkling",
+          "name": "Inkling",
+          "family": "ling",
+          "context": 1000000,
+          "max_output": 1048576,
+          "cost_input": 1.00002,
+          "cost_output": 4.04999,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-15",
+          "knowledge": "",
+          "last_updated": "2026-07-15"
+        },
+        {
           "id": "deepinfra/ByteDance/Seed-2.0-code",
           "name": "Seed 2.0 Code",
           "family": "seed",
@@ -35842,7 +35886,7 @@
         },
         {
           "id": "google/gemini-flash-latest",
-          "name": "Gemini 3.7 Flash",
+          "name": "Gemini 3.8 Flash",
           "family": "gemini-flash",
           "context": 1048576,
           "max_output": 65536,
@@ -35861,9 +35905,9 @@
           "open_weights": false,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-13",
-          "knowledge": "2026-03",
-          "last_updated": "2026-08-13"
+          "release_date": "2026-09-02",
+          "knowledge": "",
+          "last_updated": "2026-09-02"
         },
         {
           "id": "google/gemini-pro-latest",
@@ -37156,13 +37200,13 @@
           "last_updated": "2026-07-09"
         },
         {
-          "id": "openai/gpt-latest",
-          "name": "GPT-5.6 Sol",
-          "family": "gpt-sol",
+          "id": "openai/gpt-6-astra",
+          "name": "GPT-6 Astra",
+          "family": "gpt-astra",
           "context": 1050000,
           "max_output": 128000,
-          "cost_input": 4,
-          "cost_output": 20,
+          "cost_input": 10,
+          "cost_output": 50,
           "modalities_in": [
             "text",
             "image",
@@ -37174,9 +37218,32 @@
           "open_weights": false,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-07-09",
-          "knowledge": "2026-02-16",
-          "last_updated": "2026-07-09"
+          "release_date": "2026-09-04",
+          "knowledge": "",
+          "last_updated": "2026-09-04"
+        },
+        {
+          "id": "openai/gpt-latest",
+          "name": "GPT-6 Astra",
+          "family": "gpt-astra",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 10,
+          "cost_output": 50,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-04",
+          "knowledge": "",
+          "last_updated": "2026-09-04"
         },
         {
           "id": "openai/gpt-mini-latest",
@@ -38883,7 +38950,7 @@
         },
         {
           "id": "vertex/gemini-flash-latest",
-          "name": "Gemini 3.7 Flash",
+          "name": "Gemini 3.8 Flash",
           "family": "gemini-flash",
           "context": 1048576,
           "max_output": 65536,
@@ -38902,9 +38969,9 @@
           "open_weights": false,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-08-13",
-          "knowledge": "2026-03",
-          "last_updated": "2026-08-13"
+          "release_date": "2026-09-02",
+          "knowledge": "",
+          "last_updated": "2026-09-02"
         },
         {
           "id": "vertex/gemini-pro-latest",
@@ -52575,6 +52642,28 @@
           "last_updated": "2026-07-22"
         },
         {
+          "id": "inkling",
+          "name": "Inkling",
+          "family": "ling",
+          "context": 1048576,
+          "max_output": 32768,
+          "cost_input": 1.0888,
+          "cost_output": 4.40964,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-15",
+          "knowledge": "",
+          "last_updated": "2026-09-05"
+        },
+        {
           "id": "kimi-k2-thinking",
           "name": "Kimi K2 Thinking",
           "family": "kimi-thinking",
@@ -65707,7 +65796,7 @@
           "id": "qwen/qwen3.5-35b-a3b",
           "name": "Qwen3.5 35B-A3B",
           "family": "qwen",
-          "context": 262144,
+          "context": 256000,
           "max_output": 16384,
           "cost_input": 0.1625,
           "cost_output": 1.3,
@@ -66677,8 +66766,8 @@
           "id": "thedrummer/unslopnemo-12b",
           "name": "TheDrummer: UnslopNemo 12B",
           "family": "",
-          "context": 32768,
-          "max_output": 26214,
+          "context": 1024000,
+          "max_output": 819200,
           "cost_input": 0.4,
           "cost_output": 0.4,
           "modalities_in": [
@@ -67638,8 +67727,8 @@
           "family": "glm",
           "context": 262144,
           "max_output": 235929,
-          "cost_input": 1.15,
-          "cost_output": 3.5,
+          "cost_input": 1.17,
+          "cost_output": 3.96,
           "modalities_in": [
             "text"
           ],
@@ -68621,8 +68710,8 @@
           "family": "deepseek-flash",
           "context": 1050000,
           "max_output": 384000,
-          "cost_input": 0.051,
-          "cost_output": 0.104,
+          "cost_input": 0.05,
+          "cost_output": 0.1,
           "modalities_in": [
             "text"
           ],
@@ -69451,7 +69540,7 @@
           "family": "glm",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 0.075,
+          "cost_input": 0.1,
           "cost_output": 0.25,
           "modalities_in": [
             "text",
@@ -75171,8 +75260,8 @@
           "family": "deepseek-flash",
           "context": 524288,
           "max_output": 393216,
-          "cost_input": 0.08,
-          "cost_output": 0.16,
+          "cost_input": 0.05,
+          "cost_output": 0.1,
           "modalities_in": [
             "text"
           ],
@@ -77470,8 +77559,8 @@
           "family": "glm",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 0.075,
-          "cost_output": 0.25,
+          "cost_input": 0.15,
+          "cost_output": 0.5,
           "modalities_in": [
             "text",
             "image",
@@ -85965,8 +86054,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 0.075,
-          "cost_output": 0.25,
+          "cost_input": 0.015,
+          "cost_output": 0.05,
           "modalities_in": [
             "text",
             "image",
@@ -89851,27 +89940,6 @@
           "last_updated": "2024-07-01"
         },
         {
-          "id": "NousResearch/Hermes-4-70B:thinking",
-          "name": "Hermes 4 (Thinking)",
-          "family": "nousresearch",
-          "context": 128000,
-          "max_output": 8192,
-          "cost_input": 0.2006,
-          "cost_output": 0.3995,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2025-09-17",
-          "knowledge": "",
-          "last_updated": "2025-09-17"
-        },
-        {
           "id": "NousResearch/hermes-3-llama-3.1-70b",
           "name": "Hermes 3 70B",
           "family": "nousresearch",
@@ -90857,7 +90925,7 @@
           "id": "TheDrummer/Anubis-70B-v1.1",
           "name": "Anubis 70B v1.1",
           "family": "",
-          "context": 131072,
+          "context": 32000,
           "max_output": 16384,
           "cost_input": 0.31,
           "cost_output": 0.31,
@@ -92596,7 +92664,7 @@
           "name": "Claude 4.5 Opus",
           "family": "claude-opus",
           "context": 200000,
-          "max_output": 32000,
+          "max_output": 64000,
           "cost_input": 5,
           "cost_output": 25,
           "modalities_in": [
@@ -92619,7 +92687,7 @@
           "name": "Claude 4.5 Opus Thinking",
           "family": "claude-opus",
           "context": 200000,
-          "max_output": 32000,
+          "max_output": 64000,
           "cost_input": 5,
           "cost_output": 25,
           "modalities_in": [
@@ -94085,7 +94153,7 @@
           "id": "gemini-2.5-flash",
           "name": "Gemini 2.5 Flash",
           "family": "gemini-flash",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.3,
           "cost_output": 2.5,
@@ -94108,7 +94176,7 @@
           "id": "gemini-2.5-flash-lite",
           "name": "Gemini 2.5 Flash Lite",
           "family": "gemini-flash-lite",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.1,
           "cost_output": 0.4,
@@ -94131,7 +94199,7 @@
           "id": "gemini-2.5-flash-lite-preview-06-17",
           "name": "Gemini 2.5 Flash Lite Preview",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.15,
           "cost_output": 0.6,
@@ -94154,7 +94222,7 @@
           "id": "gemini-2.5-flash-lite-preview-09-2025",
           "name": "Gemini 2.5 Flash Lite Preview (09/2025)",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.1,
           "cost_output": 0.4,
@@ -94178,7 +94246,7 @@
           "id": "gemini-2.5-flash-lite-preview-09-2025-thinking",
           "name": "Gemini 2.5 Flash Lite Preview (09/2025) \u2013 Thinking",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.1,
           "cost_output": 0.4,
@@ -94202,7 +94270,7 @@
           "id": "gemini-2.5-flash-nothinking",
           "name": "Gemini 2.5 Flash (No Thinking)",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.3,
           "cost_output": 2.5,
@@ -94226,7 +94294,7 @@
           "id": "gemini-2.5-flash-preview-04-17",
           "name": "Gemini 2.5 Flash Preview",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.15,
           "cost_output": 0.6,
@@ -94249,7 +94317,7 @@
           "id": "gemini-2.5-flash-preview-04-17:thinking",
           "name": "Gemini 2.5 Flash Preview Thinking",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.15,
           "cost_output": 3.5,
@@ -94316,7 +94384,7 @@
           "id": "gemini-2.5-flash-preview-09-2025",
           "name": "Gemini 2.5 Flash Preview (09/2025)",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.3,
           "cost_output": 2.5,
@@ -94340,7 +94408,7 @@
           "id": "gemini-2.5-flash-preview-09-2025-thinking",
           "name": "Gemini 2.5 Flash Preview (09/2025) \u2013 Thinking",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.3,
           "cost_output": 2.5,
@@ -94364,7 +94432,7 @@
           "id": "gemini-2.5-pro",
           "name": "Gemini 2.5 Pro",
           "family": "gemini-pro",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 1.25,
           "cost_output": 10,
@@ -94387,7 +94455,7 @@
           "id": "gemini-2.5-pro-exp-03-25",
           "name": "Gemini 2.5 Pro Experimental 0325",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 2.5,
           "cost_output": 10,
@@ -94410,7 +94478,7 @@
           "id": "gemini-2.5-pro-preview-03-25",
           "name": "Gemini 2.5 Pro Preview 0325",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 2.5,
           "cost_output": 10,
@@ -94433,7 +94501,7 @@
           "id": "gemini-2.5-pro-preview-05-06",
           "name": "Gemini 2.5 Pro Preview 0506",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 2.5,
           "cost_output": 10,
@@ -94456,7 +94524,7 @@
           "id": "gemini-2.5-pro-preview-06-05",
           "name": "Gemini 2.5 Pro Preview 0605",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 2.5,
           "cost_output": 10,
@@ -94479,8 +94547,8 @@
           "id": "gemini-3-pro-image-preview",
           "name": "Gemini 3 Pro Image",
           "family": "gemini-pro",
-          "context": 1048756,
-          "max_output": 65536,
+          "context": 65536,
+          "max_output": 32768,
           "cost_input": 2,
           "cost_output": 12,
           "modalities_in": [
@@ -95076,7 +95144,7 @@
           "id": "google/gemini-3-flash-preview",
           "name": "Gemini 3 Flash (Preview)",
           "family": "gemini-flash",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.5,
           "cost_output": 3,
@@ -95099,7 +95167,7 @@
           "id": "google/gemini-3-flash-preview-thinking",
           "name": "Gemini 3 Flash Thinking",
           "family": "gemini-flash",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 0.5,
           "cost_output": 3,
@@ -95147,7 +95215,7 @@
           "id": "google/gemini-3.1-pro-preview",
           "name": "Gemini 3.1 Pro (Preview)",
           "family": "gemini-pro",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 2,
           "cost_output": 12,
@@ -95170,7 +95238,7 @@
           "id": "google/gemini-3.1-pro-preview-customtools",
           "name": "Gemini 3.1 Pro (Preview Custom Tools)",
           "family": "gemini-pro",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 2,
           "cost_output": 12,
@@ -95193,7 +95261,7 @@
           "id": "google/gemini-3.1-pro-preview-high",
           "name": "Gemini 3.1 Pro (Preview High)",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 2,
           "cost_output": 12,
@@ -95216,7 +95284,7 @@
           "id": "google/gemini-3.1-pro-preview-low",
           "name": "Gemini 3.1 Pro (Preview Low)",
           "family": "gemini",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 2,
           "cost_output": 12,
@@ -95435,7 +95503,7 @@
           "id": "google/gemini-pro-latest",
           "name": "Gemini Pro Latest",
           "family": "gemini-pro",
-          "context": 1048756,
+          "context": 1048576,
           "max_output": 65536,
           "cost_input": 2,
           "cost_output": 12,
@@ -98402,8 +98470,8 @@
           "family": "gpt",
           "context": 1050000,
           "max_output": 128000,
-          "cost_input": 2,
-          "cost_output": 10,
+          "cost_input": 10,
+          "cost_output": 50,
           "modalities_in": [
             "text",
             "image",
@@ -117987,8 +118055,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.08582,
-          "cost_output": 0.17164,
+          "cost_input": 0.08134,
+          "cost_output": 0.16268,
           "modalities_in": [
             "text"
           ],
@@ -118051,8 +118119,8 @@
           "family": "deepseek-thinking",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.9309,
-          "cost_output": 1.8618,
+          "cost_input": 0.72819,
+          "cost_output": 1.45638,
           "modalities_in": [
             "text"
           ],
@@ -123069,8 +123137,8 @@
           "family": "qwen",
           "context": 262144,
           "max_output": 16384,
-          "cost_input": 0.08,
-          "cost_output": 0.75,
+          "cost_input": 0.3125,
+          "cost_output": 1.25,
           "modalities_in": [
             "text",
             "image",
@@ -123902,7 +123970,7 @@
           "name": "UnslopNemo 12B",
           "family": "",
           "context": 1024000,
-          "max_output": 26214,
+          "max_output": 819200,
           "cost_input": 0.4,
           "cost_output": 0.4,
           "modalities_in": [
@@ -124883,8 +124951,8 @@
           "family": "glm",
           "context": 1310720,
           "max_output": 235929,
-          "cost_input": 1.15,
-          "cost_output": 3.5,
+          "cost_input": 1.17,
+          "cost_output": 3.96,
           "modalities_in": [
             "text"
           ],
@@ -153480,8 +153548,8 @@
           "family": "gpt-luna",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 0.26666667,
-          "cost_output": 1.6,
+          "cost_input": 0.25,
+          "cost_output": 1.5,
           "modalities_in": [
             "text",
             "image"
@@ -153502,8 +153570,8 @@
           "family": "gpt-luna",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 1.25,
-          "cost_output": 7.5,
+          "cost_input": 0.25,
+          "cost_output": 1.5,
           "modalities_in": [
             "text",
             "image"
@@ -153524,8 +153592,8 @@
           "family": "gpt-sol",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 6.25,
-          "cost_output": 37.5,
+          "cost_input": 2.5,
+          "cost_output": 12.5,
           "modalities_in": [
             "text",
             "image"
@@ -153546,8 +153614,8 @@
           "family": "gpt-sol",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 6.25,
-          "cost_output": 37.5,
+          "cost_input": 2.5,
+          "cost_output": 12.5,
           "modalities_in": [
             "text",
             "image"
@@ -153568,8 +153636,8 @@
           "family": "gpt-terra",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 3.125,
-          "cost_output": 18.75,
+          "cost_input": 2.5,
+          "cost_output": 15,
           "modalities_in": [
             "text",
             "image"
@@ -153590,8 +153658,8 @@
           "family": "gpt-terra",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 3.125,
-          "cost_output": 18.75,
+          "cost_input": 2.5,
+          "cost_output": 15,
           "modalities_in": [
             "text",
             "image"
