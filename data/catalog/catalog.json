@@ -4,7 +4,7 @@
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
   "provider_count": 213,
-  "model_count": 7617,
+  "model_count": 7619,
   "providers": [
     {
       "provider_id": "302ai",
@@ -27419,8 +27419,8 @@
         },
         {
           "id": "nova-2-lite",
-          "name": "nova-2-lite",
-          "family": "",
+          "name": "Nova 2 Lite",
+          "family": "nova",
           "context": 1000000,
           "max_output": 65535,
           "cost_input": 0.373,
@@ -27436,9 +27436,9 @@
           "open_weights": false,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2025-12-04",
+          "release_date": "2025-12-01",
           "knowledge": "",
-          "last_updated": "2025-12-04"
+          "last_updated": "2025-12-01"
         },
         {
           "id": "nova-lite-v1",
@@ -27553,8 +27553,8 @@
         },
         {
           "id": "pixtral-large-2502",
-          "name": "pixtral-large-2502",
-          "family": "",
+          "name": "Pixtral Large (25.02)",
+          "family": "pixtral",
           "context": 128000,
           "max_output": 128000,
           "cost_input": 1.993,
@@ -27570,9 +27570,9 @@
           "open_weights": false,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2025-05-26",
+          "release_date": "2025-04-08",
           "knowledge": "",
-          "last_updated": "2025-05-26"
+          "last_updated": "2025-04-08"
         },
         {
           "id": "qwen2.5-vl-72b-instruct",
@@ -28697,8 +28697,8 @@
           "family": "deepseek-flash",
           "context": 1000000,
           "max_output": 384000,
-          "cost_input": 0.405,
-          "cost_output": 1.215,
+          "cost_input": 0.27,
+          "cost_output": 1.08,
           "modalities_in": [
             "text"
           ],
@@ -28718,8 +28718,8 @@
           "family": "deepseek-flash",
           "context": 1000000,
           "max_output": 384000,
-          "cost_input": 0.405,
-          "cost_output": 1.215,
+          "cost_input": 0.27,
+          "cost_output": 1.08,
           "modalities_in": [
             "text",
             "image"
@@ -28754,6 +28754,28 @@
           "release_date": "2026-04-24",
           "knowledge": "2025-05",
           "last_updated": "2026-04-24"
+        },
+        {
+          "id": "deepseek/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash",
+          "family": "deepseek-flash",
+          "context": 1000000,
+          "max_output": 384000,
+          "cost_input": 0.27,
+          "cost_output": 1.08,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
         },
         {
           "id": "gemini/gemini-2.5-flash",
@@ -29792,8 +29814,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 0.075,
-          "cost_output": 0.25,
+          "cost_input": 0.15,
+          "cost_output": 0.5,
           "modalities_in": [
             "text",
             "image",
@@ -33457,8 +33479,8 @@
           "family": "kimi-k3",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 2.85,
-          "cost_output": 14.25,
+          "cost_input": 2.55,
+          "cost_output": 12.95,
           "modalities_in": [
             "text",
             "image"
@@ -37295,8 +37317,8 @@
           "family": "llama",
           "context": 128000,
           "max_output": 4096,
-          "cost_input": 0.75491,
-          "cost_output": 0.75491,
+          "cost_input": 0.75738,
+          "cost_output": 0.75738,
           "modalities_in": [
             "text"
           ],
@@ -37316,8 +37338,8 @@
           "family": "gpt-oss",
           "context": 131072,
           "max_output": 32768,
-          "cost_input": 0.17421,
-          "cost_output": 0.75491,
+          "cost_input": 0.17478,
+          "cost_output": 0.75738,
           "modalities_in": [
             "text"
           ],
@@ -37810,6 +37832,27 @@
           "release_date": "2026-07-31",
           "knowledge": "2025-05",
           "last_updated": "2026-07-31"
+        },
+        {
+          "id": "nebius/deepseek-ai/DeepSeek-V4-Pro-0813",
+          "name": "DeepSeek V4 Pro 0813 (Nebius)",
+          "family": "deepseek-thinking",
+          "context": 979000,
+          "max_output": 384000,
+          "cost_input": 1.32,
+          "cost_output": 3.96,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-12",
+          "knowledge": "",
+          "last_updated": "2026-08-22"
         },
         {
           "id": "nebius/meta-llama/Llama-3.3-70B-Instruct",
@@ -39396,8 +39439,8 @@
           "family": "deepseek-flash",
           "context": 256000,
           "max_output": 384000,
-          "cost_input": 0.46456,
-          "cost_output": 0.92912,
+          "cost_input": 0.46608,
+          "cost_output": 0.93216,
           "modalities_in": [
             "text"
           ],
@@ -39417,8 +39460,8 @@
           "family": "gpt-oss",
           "context": 128000,
           "max_output": 32768,
-          "cost_input": 0.17421,
-          "cost_output": 0.69684,
+          "cost_input": 0.17478,
+          "cost_output": 0.69912,
           "modalities_in": [
             "text"
           ],
@@ -39438,8 +39481,8 @@
           "family": "llama",
           "context": 128000,
           "max_output": 4096,
-          "cost_input": 1.04526,
-          "cost_output": 1.04526,
+          "cost_input": 1.04868,
+          "cost_output": 1.04868,
           "modalities_in": [
             "text"
           ],
@@ -49118,6 +49161,48 @@
           "last_updated": "2026-06-13"
         },
         {
+          "id": "glm-5.3",
+          "name": "GLM-5.3",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 1.27754,
+          "cost_output": 5.11016,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
+          "id": "glm-5.3-flash",
+          "name": "GLM-5.3-Flash",
+          "family": "glm",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 0.127754,
+          "cost_output": 0.511016,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-26",
+          "knowledge": "",
+          "last_updated": "2026-08-26"
+        },
+        {
           "id": "gpt-oss-120b",
           "name": "GPT OSS 120B",
           "family": "gpt-oss",
@@ -53898,8 +53983,8 @@
           "family": "glm",
           "context": 202750,
           "max_output": 3276,
-          "cost_input": 1.358,
-          "cost_output": 4.268,
+          "cost_input": 1.386,
+          "cost_output": 4.356,
           "modalities_in": [
             "text"
           ],
@@ -53983,8 +54068,8 @@
           "family": "gpt-oss",
           "context": 128072,
           "max_output": 13107,
-          "cost_input": 0.178,
-          "cost_output": 0.68,
+          "cost_input": 0.18,
+          "cost_output": 0.61,
           "modalities_in": [
             "text"
           ],
@@ -61796,10 +61881,10 @@
           "id": "deepseek/deepseek-chat",
           "name": "DeepSeek Chat",
           "family": "deepseek",
-          "context": 163840,
-          "max_output": 16384,
-          "cost_input": 0.32,
-          "cost_output": 0.89,
+          "context": 128000,
+          "max_output": 16000,
+          "cost_input": 0.2574,
+          "cost_output": 1.0287,
           "modalities_in": [
             "text"
           ],
@@ -62070,8 +62155,8 @@
           "id": "deepseek/deepseek-v4-pro-0813",
           "name": "DeepSeek V4 Pro 0813",
           "family": "deepseek-thinking",
-          "context": 1048576,
-          "max_output": 393216,
+          "context": 1024000,
+          "max_output": 384000,
           "cost_input": 1.32,
           "cost_output": 3.96,
           "modalities_in": [
@@ -62086,6 +62171,28 @@
           "release_date": "2026-08-12",
           "knowledge": "",
           "last_updated": "2026-08-22"
+        },
+        {
+          "id": "deepseek/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash",
+          "family": "deepseek-flash",
+          "context": 1048576,
+          "max_output": 384000,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
         },
         {
           "id": "dots-studio/dots-3-note-preview:free",
@@ -63681,8 +63788,8 @@
           "id": "minimax/minimax-m2.5",
           "name": "MiniMax-M2.5",
           "family": "minimax",
-          "context": 200000,
-          "max_output": 128000,
+          "context": 204800,
+          "max_output": 131072,
           "cost_input": 0.3,
           "cost_output": 1.2,
           "modalities_in": [
@@ -64210,7 +64317,7 @@
           "name": "Kimi K2 Thinking",
           "family": "kimi-thinking",
           "context": 262144,
-          "max_output": 235929,
+          "max_output": 100352,
           "cost_input": 0.6,
           "cost_output": 2.5,
           "modalities_in": [
@@ -64366,7 +64473,8 @@
           "cost_input": 0,
           "cost_output": 0,
           "modalities_in": [
-            "text"
+            "text",
+            "image"
           ],
           "modalities_out": [
             "text"
@@ -64450,27 +64558,6 @@
           "max_output": 117964,
           "cost_input": 1,
           "cost_output": 3,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": false,
-          "release_date": "2025-08-26",
-          "knowledge": "",
-          "last_updated": "2025-08-26"
-        },
-        {
-          "id": "nousresearch/hermes-4-70b",
-          "name": "Nous: Hermes 4 70B",
-          "family": "nousresearch",
-          "context": 131072,
-          "max_output": 117964,
-          "cost_input": 0.13,
-          "cost_output": 0.4,
           "modalities_in": [
             "text"
           ],
@@ -66635,8 +66722,8 @@
           "id": "qwen/qwen3-30b-a3b-instruct-2507",
           "name": "Qwen: Qwen3 30B A3B Instruct 2507",
           "family": "qwen",
-          "context": 128000,
-          "max_output": 32000,
+          "context": 262144,
+          "max_output": 235929,
           "cost_input": 0.13,
           "cost_output": 0.52,
           "modalities_in": [
@@ -67063,7 +67150,7 @@
           "name": "Qwen3.5 122B-A10B",
           "family": "qwen",
           "context": 262144,
-          "max_output": 81920,
+          "max_output": 65536,
           "cost_input": 0.26,
           "cost_output": 2.08,
           "modalities_in": [
@@ -68099,8 +68186,8 @@
           "id": "thinkingmachines/inkling",
           "name": "Inkling",
           "family": "ling",
-          "context": 524288,
-          "max_output": 471859,
+          "context": 1048576,
+          "max_output": 32768,
           "cost_input": 0.95,
           "cost_output": 4.05,
           "modalities_in": [
@@ -68671,7 +68758,7 @@
           "id": "z-ai/glm-5.2",
           "name": "GLM-5.2",
           "family": "glm",
-          "context": 1048576,
+          "context": 1000000,
           "max_output": 131072,
           "cost_input": 1.4,
           "cost_output": 4.4,
@@ -69015,7 +69102,7 @@
           "name": "Z.ai: GLM Flash Latest",
           "family": "glm-flash",
           "context": 1048576,
-          "max_output": 943718,
+          "max_output": 131072,
           "cost_input": 0.075,
           "cost_output": 0.25,
           "modalities_in": [
@@ -69039,8 +69126,8 @@
           "family": "glm",
           "context": 1024000,
           "max_output": 128000,
-          "cost_input": 1.113,
-          "cost_output": 3.498,
+          "cost_input": 1.085,
+          "cost_output": 3.41,
           "modalities_in": [
             "text"
           ],
@@ -70789,8 +70876,8 @@
           "family": "glm",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 0.55,
-          "cost_output": 1.784,
+          "cost_input": 0.8,
+          "cost_output": 2.55,
           "modalities_in": [
             "text"
           ],
@@ -70810,8 +70897,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 1.99,
-          "cost_output": 6.16,
+          "cost_input": 2.2,
+          "cost_output": 6.5,
           "modalities_in": [
             "text"
           ],
@@ -70852,7 +70939,7 @@
           "family": "glm",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 0.1,
+          "cost_input": 0.088,
           "cost_output": 0.25,
           "modalities_in": [
             "text",
@@ -71967,8 +72054,8 @@
           "family": "kimi-k2",
           "context": 262144,
           "max_output": 262144,
-          "cost_input": 0.89,
-          "cost_output": 3.71,
+          "cost_input": 0.95,
+          "cost_output": 4,
           "modalities_in": [
             "text",
             "image",
@@ -72013,8 +72100,8 @@
           "family": "kimi-k3",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 2.83,
-          "cost_output": 14.13,
+          "cost_input": 3,
+          "cost_output": 15,
           "modalities_in": [
             "text",
             "image",
@@ -73521,8 +73608,8 @@
           "family": "qwen",
           "context": 1000000,
           "max_output": 1000000,
-          "cost_input": 1.815,
-          "cost_output": 5.4461,
+          "cost_input": 2,
+          "cost_output": 6,
           "modalities_in": [
             "text",
             "image"
@@ -80589,8 +80676,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 0.55,
-          "cost_output": 1.784,
+          "cost_input": 0.8,
+          "cost_output": 2.55,
           "modalities_in": [
             "text"
           ],
@@ -80610,8 +80697,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 1.99,
-          "cost_output": 6.16,
+          "cost_input": 2.2,
+          "cost_output": 6.5,
           "modalities_in": [
             "text"
           ],
@@ -80631,8 +80718,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 1.3,
-          "cost_output": 4,
+          "cost_input": 1.4,
+          "cost_output": 4.4,
           "modalities_in": [
             "text"
           ],
@@ -80652,8 +80739,8 @@
           "family": "glm",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 0.13,
-          "cost_output": 0.4,
+          "cost_input": 0.088,
+          "cost_output": 0.25,
           "modalities_in": [
             "text",
             "image",
@@ -80676,8 +80763,8 @@
           "family": "kimi-k2",
           "context": 262144,
           "max_output": 262144,
-          "cost_input": 0.89,
-          "cost_output": 3.71,
+          "cost_input": 0.95,
+          "cost_output": 4,
           "modalities_in": [
             "text",
             "image",
@@ -80699,8 +80786,8 @@
           "family": "kimi-k3",
           "context": 1048576,
           "max_output": 1048576,
-          "cost_input": 2.83,
-          "cost_output": 14.13,
+          "cost_input": 3.5,
+          "cost_output": 18,
           "modalities_in": [
             "text",
             "image",
@@ -80722,8 +80809,8 @@
           "family": "qwen",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 1.815,
-          "cost_output": 5.4461,
+          "cost_input": 2,
+          "cost_output": 6,
           "modalities_in": [
             "text",
             "image",
@@ -92278,6 +92365,28 @@
           "last_updated": "2026-08-31"
         },
         {
+          "id": "agnes-3.0-flash",
+          "name": "Agnes 3.0 Flash",
+          "family": "",
+          "context": 524288,
+          "max_output": 65536,
+          "cost_input": 0.05,
+          "cost_output": 0.15,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-09",
+          "knowledge": "",
+          "last_updated": "2026-09-09"
+        },
+        {
           "id": "aion-labs/aion-2.0",
           "name": "AionLabs: Aion-2.0",
           "family": "",
@@ -93169,113 +93278,6 @@
           "release_date": "2025-04-16",
           "knowledge": "",
           "last_updated": "2024-06-01"
-        },
-        {
-          "id": "azure-gpt-4-turbo",
-          "name": "Azure gpt-4-turbo",
-          "family": "gpt",
-          "context": 128000,
-          "max_output": 4096,
-          "cost_input": 10,
-          "cost_output": 30,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-01-01"
-        },
-        {
-          "id": "azure-gpt-4o",
-          "name": "Azure gpt-4o",
-          "family": "gpt",
-          "context": 128000,
-          "max_output": 16384,
-          "cost_input": 2.5,
-          "cost_output": 10,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-05-13"
-        },
-        {
-          "id": "azure-gpt-4o-mini",
-          "name": "Azure gpt-4o-mini",
-          "family": "gpt",
-          "context": 128000,
-          "max_output": 16384,
-          "cost_input": 0.15,
-          "cost_output": 0.6,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-07-18"
-        },
-        {
-          "id": "azure-o1",
-          "name": "Azure o1",
-          "family": "o",
-          "context": 200000,
-          "max_output": 100000,
-          "cost_input": 15,
-          "cost_output": 60,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2024-12-17"
-        },
-        {
-          "id": "azure-o3-mini",
-          "name": "Azure o3-mini",
-          "family": "o",
-          "context": 200000,
-          "max_output": 65536,
-          "cost_input": 1.1,
-          "cost_output": 4.4,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2024-01-01",
-          "knowledge": "",
-          "last_updated": "2025-01-31"
         },
         {
           "id": "baseten/Kimi-K2-Instruct-FP4",
@@ -94830,7 +94832,7 @@
         {
           "id": "deepseek/deepseek-v4.1-flash",
           "name": "DeepSeek V4.1 Flash",
-          "family": "deepseek",
+          "family": "deepseek-flash",
           "context": 1000000,
           "max_output": 384000,
           "cost_input": 0.1562,
@@ -94842,12 +94844,34 @@
           "modalities_out": [
             "text"
           ],
-          "open_weights": false,
+          "open_weights": true,
           "reasoning": true,
           "tool_call": true,
-          "release_date": "2026-09-08",
-          "knowledge": "",
-          "last_updated": "2026-09-08"
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
+        },
+        {
+          "id": "deepseek/deepseek-v4.1-flash:thinking",
+          "name": "DeepSeek V4.1 Flash Thinking",
+          "family": "deepseek-flash",
+          "context": 1000000,
+          "max_output": 384000,
+          "cost_input": 0.1562,
+          "cost_output": 0.3124,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
         },
         {
           "id": "doubao-1.5-pro-256k",
@@ -95720,6 +95744,50 @@
           "release_date": "2026-08-01",
           "knowledge": "",
           "last_updated": "2026-08-01"
+        },
+        {
+          "id": "gemma-4-12b-it-semancer",
+          "name": "Gemma 4 12B Semancer",
+          "family": "gemma",
+          "context": 131072,
+          "max_output": 32768,
+          "cost_input": 0.05,
+          "cost_output": 0.25,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-09",
+          "knowledge": "",
+          "last_updated": "2026-09-09"
+        },
+        {
+          "id": "gemma-4-12b-it-station-keeper",
+          "name": "Gemma 4 12B StationKeeper",
+          "family": "gemma",
+          "context": 131072,
+          "max_output": 32768,
+          "cost_input": 0.05,
+          "cost_output": 0.25,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-09",
+          "knowledge": "",
+          "last_updated": "2026-09-09"
         },
         {
           "id": "gemma-4-26b-a4b-it-chimerax",
@@ -96985,6 +97053,29 @@
           "last_updated": "2026-07-23"
         },
         {
+          "id": "inclusionai/ling-3.0-flash-vl",
+          "name": "Ling 3.0 Flash VL",
+          "family": "ling",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.06,
+          "cost_output": 0.18,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-09",
+          "knowledge": "",
+          "last_updated": "2026-09-09"
+        },
+        {
           "id": "inclusionai/ling-3.0-flash:thinking",
           "name": "Ling 3.0 Flash Thinking",
           "family": "ling",
@@ -97025,6 +97116,27 @@
           "release_date": "2024-01-01",
           "knowledge": "",
           "last_updated": "2024-07-01"
+        },
+        {
+          "id": "k2-horizon-7b",
+          "name": "K2-Horizon-7B",
+          "family": "",
+          "context": 131072,
+          "max_output": 8192,
+          "cost_input": 0.05,
+          "cost_output": 0.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-09",
+          "knowledge": "",
+          "last_updated": "2026-09-09"
         },
         {
           "id": "kimi-k2-instruct-fast",
@@ -100841,6 +100953,28 @@
           "last_updated": "2026-08-24"
         },
         {
+          "id": "qwen/qwen3.8-27b-queen",
+          "name": "Qwen 3.8 27B Queen",
+          "family": "qwen",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.25,
+          "cost_output": 1.5,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-09",
+          "knowledge": "",
+          "last_updated": "2026-09-09"
+        },
+        {
           "id": "qwen/qwen3.8-27b-uncensored",
           "name": "Qwen 3.8 27B Uncensored",
           "family": "qwen",
@@ -103291,34 +103425,13 @@
       "provenance": null,
       "models": [
         {
-          "id": "Qwen/Qwen3-30B-A3B-Instruct-2507",
-          "name": "Qwen3 30B-A3B Instruct 2507",
-          "family": "qwen",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.15,
-          "cost_output": 0.55,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2025-07-29",
-          "knowledge": "",
-          "last_updated": "2025-07-29"
-        },
-        {
           "id": "Qwen/Qwen3-Embedding-0.6B",
           "name": "Qwen3 Embedding 0.6B",
           "family": "text-embedding",
-          "context": 40960,
+          "context": 32768,
           "max_output": 1024,
           "cost_input": 0.01,
-          "cost_output": 0,
+          "cost_output": 0.01,
           "modalities_in": [
             "text"
           ],
@@ -103357,8 +103470,8 @@
           "id": "Qwen/Qwen3-VL-30B-A3B-Instruct",
           "name": "Qwen3-VL 30B-A3B Instruct",
           "family": "qwen",
-          "context": 256000,
-          "max_output": 32768,
+          "context": 16384,
+          "max_output": 8192,
           "cost_input": 0.15,
           "cost_output": 0.55,
           "modalities_in": [
@@ -103376,32 +103489,11 @@
           "last_updated": "2025-09-23"
         },
         {
-          "id": "Qwen/Qwen3.5-122B-A10B",
-          "name": "Qwen3.5 122B-A10B",
-          "family": "qwen",
-          "context": 131072,
-          "max_output": 32768,
-          "cost_input": 0.4,
-          "cost_output": 3.2,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-02-23",
-          "knowledge": "",
-          "last_updated": "2026-02-23"
-        },
-        {
           "id": "Qwen/Qwen3.6-35B-A3B-FP8",
           "name": "Qwen 3.6 35B A3B FP8",
           "family": "qwen",
           "context": 262144,
-          "max_output": 32768,
+          "max_output": 8192,
           "cost_input": 0.17,
           "cost_output": 1.1,
           "modalities_in": [
@@ -103493,7 +103585,7 @@
           "context": 200000,
           "max_output": 64000,
           "cost_input": 3,
-          "cost_output": 15.5,
+          "cost_output": 15,
           "modalities_in": [
             "text",
             "image",
@@ -103541,8 +103633,7 @@
           "cost_input": 1,
           "cost_output": 1,
           "modalities_in": [
-            "text",
-            "image"
+            "text"
           ],
           "modalities_out": [
             "image"
@@ -103630,31 +103721,6 @@
           "last_updated": "2025-06-17"
         },
         {
-          "id": "google/gemini-3-pro",
-          "name": "Gemini 3 Pro Preview",
-          "family": "gemini-pro",
-          "context": 1048576,
-          "max_output": 65536,
-          "cost_input": 1.25,
-          "cost_output": 15,
-          "modalities_in": [
-            "text",
-            "image",
-            "video",
-            "audio",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2025-11-18",
-          "knowledge": "2025-01",
-          "last_updated": "2025-11-18"
-        },
-        {
           "id": "google/gemini-3.1-flash-lite",
           "name": "Gemini 3.1 Flash Lite",
           "family": "gemini-flash-lite",
@@ -103703,27 +103769,6 @@
           "release_date": "2026-05-19",
           "knowledge": "2025-01",
           "last_updated": "2026-05-19"
-        },
-        {
-          "id": "google/gemma-4-31B-it",
-          "name": "Gemma 4 31B IT",
-          "family": "gemma",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.13,
-          "cost_output": 0.4,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-04-02",
-          "knowledge": "",
-          "last_updated": "2026-04-02"
         },
         {
           "id": "openai/gpt-4.1",
@@ -103887,8 +103932,8 @@
           "family": "gpt",
           "context": 400000,
           "max_output": 128000,
-          "cost_input": 1.8,
-          "cost_output": 15.5,
+          "cost_input": 1.75,
+          "cost_output": 14,
           "modalities_in": [
             "text",
             "image"
@@ -103994,27 +104039,6 @@
           "last_updated": "2026-04-23"
         },
         {
-          "id": "openai/gpt-oss-120b",
-          "name": "GPT-OSS 120B",
-          "family": "gpt-oss",
-          "context": 131000,
-          "max_output": 32768,
-          "cost_input": 0.15,
-          "cost_output": 0.55,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2025-08-05",
-          "knowledge": "",
-          "last_updated": "2025-08-05"
-        },
-        {
           "id": "openai/o3",
           "name": "o3",
           "family": "o",
@@ -104087,7 +104111,7 @@
           "context": 448,
           "max_output": 448,
           "cost_input": 0.01,
-          "cost_output": 0,
+          "cost_output": 0.01,
           "modalities_in": [
             "audio"
           ],
@@ -104106,9 +104130,9 @@
           "name": "GLM-5.1 FP8",
           "family": "glm",
           "context": 202752,
-          "max_output": 131072,
-          "cost_input": 0.85,
-          "cost_output": 3.3,
+          "max_output": 16384,
+          "cost_input": 1.4,
+          "cost_output": 4.4,
           "modalities_in": [
             "text"
           ],
@@ -113260,8 +113284,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 0.98,
-          "cost_output": 3.08,
+          "cost_input": 1.4,
+          "cost_output": 4.4,
           "modalities_in": [
             "text"
           ],
@@ -113281,8 +113305,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 1.26,
-          "cost_output": 3.96,
+          "cost_input": 1.4,
+          "cost_output": 4.4,
           "modalities_in": [
             "text"
           ],
@@ -113302,8 +113326,8 @@
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 0.075,
-          "cost_output": 0.25,
+          "cost_input": 0.15,
+          "cost_output": 0.5,
           "modalities_in": [
             "text",
             "image",
@@ -117235,13 +117259,35 @@
       "provenance": null,
       "models": [
         {
+          "id": "deepseek-flash",
+          "name": "DeepSeek V4.1 Flash",
+          "family": "deepseek-flash",
+          "context": 1000000,
+          "max_output": 384000,
+          "cost_input": 0.15,
+          "cost_output": 0.6,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
+        },
+        {
           "id": "deepseek-v4-flash",
           "name": "DeepSeek V4 Flash",
           "family": "deepseek-flash",
           "context": 1000000,
           "max_output": 384000,
-          "cost_input": 0.22,
-          "cost_output": 0.66,
+          "cost_input": 0.15,
+          "cost_output": 0.6,
           "modalities_in": [
             "text"
           ],
@@ -117261,8 +117307,8 @@
           "family": "deepseek-flash",
           "context": 1000000,
           "max_output": 384000,
-          "cost_input": 0.22,
-          "cost_output": 0.66,
+          "cost_input": 0.15,
+          "cost_output": 0.6,
           "modalities_in": [
             "text",
             "image"
@@ -117384,12 +117430,12 @@
         },
         {
           "id": "glm-5.3-flash",
-          "name": "GLM-5.3-Flash (2x usage)",
+          "name": "GLM-5.3-Flash",
           "family": "glm",
           "context": 1000000,
           "max_output": 131072,
-          "cost_input": 0.075,
-          "cost_output": 0.25,
+          "cost_input": 0.15,
+          "cost_output": 0.5,
           "modalities_in": [
             "text",
             "image",
@@ -119005,9 +119051,9 @@
           "name": "DeepSeek Chat",
           "family": "deepseek",
           "context": 163840,
-          "max_output": 16384,
-          "cost_input": 0.32,
-          "cost_output": 0.89,
+          "max_output": 16000,
+          "cost_input": 0.2574,
+          "cost_output": 1.0287,
           "modalities_in": [
             "text"
           ],
@@ -119279,9 +119325,9 @@
           "name": "DeepSeek V4 Pro 0813",
           "family": "deepseek-thinking",
           "context": 1048576,
-          "max_output": 393216,
-          "cost_input": 0.57948,
-          "cost_output": 1.73844,
+          "max_output": 384000,
+          "cost_input": 1.0494,
+          "cost_output": 3.1482,
           "modalities_in": [
             "text"
           ],
@@ -119294,6 +119340,28 @@
           "release_date": "2026-08-12",
           "knowledge": "",
           "last_updated": "2026-08-22"
+        },
+        {
+          "id": "deepseek/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash",
+          "family": "deepseek-flash",
+          "context": 1048576,
+          "max_output": 384000,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
         },
         {
           "id": "dots-studio/dots-3-note-preview:free",
@@ -120819,9 +120887,9 @@
           "name": "MiniMax-M2.5",
           "family": "minimax",
           "context": 204800,
-          "max_output": 128000,
-          "cost_input": 0.27,
-          "cost_output": 1.08,
+          "max_output": 131072,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
           "modalities_in": [
             "text"
           ],
@@ -121347,7 +121415,7 @@
           "name": "Kimi K2 Thinking",
           "family": "kimi-thinking",
           "context": 262144,
-          "max_output": 235929,
+          "max_output": 100352,
           "cost_input": 0.6,
           "cost_output": 2.5,
           "modalities_in": [
@@ -121503,7 +121571,8 @@
           "cost_input": 0,
           "cost_output": 0,
           "modalities_in": [
-            "text"
+            "text",
+            "image"
           ],
           "modalities_out": [
             "text"
@@ -121587,27 +121656,6 @@
           "max_output": 117964,
           "cost_input": 1,
           "cost_output": 3,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": false,
-          "release_date": "2025-08-26",
-          "knowledge": "2024-08-31",
-          "last_updated": "2025-08-26"
-        },
-        {
-          "id": "nousresearch/hermes-4-70b",
-          "name": "Hermes 4 70B",
-          "family": "hermes",
-          "context": 131072,
-          "max_output": 117964,
-          "cost_input": 0.13,
-          "cost_output": 0.4,
           "modalities_in": [
             "text"
           ],
@@ -123758,9 +123806,9 @@
           "name": "Qwen3 30B A3B Instruct 2507",
           "family": "qwen",
           "context": 262144,
-          "max_output": 32000,
-          "cost_input": 0.04815,
-          "cost_output": 0.19305,
+          "max_output": 235929,
+          "cost_input": 0.09,
+          "cost_output": 0.3,
           "modalities_in": [
             "text"
           ],
@@ -124185,9 +124233,9 @@
           "name": "Qwen3.5 122B-A10B",
           "family": "qwen",
           "context": 262144,
-          "max_output": 81920,
-          "cost_input": 0.29,
-          "cost_output": 2.4,
+          "max_output": 65536,
+          "cost_input": 0.26,
+          "cost_output": 2.08,
           "modalities_in": [
             "text",
             "image",
@@ -125086,7 +125134,7 @@
           "name": "Inkling",
           "family": "ling",
           "context": 1048576,
-          "max_output": 471859,
+          "max_output": 32768,
           "cost_input": 1,
           "cost_output": 4.05,
           "modalities_in": [
@@ -126001,7 +126049,7 @@
           "name": "GLM Flash Latest",
           "family": "glm-flash",
           "context": 1310720,
-          "max_output": 943718,
+          "max_output": 131072,
           "cost_input": 0.075,
           "cost_output": 0.25,
           "modalities_in": [
@@ -126025,8 +126073,8 @@
           "family": "glm",
           "context": 1310720,
           "max_output": 128000,
-          "cost_input": 1.113,
-          "cost_output": 3.498,
+          "cost_input": 1.085,
+          "cost_output": 3.41,
           "modalities_in": [
             "text"
           ],
@@ -155057,6 +155105,29 @@
           "last_updated": "2026-08-18"
         },
         {
+          "id": "qwen-3-8-flash",
+          "name": "Qwen 3.8 Flash",
+          "family": "qwen",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 0.14,
+          "cost_output": 0.49,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "",
+          "last_updated": "2026-09-10"
+        },
+        {
           "id": "qwen-3-8-max",
           "name": "Qwen 3.8 Max",
           "family": "qwen",
@@ -162798,27 +162869,6 @@
         {
           "id": "spacexai/grok-imagine-video-1.5",
           "name": "Grok Imagine Video 1.5",
-          "family": "grok",
-          "context": 0,
-          "max_output": 0,
-          "cost_input": null,
-          "cost_output": null,
-          "modalities_in": [
-            "text"
-          ],
-          "modalities_out": [
-            "video"
-          ],
-          "open_weights": false,
-          "reasoning": false,
-          "tool_call": false,
-          "release_date": "2026-05-30",
-          "knowledge": "",
-          "last_updated": "2026-05-30"
-        },
-        {
-          "id": "spacexai/grok-imagine-video-1.5-preview",
-          "name": "Grok Imagine Video 1.5 Preview",
           "family": "grok",
           "context": 0,
           "max_output": 0,
