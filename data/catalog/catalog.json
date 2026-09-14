@@ -4,7 +4,7 @@
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
   "provider_count": 213,
-  "model_count": 7780,
+  "model_count": 7787,
   "providers": [
     {
       "provider_id": "302ai",
@@ -39899,6 +39899,28 @@
           "last_updated": "2026-08-22"
         },
         {
+          "id": "qwen/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash (Alibaba)",
+          "family": "deepseek-flash",
+          "context": 1000000,
+          "max_output": 384000,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
+        },
+        {
           "id": "qwen/qwen-max",
           "name": "Qwen Max",
           "family": "qwen",
@@ -40502,6 +40524,28 @@
           "release_date": "2026-08-12",
           "knowledge": "",
           "last_updated": "2026-08-22"
+        },
+        {
+          "id": "tensorx/deepseek/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash (TensorX)",
+          "family": "deepseek-flash",
+          "context": 1048576,
+          "max_output": 384000,
+          "cost_input": 0.5,
+          "cost_output": 1.5,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
         },
         {
           "id": "tensorx/moonshotai/kimi-k2.5",
@@ -63516,8 +63560,8 @@
           "id": "deepseek/deepseek-v4-pro-0813",
           "name": "DeepSeek V4 Pro 0813",
           "family": "deepseek-thinking",
-          "context": 1048576,
-          "max_output": 393216,
+          "context": 1024000,
+          "max_output": 384000,
           "cost_input": 1.32,
           "cost_output": 3.96,
           "modalities_in": [
@@ -66111,8 +66155,8 @@
           "id": "nvidia/nemotron-3-ultra-550b-a55b",
           "name": "Nemotron 3 Ultra 550B A55B",
           "family": "nemotron",
-          "context": 256000,
-          "max_output": 32768,
+          "context": 202800,
+          "max_output": 182520,
           "cost_input": 0.5,
           "cost_output": 2.2,
           "modalities_in": [
@@ -68066,8 +68110,8 @@
           "id": "qwen/qwen3-14b",
           "name": "Qwen: Qwen3 14B",
           "family": "qwen",
-          "context": 131072,
-          "max_output": 8192,
+          "context": 40960,
+          "max_output": 16384,
           "cost_input": 0.2275,
           "cost_output": 0.91,
           "modalities_in": [
@@ -70230,8 +70274,8 @@
           "id": "z-ai/glm-5.2",
           "name": "GLM-5.2",
           "family": "glm",
-          "context": 202752,
-          "max_output": 182476,
+          "context": 1048576,
+          "max_output": 131072,
           "cost_input": 1.4,
           "cost_output": 4.4,
           "modalities_in": [
@@ -70251,8 +70295,8 @@
           "id": "z-ai/glm-5.3",
           "name": "GLM-5.3",
           "family": "glm",
-          "context": 1048576,
-          "max_output": 131072,
+          "context": 1048575,
+          "max_output": 943717,
           "cost_input": 1.4,
           "cost_output": 4.4,
           "modalities_in": [
@@ -70665,10 +70709,10 @@
           "id": "~z-ai/glm-latest",
           "name": "Z.ai: GLM Latest",
           "family": "glm",
-          "context": 262144,
-          "max_output": 235929,
-          "cost_input": 0.936,
-          "cost_output": 3.168,
+          "context": 1048576,
+          "max_output": 943718,
+          "cost_input": 0.92,
+          "cost_output": 3.1372,
           "modalities_in": [
             "text"
           ],
@@ -78417,6 +78461,27 @@
           "last_updated": "2026-04-24"
         },
         {
+          "id": "consensusprotocol/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash (Consensus Protocol)",
+          "family": "deepseek-flash",
+          "context": 1048576,
+          "max_output": 384000,
+          "cost_input": 0.2,
+          "cost_output": 1,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": false,
+          "tool_call": false,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
+        },
+        {
           "id": "consensusprotocol/gemma-4-31b-it",
           "name": "Gemma 4 31B IT (Consensus Protocol)",
           "family": "gemma",
@@ -78544,6 +78609,28 @@
           "release_date": "2026-04-24",
           "knowledge": "2025-05",
           "last_updated": "2026-04-24"
+        },
+        {
+          "id": "deepinfra/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash (DeepInfra)",
+          "family": "deepseek-flash",
+          "context": 1048576,
+          "max_output": 393216,
+          "cost_input": 0.2,
+          "cost_output": 0.6,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
         },
         {
           "id": "deepinfra/gemma-4-26b-a4b-it",
@@ -79055,6 +79142,28 @@
           "release_date": "2026-04-24",
           "knowledge": "2025-05",
           "last_updated": "2026-04-24"
+        },
+        {
+          "id": "fireworks/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash (Fireworks AI)",
+          "family": "deepseek-flash",
+          "context": 1048576,
+          "max_output": 393216,
+          "cost_input": 0.22,
+          "cost_output": 0.66,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
         },
         {
           "id": "fireworks/kimi-k3",
@@ -80416,6 +80525,28 @@
           "release_date": "2026-04-24",
           "knowledge": "2025-05",
           "last_updated": "2026-04-24"
+        },
+        {
+          "id": "novita/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash (NovitaAI)",
+          "family": "deepseek-flash",
+          "context": 1048576,
+          "max_output": 393216,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
         },
         {
           "id": "novita/ernie-4.5-vl-424b-a47b",
@@ -83151,6 +83282,28 @@
           "release_date": "2026-04-24",
           "knowledge": "2025-05",
           "last_updated": "2026-04-24"
+        },
+        {
+          "id": "together-ai/deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash (Together AI)",
+          "family": "deepseek-flash",
+          "context": 1048576,
+          "max_output": 393216,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-10",
+          "knowledge": "2025-05",
+          "last_updated": "2026-09-10"
         },
         {
           "id": "together-ai/gemma-4-31b-it",
@@ -122348,8 +122501,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.04956,
-          "cost_output": 0.09912,
+          "cost_input": 0.088606,
+          "cost_output": 0.177212,
           "modalities_in": [
             "text"
           ],
@@ -122369,8 +122522,8 @@
           "family": "deepseek-flash",
           "context": 1310720,
           "max_output": 943718,
-          "cost_input": 0.04,
-          "cost_output": 0.08,
+          "cost_input": 0.06,
+          "cost_output": 0.12,
           "modalities_in": [
             "text"
           ],
@@ -122432,9 +122585,9 @@
           "name": "DeepSeek V4 Pro 0813",
           "family": "deepseek-thinking",
           "context": 1048576,
-          "max_output": 393216,
-          "cost_input": 0.57816,
-          "cost_output": 1.73448,
+          "max_output": 384000,
+          "cost_input": 0.9834,
+          "cost_output": 2.9502,
           "modalities_in": [
             "text"
           ],
@@ -122454,8 +122607,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.15,
-          "cost_output": 0.6,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
           "modalities_in": [
             "text",
             "image"
@@ -124956,9 +125109,9 @@
           "name": "Nemotron 3 Ultra 550B A55B",
           "family": "nemotron",
           "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0.625,
-          "cost_output": 3.125,
+          "max_output": 182520,
+          "cost_input": 0.6,
+          "cost_output": 2.4,
           "modalities_in": [
             "text"
           ],
@@ -126896,9 +127049,9 @@
           "name": "Qwen3 14B",
           "family": "qwen",
           "context": 131072,
-          "max_output": 8192,
-          "cost_input": 0.2275,
-          "cost_output": 0.91,
+          "max_output": 16384,
+          "cost_input": 0.12,
+          "cost_output": 0.24,
           "modalities_in": [
             "text"
           ],
@@ -128947,9 +129100,9 @@
           "name": "GLM-5.2",
           "family": "glm",
           "context": 1048576,
-          "max_output": 182476,
-          "cost_input": 0.6,
-          "cost_output": 2,
+          "max_output": 131072,
+          "cost_input": 0.6832,
+          "cost_output": 2.1472,
           "modalities_in": [
             "text"
           ],
@@ -128968,9 +129121,9 @@
           "name": "GLM-5.3",
           "family": "glm",
           "context": 1310720,
-          "max_output": 131072,
-          "cost_input": 1.092,
-          "cost_output": 3.432,
+          "max_output": 943717,
+          "cost_input": 1.4,
+          "cost_output": 4.4,
           "modalities_in": [
             "text"
           ],
@@ -129382,9 +129535,9 @@
           "name": "GLM Latest",
           "family": "glm",
           "context": 1310720,
-          "max_output": 235929,
-          "cost_input": 0.936,
-          "cost_output": 3.168,
+          "max_output": 943718,
+          "cost_input": 0.92,
+          "cost_output": 3.1372,
           "modalities_in": [
             "text"
           ],
