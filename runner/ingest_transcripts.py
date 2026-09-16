@@ -20,6 +20,7 @@ so 0 and 2 are both success here.
 from __future__ import annotations
 import argparse
 import glob
+import hashlib
 import json
 import os
 import subprocess
@@ -69,6 +70,7 @@ def split(result: dict, *, target: str, public: bool) -> dict:
     return {
         "schema_version": SCHEMA_VERSION,
         "target": target,
+        "source": result.get("_source") or {},
         "turns_analyzed": result.get("turns_analyzed", 0),
         "distinct_identities": result.get("distinct_identities", []),
         "model_change_events": result.get("model_change_events", []),
@@ -76,6 +78,30 @@ def split(result: dict, *, target: str, public: bool) -> dict:
         "verdict": {"misrepresentation": bool(corr.get("misrepresentation")),
                     "severity": corr.get("severity"), "finding": corr.get("finding")},
     }
+
+
+def _source_meta(conv_path: str, origin: str | None) -> dict:
+    """Identity of the captured transcript so a re-run can tell 'new capture'
+    from 'same file again'. The hash covers the conversation bytes + the
+    declared origin (a changed origin.txt is a different claim)."""
+    h = hashlib.sha256()
+    with open(conv_path, "rb") as f:
+        h.update(f.read())
+    h.update(b"\norigin=" + (origin or "").encode())
+    return {"file": os.path.basename(conv_path), "sha256": h.hexdigest()}
+
+
+def _latest_ingested_source(data_dir: str, target: str) -> dict | None:
+    """The `source` block of the newest transcript.json already in data/ for
+    this target (None if nothing ingested yet, or the record predates hashing)."""
+    paths = sorted(glob.glob(os.path.join(data_dir, target, "*", "transcript.json")))
+    if not paths:
+        return None
+    try:
+        with open(paths[-1]) as f:
+            return (json.load(f) or {}).get("source") or None
+    except (OSError, ValueError):
+        return None
 
 
 def ingest(transcripts_dir: str = TRANSCRIPTS_DIR, data_dir: str = DATA_DIR,
@@ -94,11 +120,22 @@ def ingest(transcripts_dir: str = TRANSCRIPTS_DIR, data_dir: str = DATA_DIR,
         if not convs:
             continue
         # newest conversation file drives the day's record
+        conv = convs[-1]
+        source = _source_meta(conv, origin)
+        prior = _latest_ingested_source(data_dir, target)
+        if prior and prior.get("sha256") == source["sha256"]:
+            # Same capture already in the log. Re-analyzing it every night would
+            # stamp today's date on evidence collected on `source["file"]`'s day
+            # and pad the signed log with identical records.
+            print(f"[skip] {target}: transcript {source['file']} already ingested "
+                  f"({prior.get('ingested_on')})")
+            continue
         try:
-            result = analyze_file(convs[-1], origin)
+            result = analyze_file(conv, origin)
         except Exception as e:  # noqa: BLE001 — never let one target abort the run
             print(f"[warn] transcript ingest {target}: {e}")
             continue
+        result["_source"] = dict(source, ingested_on=today)
         is_public = target in public_targets
         rec = split(result, target=target, public=is_public)
         out_dir = os.path.join(data_dir, target, today)

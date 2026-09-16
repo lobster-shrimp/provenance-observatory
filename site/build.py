@@ -191,9 +191,7 @@ def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | 
     for dstr, rec, changed in reversed(flagged):
         fp = html.escape((rec.get("fingerprint_id") or "")[:14]) or "&mdash;"
         cc = rec.get("control_check")
-        ctl = ("&mdash;" if not cc else
-               f'<span class="ctl {"pass" if cc.get("pass") else "fail"}">'
-               f'{"PASS" if cc.get("pass") else "FAIL"}</span>')
+        ctl = "&mdash;" if not cc else _control_span(cc)
         usable = (rec.get("tokenizer") or {}).get("usable")
         tok = "yes" if usable else ('<span class="muted">suppressed</span>'
                                     if usable is not None else "&mdash;")
@@ -266,8 +264,8 @@ def _row(target: str, records: list[tuple[str, dict]], promoted: dict | None,
     ctl = latest.get("control_check")
     ctl_html = ""
     if ctl:
-        cls = "pass" if ctl.get("pass") else "fail"
-        ctl_html = f'<div class="ctl {cls}">control: {"PASS" if ctl.get("pass") else "FAIL"}</div>'
+        cls, label = _control_state(ctl)
+        ctl_html = f'<div class="ctl {cls}">control: {label}</div>'
 
     return f"""<tr data-target="{html.escape(target)}" data-kind="{html.escape(kind)}" \
 data-model="{model}" data-prov="{html.escape(raw_prov)}" data-juris="{html.escape(raw_juris)}" \
@@ -1102,18 +1100,38 @@ def _load_engine_eval(data_dir: str) -> dict:
     return {}
 
 
+def _control_state(cc: dict) -> tuple[str, str]:
+    """(css-class, label) for a control_check. pass=None means the control ran
+    but the tokenizer layer measured nothing (429/5xx/usage suppressed) — it is
+    neither a pass nor a fail and must not be shown as either."""
+    p = cc.get("pass")
+    if p is None:
+        return ("unmeasured", "NOT MEASURED")
+    return ("pass", "PASS") if p else ("fail", "FAIL")
+
+
+def _control_span(cc: dict) -> str:
+    cls, label = _control_state(cc)
+    return f'<span class="ctl {cls}">{label}</span>'
+
+
 def _control_accuracy(records: dict) -> dict:
     """Live false-positive/true-positive tally from the controls' latest runs.
 
     control-negative failing = a false positive (US model flagged Chinese) — the
     continuous FP gate. control-positive passing = a known-CN model caught.
+    A control whose latest run measured nothing (pass=None) is counted as
+    unmeasured, not as clean — otherwise an outage reads as a passing gate.
     """
-    neg_total = neg_pass = pos_total = pos_pass = 0
+    neg_total = neg_pass = pos_total = pos_pass = unmeasured = 0
     for recs in records.values():
         if not recs:
             continue
         cc = recs[-1][1].get("control_check")
         if not cc:
+            continue
+        if cc.get("pass") is None:
+            unmeasured += 1
             continue
         if cc.get("kind") == "control-negative":
             neg_total += 1
@@ -1122,7 +1140,8 @@ def _control_accuracy(records: dict) -> dict:
             pos_total += 1
             pos_pass += 1 if cc.get("pass") else 0
     return {"neg_total": neg_total, "neg_pass": neg_pass,
-            "fp": neg_total - neg_pass, "pos_total": pos_total, "pos_pass": pos_pass}
+            "fp": neg_total - neg_pass, "pos_total": pos_total, "pos_pass": pos_pass,
+            "unmeasured": unmeasured}
 
 
 def _assurance_panel(records: dict, engine_eval: dict) -> str:
@@ -1134,6 +1153,13 @@ def _assurance_panel(records: dict, engine_eval: dict) -> str:
                 f'{"" if ca["fp"] == 1 else "s"}</b> '
                 f'<span class="small">{ca["neg_pass"]}/{ca["neg_total"]} negative '
                 f'controls clean · {ca["pos_pass"]}/{ca["pos_total"]} positive controls caught</span>')
+        if ca["unmeasured"]:
+            live += (f' <span class="badge warn">{ca["unmeasured"]} control'
+                     f'{"" if ca["unmeasured"] == 1 else "s"} not measured today</span>')
+    elif ca["unmeasured"]:
+        live = (f'<b class="badge warn">not measured</b> <span class="small">'
+                f'{ca["unmeasured"]} control{"" if ca["unmeasured"] == 1 else "s"} ran but the '
+                f'tokenizer layer returned nothing — no accuracy claim today</span>')
     else:
         live = '<span class="muted">no control runs yet</span>'
 
@@ -1200,7 +1226,7 @@ _CSS = """
   .agent-head { margin-bottom:4px; } .agent-tbl { width:100%; border-collapse:collapse; margin-top:6px; }
   .agent-tbl th { text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:#888; padding:2px 4px; }
   .agent-tbl td { padding:3px 4px; border-top:1px solid var(--line); }
-  .ctl { font-size:11px; margin-top:3px; } .ctl.pass { color:#0a7d33; } .ctl.fail { color:#b42318; }
+  .ctl { font-size:11px; margin-top:3px; } .ctl.pass { color:#0a7d33; } .ctl.fail { color:#b42318; } .ctl.unmeasured { color:#8a6d00; }
   .spark { letter-spacing:2px; } .sp-ok { color:#0a7d33; } .sp-drift { color:#b42318; } .sp-none { color:#cbd5e1; }
   aside h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
   ul.adv { list-style:none; padding:0; margin:0; } ul.adv li { padding:6px 0; border-bottom:1px solid var(--line); }
