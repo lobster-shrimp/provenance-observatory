@@ -36,6 +36,7 @@ from lib import feed as _feed  # noqa: E402 — shared RSS builder (shared with 
 
 DATA_DIR = os.environ.get("OBSERVATORY_DATA_DIR", os.path.join(ROOT, "data"))
 OUT_DIR = os.environ.get("OBSERVATORY_SITE_OUT", os.path.join(ROOT, "site", "dist"))
+TARGETS_YAML = os.path.join(ROOT, "targets.yaml")
 HOT_WINDOW_DAYS = _records.HOT_WINDOW_DAYS
 SPARK_DAYS = 7
 
@@ -44,6 +45,66 @@ _load_target_records = _records.load_target_records
 _load_promoted_advisories = _records.load_promoted_advisories
 _manifests = _records.load_manifests
 _load_transcripts = _records.load_transcripts
+
+
+# --- paused-target awareness -----------------------------------------------
+# A watch-list target can be authorized:false with a "PAUSED …" note (e.g.
+# chat-z-ai-webapp, paused when z.ai moved to a signed per-request API). Its last
+# finding still renders — full transparency — but it is NOT measured nightly, so
+# every surface that leads with that finding must say so, or a reader assumes it
+# is under active monitoring. This is data-driven: ANY authorized:false + PAUSED
+# target gets the treatment, never a per-target special-case.
+_PAUSED_DATE_RE = re.compile(r"PAUSED\s+(\d{4}-\d{2}-\d{2})")
+
+
+def _load_paused_targets(path: str | None = None) -> dict[str, dict]:
+    """Map target name -> {"date": <YYYY-MM-DD|None>} for every target that is
+    authorized:false AND flagged PAUSED in its notes. Returns {} if the file is
+    missing/unparseable — the static site must always build."""
+    path = path or TARGETS_YAML          # resolved at call time (monkeypatch-friendly)
+    try:
+        import yaml
+    except ImportError:
+        return {}
+    try:
+        with open(path) as f:
+            cfg = yaml.safe_load(f) or {}
+    except (OSError, yaml.YAMLError):
+        return {}
+    out: dict[str, dict] = {}
+    for t in (cfg.get("targets") or []):
+        if not isinstance(t, dict):
+            continue
+        name = t.get("name")
+        notes = t.get("notes") or ""
+        if name and t.get("authorized") is False and "PAUSED" in notes:
+            m = _PAUSED_DATE_RE.search(notes)
+            out[name] = {"date": m.group(1) if m else None}
+    return out
+
+
+def _paused_banner(info: dict | None) -> str:
+    """Full-width 'not monitored nightly' banner for a paused target's detail
+    page. `info` is the per-target paused record (or None if not paused)."""
+    if not info:
+        return ""
+    when = info.get("date")
+    lead = (f"last observed {html.escape(when)}, not monitored nightly."
+            if when else "not monitored nightly.")
+    return (f'<div class="note" style="border-left-color:#b42318">'
+            f'<b>Paused</b> &mdash; {lead} This target is authorized:false; the '
+            f'finding shown is point-in-time, not a live nightly measurement.</div>')
+
+
+def _paused_badge(info: dict | None) -> str:
+    """Small inline qualifier for list/rail surfaces that lead with a paused
+    target's finding, so it can't be mistaken for active monitoring."""
+    if not info:
+        return ""
+    when = info.get("date")
+    title = (f"paused — last observed {when}, not monitored nightly"
+             if when else "paused — not monitored nightly")
+    return f' <span class="badge warn" title="{html.escape(title)}">PAUSED</span>'
 
 
 
@@ -172,7 +233,8 @@ def _slug(target: str) -> str:
 
 
 def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | None,
-                 *, now_iso: str, probe_url: str, transcript: dict | None = None) -> str:
+                 *, now_iso: str, probe_url: str, transcript: dict | None = None,
+                 paused: dict | None = None) -> str:
     """Full drift timeline for one target: every dated run, fingerprint changes,
     control status, tokenizer coverage, and the interpreted verdict (always
     shown as collected). The per-target drill-down the index table links to."""
@@ -213,6 +275,7 @@ def _detail_page(target: str, records: list[tuple[str, dict]], promoted: dict | 
 <header><h1>{html.escape(target)}</h1>
   <p>{kind or "target"} &middot; {len(records)} run(s) in the hot window &middot;
      {n_changes} fingerprint change(s)</p></header>
+{_paused_banner(paused)}
 {_coverage_note(records[-1][1]) if records else ""}
 {_session_boundary_note(records[-1][1]) if records else ""}
 {adv_html}
@@ -298,7 +361,8 @@ def _severity_of(adv: dict) -> str:
     return "info"
 
 
-def _advisories_rail(promoted: dict[str, dict]) -> str:
+def _advisories_rail(promoted: dict[str, dict], paused: dict | None = None) -> str:
+    paused = paused or {}
     head = '<a class="viewall tlink" href="advisories.html">VIEW ALL</a>'
     if not promoted:
         return (head + '<p class="muted">No advisories published yet. A verdict '
@@ -312,7 +376,7 @@ def _advisories_rail(promoted: dict[str, dict]) -> str:
                            or f'verdict change on {adv.get("target", "an endpoint")}')
         items.append(
             f'<div class="adv-item"><div class="adv-head">'
-            f'<span class="sev {sev}">{sev.upper()}</span>'
+            f'<span class="sev {sev}">{sev.upper()}</span>{_paused_badge(paused.get(adv.get("target")))}'
             f'<span class="small muted">{html.escape(adv.get("promoted_at","")[:10])}</span></div>'
             f'<div class="mpa">{html.escape(aid)}</div><p>{desc}</p>'
             f'<a class="tlink" href="a/{_slug(aid)}.html">View advisory &#8599;</a></div>')
@@ -810,7 +874,7 @@ def _rekor_cell(m: dict) -> str:
     return '<span class="muted">unsigned (local)</span>'
 
 
-def _advisory_page(adv: dict) -> str:
+def _advisory_page(adv: dict, paused: dict | None = None) -> str:
     sev = _severity_of(adv)
     aid = html.escape(adv.get("advisory_id", ""))
     if adv.get("kind") == "model_switch" or adv.get("model_change_events"):
@@ -828,6 +892,7 @@ def _advisory_page(adv: dict) -> str:
                      for c in changes) or "<li>(no change detail recorded)</li>"
         ev_title = "Evidence (what changed)"
     inner = f"""
+{_paused_banner(paused)}
 <p><span class="sev {sev}">{sev.upper()}</span> &middot; promoted
 {html.escape(adv.get("promoted_at","")[:10])} &middot; target
 <span class="mono">{html.escape(adv.get("target",""))}</span></p>
@@ -840,7 +905,8 @@ appended to the log &mdash; see the <a href="../disclosure.html">publication pol
     return _page(f"{aid} advisory", inner, base="../")
 
 
-def _advisories_index(promoted: dict) -> str:
+def _advisories_index(promoted: dict, paused: dict | None = None) -> str:
+    paused = paused or {}
     if not promoted:
         inner = ('<p class="muted">No advisories published yet. A verdict change '
                  'becomes a numbered advisory (MPA-YYYY-NNN), published in full '
@@ -849,6 +915,7 @@ def _advisories_index(promoted: dict) -> str:
         items = "".join(
             f'<div class="adv-item"><div class="adv-head">'
             f'<span class="sev {_severity_of(a)}">{_severity_of(a).upper()}</span>'
+            f'{_paused_badge(paused.get(a.get("target")))}'
             f'<span class="small muted">{html.escape(a.get("promoted_at","")[:10])}</span></div>'
             f'<div class="mpa">{html.escape(a.get("advisory_id",""))}</div>'
             f'<p>{html.escape(a.get("summary") or a.get("title") or a.get("target",""))}</p>'
@@ -1315,11 +1382,13 @@ def _model_change_section(trec: dict | None) -> str:
             f'<div class="note">{verdict}</div>{table}')
 
 
-def _transcript_detail_page(target: str, trec: dict, *, now_iso: str) -> str:
+def _transcript_detail_page(target: str, trec: dict, *, now_iso: str,
+                            paused: dict | None = None) -> str:
     """Standalone detail page for a transcript-only target (no probe record yet)."""
     body = (f'<div class="topnav"><a href="../index.html">&larr; Observatory</a></div>'
             f'<header><h1>{html.escape(target)}</h1>'
             f'<p>session model-switch watch &middot; {html.escape(trec.get("date",""))}</p></header>'
+            f'{_paused_banner(paused)}'
             f'{_model_change_section(trec)}'
             f'<footer><span>The complete work is published as collected: what the model '
             f'said and the interpreted misrepresentation verdict, together.</span></footer>')
@@ -1329,8 +1398,9 @@ def _transcript_detail_page(target: str, trec: dict, *, now_iso: str) -> str:
             f'<style>{_CSS}</style></head><body><div class="wrap">{body}</div></body></html>')
 
 
-def _model_switch_panel(transcripts: dict) -> str:
+def _model_switch_panel(transcripts: dict, paused: dict | None = None) -> str:
     """Index panel listing targets with recorded mid-session model switches."""
+    paused = paused or {}
     hits = {t: r for t, r in transcripts.items() if (r.get("model_change_events"))}
     if not hits:
         return ""
@@ -1340,7 +1410,8 @@ def _model_switch_panel(transcripts: dict) -> str:
         badge = ('<span class="sev high">misrepresentation</span>' if v.get("misrepresentation")
                  else '<span class="badge ok">clean</span>')
         ids = " &rarr; ".join(html.escape(str(e.get("to"))) for e in r["model_change_events"])
-        rows += (f'<tr><td class="mono"><a class="tlink" href="t/{_slug(t)}.html">{html.escape(t)}</a></td>'
+        rows += (f'<tr><td class="mono"><a class="tlink" href="t/{_slug(t)}.html">{html.escape(t)}</a>'
+                 f'{_paused_badge(paused.get(t))}</td>'
                  f'<td>{len(r["model_change_events"])}</td>'
                  f'<td class="small">{html.escape(", ".join(r.get("distinct_identities") or []))} '
                  f'&rArr; {ids}</td><td>{badge}</td></tr>')
@@ -1468,12 +1539,13 @@ def _agent_panel(agent_records: dict) -> str:
 
 def render(records: dict, promoted: dict, *, now_iso: str, engine_eval: dict | None = None,
            manifests: list[dict] | None = None, transcripts: dict | None = None,
-           agent_records: dict | None = None) -> str:
+           agent_records: dict | None = None, paused: dict | None = None) -> str:
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", DEFAULT_PROBE_URL)
     api_url = os.environ.get("OBSERVATORY_API_URL", DEFAULT_API_URL)
     app_js = _APP_JS.replace("__API_URL__", api_url).replace("__PAGE_SIZE__", str(PAGE_SIZE))
     manifests = manifests or []
     transcripts = transcripts or {}
+    paused = paused or {}
     mbd = {m.get("date"): m for m in manifests}
     n_targets = len(records)
     n_aggregators = sum(1 for recs in records.values()
@@ -1506,7 +1578,7 @@ known-answer + negative controls with a published false-positive rate.</div>
   <div class="stat"><b>{len(promoted)}</b><span>PUBLISHED ADVISORIES</span></div>
   <div class="stat"><b>{html.escape(now_iso[:16])}</b><span>LAST UPDATED (UTC)</span></div>
 </div>
-{_model_switch_panel(transcripts)}
+{_model_switch_panel(transcripts, paused)}
 {_agent_panel(agent_records or {})}
 <div class="layout">
   <main>
@@ -1525,7 +1597,7 @@ known-answer + negative controls with a published false-positive rate.</div>
   </main>
   <aside>
     <h2>Advisories</h2>
-    {_advisories_rail(promoted)}
+    {_advisories_rail(promoted, paused)}
   </aside>
 </div>
 {_footer()}
@@ -1543,6 +1615,7 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     transcripts = _load_transcripts(data_dir)
     agent_records = _records.load_agent_records(data_dir)
     catalog = _load_catalog(data_dir)
+    paused = _load_paused_targets(TARGETS_YAML)
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", DEFAULT_PROBE_URL)
     api_url = os.environ.get("OBSERVATORY_API_URL", DEFAULT_API_URL)
     now_iso = now_iso or datetime.utcnow().isoformat()
@@ -1551,7 +1624,8 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     out_path = os.path.join(out_dir, "index.html")
     with open(out_path, "w") as f:
         f.write(render(records, promoted, now_iso=now_iso, engine_eval=engine_eval,
-                       manifests=manifests, transcripts=transcripts, agent_records=agent_records))
+                       manifests=manifests, transcripts=transcripts, agent_records=agent_records,
+                       paused=paused))
 
     # Footer + nav content pages (real links, not dead spans).
     for fname, doc in (
@@ -1560,7 +1634,7 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
         ("disclosure.html", _disclosure_page()),
         ("verify.html", _verify_page()),
         ("transparency-log.html", _transparency_page(manifests)),
-        ("advisories.html", _advisories_index(promoted)),
+        ("advisories.html", _advisories_index(promoted, paused)),
         ("about.html", _about_page()),
         ("how-it-works.html", _how_it_works_page()),
         ("faq.html", _faq_page()),
@@ -1603,7 +1677,7 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     os.makedirs(adir, exist_ok=True)
     for adv in promoted.values():
         with open(os.path.join(adir, f"{_slug(adv.get('advisory_id',''))}.html"), "w") as f:
-            f.write(_advisory_page(adv))
+            f.write(_advisory_page(adv, paused.get(adv.get("target"))))
 
     # Per-target detail pages (drift timeline + model-change events) under t/.
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", DEFAULT_PROBE_URL)
@@ -1611,7 +1685,8 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     os.makedirs(tdir, exist_ok=True)
     for target, recs in records.items():
         page = _detail_page(target, recs, promoted.get(target), now_iso=now_iso,
-                            probe_url=probe_url, transcript=transcripts.get(target))
+                            probe_url=probe_url, transcript=transcripts.get(target),
+                            paused=paused.get(target))
         with open(os.path.join(tdir, f"{_slug(target)}.html"), "w") as f:
             f.write(page)
     # Targets with a captured transcript but no probe record yet (e.g. a web app).
@@ -1619,7 +1694,8 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
         if target in records:
             continue
         with open(os.path.join(tdir, f"{_slug(target)}.html"), "w") as f:
-            f.write(_transcript_detail_page(target, trec, now_iso=now_iso))
+            f.write(_transcript_detail_page(target, trec, now_iso=now_iso,
+                                            paused=paused.get(target)))
     return out_path
 
 
