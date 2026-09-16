@@ -18,8 +18,12 @@ concurrency:
 
 permissions:
   contents: write          # commit data/ to this (public) repo
-  # NOTE: default GITHUB_TOKEN CANNOT write the private staging repo.
-  # Provide STAGING_PAT (fine-grained, staging repo only) as a secret.
+  # NOTE: default GITHUB_TOKEN CANNOT write the private staging repo. Provide
+  # STAGING_PAT (fine-grained, staging repo only) + OBSERVATORY_STAGING_REPO
+  # (the private repo https URL) as secrets/vars. lib/staging_sync.py then clones
+  # the persisted drift state (baseline/state/drafts/MPA counter) at job start and
+  # pushes it back at job end — making silent-swap detection actually persist.
+  # Absent either → local-only fallback (drift persistence off), no network.
 
 jobs:
   probe:
@@ -55,7 +59,13 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
           ZAI_COOKIE: ${{ secrets.ZAI_COOKIE }}   # chat.z.ai web-app session. UNUSED while chat-z-ai-webapp is authorized:false (PAUSED 2026-08-05, see targets.yaml notes); kept so re-enabling is one flag flip.
-          STAGING_PAT: ${{ secrets.STAGING_PAT }}
+          STAGING_PAT: ${{ secrets.STAGING_PAT }}   # fine-grained PAT, private staging repo ONLY (least-privilege)
+          OBSERVATORY_STAGING_REPO: ${{ vars.OBSERVATORY_STAGING_REPO }}   # https URL of the private staging repo
+          # Dry-run gate (issue #50): DRAFT-only until an operator flips this to "1"
+          # after a dry-run week confirms the UNSTABLE damper swallows CDN/gateway
+          # wire noise. Default OFF so a merged-but-imperfect run can never emit a
+          # false PUBLIC advisory. Absent/"0" = drafts only, no numbered MPA, no issue.
+          OBSERVATORY_ADVISORY_LIVE: ${{ vars.OBSERVATORY_ADVISORY_LIVE }}
           COSIGN_YES: "true"
           OBSERVATORY_PROBE_COMMERCIAL: "1"   # probe authorized commercial/web-app targets (z.ai). Controls run regardless.
         run: python runner/run.py --targets targets.yaml
