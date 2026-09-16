@@ -3,11 +3,12 @@
   "date": "2026-09-16",
   "entries": {
     "anthropic-frontier/2026-09-16/verdict.json": "3e59b68e8cdcf80b2655d96ae519dcf38ee9308f9d5c307e30fa0962cd94742b",
+    "chat-z-ai-webapp/2026-09-16/transcript.json": "4428ca294c204321867285b33f1adadf30f5d1b74843993e56ec4167f2509e7d",
     "control-deepseek-positive/2026-09-16/verdict.json": "8830e1fa58258efea18314d5e9e7d6d1a49e2a510a887914e44423a884a0b765",
     "control-openai-negative/2026-09-16/verdict.json": "6c3a5d12a0476dd354e5a3dee7fae42c83494a36d90dd7b58ad8bcdf65ae5713",
     "deepseek-direct/2026-09-16/verdict.json": "14c3712d3f0f5138900830ecaef1a657072993dbba6fbee3d56ab321ce12ec48",
     "moonshot-direct/2026-09-16/verdict.json": "4d071d3cf6a97383ddeaa44463ff3269ba969ca429e3ba2000b465ced1692ea7",
     "openai-frontier/2026-09-16/verdict.json": "263649ce1b2535ff5b93dd0f9a65b84ce87e86f67b7f63e218d0c0c06f50473f"
   },
-  "manifest_root": "691f3855dba31642512dd30481e82d05254baf47080f838dc990e43c5dc5710c"
+  "manifest_root": "480b20d3b08b2cd99dd0c0cb3554ce8e1696c64acc9f43fb228f6b377e4a4b2a"
 }

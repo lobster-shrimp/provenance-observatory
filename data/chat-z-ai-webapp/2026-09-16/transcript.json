@@ -1,6 +1,11 @@
 {
   "schema_version": "0.1.0",
   "target": "chat-z-ai-webapp",
+  "source": {
+    "file": "2026-07-25-session.json",
+    "sha256": "e30e04959ad20e3092c9183e30e642747c84fc12620d47a0a4d65786d4fee6d4",
+    "ingested_on": "2026-09-16"
+  },
   "turns_analyzed": 5,
   "distinct_identities": [
     "Google Gemini"
