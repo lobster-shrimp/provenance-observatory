@@ -114,6 +114,27 @@ def test_live_gate_promotes_public_advisory(sandbox, monkeypatch):
     assert rec["verdict"]["provenance_risk"]["verdict"] == "CONFIRMED"
 
 
+def test_contradicted_drift_never_auto_promotes_even_when_live(sandbox, monkeypatch):
+    # P2b: a CONTRADICTED router-vs-fingerprint cross-check is an accusation about
+    # a named third party — quarantined for human review, never auto-published,
+    # and it must consume NO MPA number.
+    data, staging = sandbox
+    monkeypatch.setenv("OBSERVATORY_PROBE_COMMERCIAL", "1")
+    monkeypatch.setenv("OBSERVATORY_ADVISORY_LIVE", "1")
+    advisory.save_state("vendor-x", baseline.TargetState(pinned_baseline="fp_old"))
+    monkeypatch.setattr(run, "run_assess", lambda t, d: {
+        "fingerprint_id": "fp_new", "target": t["name"],
+        "score": {"provenance_risk": {"verdict": "CONFIRMED"}},
+        "measurement_path": "via_omniroute",
+        "omniroute": {"cross_check": {"state": "CONTRADICTED"}}})
+    monkeypatch.setattr(run, "check_drift",
+                        lambda n, c: (True, [{"field": "fingerprint_id"}]))
+    run.process_target(TARGET, DEFAULTS, {})
+    # DRAFT staged, but NO public advisory, and no MPA number consumed.
+    assert not os.path.isdir(os.path.join(str(data), "advisories"))
+    assert not os.path.exists(os.path.join(str(staging), "advisory-counter.json"))
+
+
 # --- persisted UNSTABLE damper + T9 across runs -----------------------------
 
 EVID = {"verdict": {"provenance_risk": {"verdict": "CONFIRMED"}}, "monitor_changes": []}

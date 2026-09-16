@@ -85,8 +85,11 @@ def _git(args: list[str], *, cwd: str | None = None, secret: str | None = None) 
     r = subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True)
     if r.returncode != 0:
         safe = " ".join(_redact_arg(a, secret) for a in args)
-        raise RuntimeError(f"git {safe} failed ({r.returncode}): "
-                           f"{_scrub((r.stderr or r.stdout or '').strip()[:200], secret)}")
+        # Scrub the token BEFORE truncating: git echoes the full authed URL in
+        # its errors, and truncating first could sever the token so it no longer
+        # matches `secret` and a partial token survives into the raised error.
+        detail = _scrub((r.stderr or r.stdout or "").strip(), secret)[:200]
+        raise RuntimeError(f"git {safe} failed ({r.returncode}): {detail}")
     return r
 
 

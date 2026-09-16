@@ -120,3 +120,20 @@ def test_git_error_never_leaks_token(env, tmp_path, monkeypatch):
         staging_sync.clone_if_configured(str(tmp_path / "s"))
     assert "ghp_SECRETTOKEN" not in str(ei.value)
     assert "<redacted-url>" in str(ei.value)
+
+
+def test_git_error_scrubs_token_even_when_url_is_past_truncation(env, tmp_path, monkeypatch):
+    # git echoes the full authed URL in stderr; if truncation happened BEFORE
+    # scrubbing, a token straddling the 200-char boundary would survive. The URL
+    # here is pushed well past char 200 to lock scrub-before-truncate.
+    import subprocess as _sp
+    long_stderr = ("x" * 260 +
+                   " unable to access 'https://x-access-token:ghp_SECRETTOKEN@github.com/org/x.git'")
+
+    def failing(cmd, cwd=None, capture_output=True, text=True):
+        return _sp.CompletedProcess(cmd, 128, stdout="", stderr=long_stderr)
+
+    monkeypatch.setattr(staging_sync.subprocess, "run", failing)
+    with pytest.raises(RuntimeError) as ei:
+        staging_sync.clone_if_configured(str(tmp_path / "s"))
+    assert "ghp_SECRETTOKEN" not in str(ei.value)
