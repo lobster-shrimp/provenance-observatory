@@ -1,0 +1,293 @@
+{
+  "schema_version": "0.1.0",
+  "tokenizer": {
+    "corpus_version": "2026.07.2",
+    "variant_seed": 0,
+    "vector": {},
+    "errors": {
+      "cjk_dense": "no usage field (HTTP 429)",
+      "cjk_mixed": "no usage field (HTTP 429)",
+      "jp_kana": "no usage field (HTTP 429)",
+      "ko_hangul": "no usage field (HTTP 429)",
+      "ws_runs": "no usage field (HTTP 429)",
+      "tabs_deep": "no usage field (HTTP 429)",
+      "digits_long": "no usage field (HTTP 429)",
+      "punct_repeat": "no usage field (HTTP 429)",
+      "emoji_zwj": "no usage field (HTTP 429)",
+      "rare_unicode": "no usage field (HTTP 429)",
+      "diacritics": "no usage field (HTTP 429)",
+      "arabic_hebrew": "no usage field (HTTP 429)",
+      "cyrillic": "no usage field (HTTP 429)",
+      "code_json": "no usage field (HTTP 429)",
+      "code_regex": "no usage field (HTTP 429)",
+      "url_paths": "no usage field (HTTP 429)",
+      "base64ish": "no usage field (HTTP 429)",
+      "md_table": "no usage field (HTTP 429)",
+      "mixed_script_cjk_code": "no usage field (HTTP 429)",
+      "newline_storm": "no usage field (HTTP 429)"
+    },
+    "meta": {},
+    "usable": false
+  },
+  "headers": {
+    "status": 429,
+    "server": "cloudflare",
+    "echoed_model": null,
+    "vendor_headers": [
+      {
+        "header": "x-request-id",
+        "implies": "generic",
+        "value": "req_665bc89f7ecd4b1c97a672f984204b28"
+      }
+    ],
+    "header_names": [
+      "access-control-expose-headers",
+      "alt-svc",
+      "cf-cache-status",
+      "cf-ray",
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "server",
+      "set-cookie",
+      "strict-transport-security",
+      "vary",
+      "x-content-type-options",
+      "x-openai-proxy-wasm",
+      "x-request-id"
+    ],
+    "header_shape_hash": "50e4da9a00bcfa94"
+  },
+  "errors": {
+    "probes": [
+      {
+        "probe": "bad_param",
+        "status": 429,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n"
+      },
+      {
+        "probe": "neg_maxtok",
+        "status": 429,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n"
+      },
+      {
+        "probe": "bad_model",
+        "status": 404,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n    \"error\": {\n        \"message\": \"The model `__nonexistent_model_probe__` does not exist or you do not have access to it.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
+      },
+      {
+        "probe": "bad_role",
+        "status": 429,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n"
+      },
+      {
+        "probe": "stop_overflow",
+        "status": 429,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n"
+      },
+      {
+        "probe": "unknown_field",
+        "status": 429,
+        "schema": {
+          "error": {
+            "code": "str",
+            "message": "str",
+            "param": "NoneType",
+            "type": "str"
+          }
+        },
+        "excerpt": "{\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n"
+      }
+    ],
+    "error_signature": "8453feb0a45edcfb"
+  },
+  "streaming": {
+    "chunk_count": 8,
+    "chunk_fields": [],
+    "final_usage_chunk": false,
+    "finish_reason": null,
+    "ttft_s": 0.0507
+  },
+  "latency": {
+    "ttft": {
+      "n": 12,
+      "mean": 0.0499,
+      "median": 0.0505,
+      "p10": 0.0466,
+      "p90": 0.0521,
+      "stdev": 0.0021
+    },
+    "total": {
+      "n": 12,
+      "mean": 0.05,
+      "median": 0.0505,
+      "p10": 0.0467,
+      "p90": 0.0521,
+      "stdev": 0.0021
+    },
+    "inter_token": {
+      "n": 12,
+      "mean": 0.05,
+      "median": 0.0505,
+      "p10": 0.0467,
+      "p90": 0.0521,
+      "stdev": 0.0021
+    }
+  },
+  "network": {
+    "host": "api.openai.com",
+    "addresses": [
+      {
+        "ip": "162.159.140.245",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      },
+      {
+        "ip": "172.66.0.243",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      },
+      {
+        "ip": "2606:4700:7::f3",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      },
+      {
+        "ip": "2a06:98c1:58::f3",
+        "ptr": null,
+        "asn": null,
+        "asn_name": null,
+        "country": null
+      }
+    ],
+    "findings": [
+      {
+        "type": "first_party",
+        "severity": "info",
+        "detail": "OpenAI is a first-party US model developer serving its own weights; jurisdiction non-PRC. Verify the served model with the tokenizer/behavioral layers (a first-party can still reroute)."
+      }
+    ],
+    "jurisdiction": "non-PRC-firstparty",
+    "operator": "OpenAI",
+    "confidence": 0.85
+  },
+  "fingerprint_id": "7fd8bc5c218b3ba34d0279dc",
+  "timestamp": "2026-09-16T08:34:36+00:00",
+  "target": {
+    "name": "control-openai-negative",
+    "base_url": "https://api.openai.com/v1",
+    "model": "gpt-4o-mini",
+    "api_style": "openai"
+  },
+  "score": {
+    "signals": [],
+    "jurisdictional_risk": {
+      "likelihood": 0.182,
+      "logodds": 0,
+      "verdict": "UNLIKELY",
+      "meaning": "Inference executed by a PRC-domiciled operator or on PRC soil (PIPL/DSL/CSL/NIL Art.7 exposure)."
+    },
+    "provenance_risk": {
+      "likelihood": 0.182,
+      "logodds": 0,
+      "verdict": "INDETERMINATE",
+      "meaning": "Model weights are Chinese-origin regardless of where served (bias/integrity/procurement-policy exposure).",
+      "note": "Primary provenance layer (tokenizer fingerprint) returned no data \u2014 usage suppressed, requests failed, or model unfingerprinted. This is NOT a clean bill; provenance was not actually measured."
+    },
+    "evidence_coverage": {
+      "network": true,
+      "tokenizer": false,
+      "tokenizer_reference": false,
+      "wire": true,
+      "behavioral": false,
+      "logprobs": false,
+      "artifacts": false,
+      "client_source": false,
+      "deception": false
+    },
+    "confidence": "low - insufficient evidence layers; do not report a verdict on this alone"
+  },
+  "user_warning": {
+    "level": "green",
+    "level_label": "No problems found in this check",
+    "headline": "No signs of a hidden or misrepresented AI model.",
+    "facts": [
+      "The checks did not find evidence that this app is disguising which AI model it uses or where your data goes."
+    ],
+    "actions": [
+      "No action needed based on this check.",
+      "Re-check periodically \u2014 services can change their AI provider without notice."
+    ],
+    "app": "control-openai-negative",
+    "url": "https://api.openai.com/v1"
+  },
+  "drift_seen": false,
+  "measurement_path": "direct",
+  "verdict": {
+    "provenance": "INDETERMINATE",
+    "jurisdiction": "UNLIKELY",
+    "confidence": "low - insufficient evidence layers; do not report a verdict on this alone"
+  },
+  "control_check": {
+    "kind": "control-negative",
+    "top_model": null,
+    "top_score": null,
+    "top_origin": null,
+    "expect_not_origin": "CN",
+    "pass": true
+  },
+  "session_boundary": {
+    "start_fingerprint": "1b6ada5da27f8750e00bf3c7",
+    "end_fingerprint": "1b6ada5da27f8750e00bf3c7",
+    "switched": false,
+    "confidence": "degraded",
+    "gap_probes": 8
+  }
+}
