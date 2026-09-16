@@ -33,7 +33,7 @@ import tempfile
 from datetime import date
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from lib import verdict, signing  # noqa: E402
+from lib import verdict, signing, staging_sync, publish_policy  # noqa: E402
 import advisory  # noqa: E402  (runner/ is on sys.path via __file__ dir)
 import build_catalog  # noqa: E402
 import build_registry  # noqa: E402
@@ -66,6 +66,93 @@ def staging_target_dir(name: str) -> str:
     d = os.path.join(STAGING_DIR, name)
     os.makedirs(d, exist_ok=True)
     return d
+
+
+def advisory_live() -> bool:
+    """Dry-run gate (the non-negotiable safety default).
+
+    `monitor.fingerprint()` hashes header_shape_hash + error_signature, so a CDN
+    or gateway header change flips the fingerprint with NO model change. Turning
+    public advisories on before the UNSTABLE damper is confirmed to swallow that
+    wire noise would manufacture a FALSE public accusation — the project's
+    cardinal sin. So drift always opens/updates a private DRAFT, but promotion to
+    a numbered public MPA advisory (and thus the GitHub-issue alert) happens ONLY
+    when OBSERVATORY_ADVISORY_LIVE=1. Default off.
+    """
+    return os.environ.get("OBSERVATORY_ADVISORY_LIVE", "0") == "1"
+
+
+def latest_committed_verdict(name: str) -> dict | None:
+    """The most recent committed public verdict.json for a target (by date)."""
+    paths = sorted(glob.glob(os.path.join(DATA_DIR, name, "*", "verdict.json")))
+    if not paths:
+        return None
+    try:
+        with open(paths[-1]) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+def seed_state_from_history(name: str) -> bool:
+    """Migration seed: on a first run with an empty staging repo, initialize this
+    target's baseline.json + state.json from the most recent committed
+    verdict.json so day-1 does NOT re-seed drift from nothing (which would make
+    every target look freshly-pinned every night). No-op once persisted state
+    exists — never clobbers a real baseline. Returns True if it seeded."""
+    sdir = staging_target_dir(name)
+    base_path = os.path.join(sdir, "baseline.json")
+    state_path = os.path.join(sdir, "state.json")
+    if os.path.exists(base_path) and os.path.exists(state_path):
+        return False   # already persisted (round-tripped from the private repo)
+    rec = latest_committed_verdict(name)
+    if not rec:
+        return False
+    seeded = False
+    if not os.path.exists(base_path):
+        with open(base_path, "w") as f:      # raw bundle monitor diffs against
+            json.dump(rec, f)
+        seeded = True
+    if not os.path.exists(state_path):
+        advisory.ensure_baseline(name, rec.get("fingerprint_id", ""))
+        seeded = True
+    return seeded
+
+
+def write_pinned(name: str) -> None:
+    """Public transparency artifact: the CURRENT pinned fingerprint_id only.
+
+    A public pinned baseline is itself a transparency feature — anyone can see
+    what fingerprint we are diffing against. It carries NO gated content (no raw
+    token counts); the private baseline.json drives the actual diff."""
+    state = advisory.load_state(name)
+    pinned = state.pinned_baseline or ""
+    d = os.path.join(DATA_DIR, name)
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, "pinned.json"), "w") as f:
+        json.dump({"target": name, "fingerprint_id": pinned,
+                   "pinned_at": date.today().isoformat()}, f, indent=2)
+
+
+def promote_public_advisory(name: str, staging_id: str) -> None:
+    """LIVE path only: assign an MPA number and write the public advisory record
+    to data/advisories/ (where the site/API render it and the workflow's
+    model-switch alert fires). Machine guard (P2b): a quarantine-worthy advisory
+    (via_omniroute without calibration+disclosure, or a CONTRADICTED cross-check)
+    is never numbered and auto-published. We inspect the DRAFT's stored evidence
+    (which carries measurement_path/omniroute/cross_check) BEFORE promoting, so a
+    quarantined draft consumes no MPA number."""
+    draft = advisory._load_advisory(name, staging_id)
+    ok, reason = publish_policy.is_publishable(draft.get("evidence") or {})
+    if not ok:
+        print(f"::warning title=Advisory quarantined::{name} {staging_id} — {reason}")
+        return
+    rec = advisory.promote(name, staging_id)
+    adir = os.path.join(DATA_DIR, "advisories")
+    os.makedirs(adir, exist_ok=True)
+    with open(os.path.join(adir, f"{rec['advisory_id']}.json"), "w") as f:
+        json.dump(rec, f, indent=2)
+    print(f"  [advisory] {name}: PROMOTED {rec['advisory_id']} -> data/advisories/")
 
 
 def already_ran(name: str) -> bool:
@@ -353,11 +440,31 @@ def process_target(target: dict, defaults: dict, budget: dict) -> None:
         evidence = {
             "verdict": (gated_record.get("score") or {}),
             "monitor_changes": changes,
+            # Carry the provenance-of-the-measurement so the P2b quarantine guard
+            # (publish_policy.is_publishable) can actually see it at promotion: a
+            # via_omniroute / CONTRADICTED drift must never auto-publish.
+            "measurement_path": public_record.get("measurement_path", "direct"),
         }
+        if bundle.get("omniroute"):
+            evidence["omniroute"] = bundle["omniroute"]
+        if bundle.get("cross_check"):
+            evidence["cross_check"] = bundle["cross_check"]
         summary = advisory.on_drift(name, bundle.get("fingerprint_id", ""), evidence,
                                     target_public=target.get("public", False))
         print(f"  [advisory] {name}: {summary.get('action')} "
               f"{summary.get('staging_id', '')}".rstrip())
+        # DRAFT-only by default. Promote to a numbered PUBLIC advisory (and thus
+        # trigger the GitHub-issue alert) ONLY when OBSERVATORY_ADVISORY_LIVE=1.
+        sid = summary.get("staging_id")
+        if summary.get("action") in ("opened", "appended") and sid:
+            if advisory_live():
+                promote_public_advisory(name, sid)
+            else:
+                print(f"::notice title=Drift DRAFT (dry-run)::{name} {sid} staged; "
+                      f"OBSERVATORY_ADVISORY_LIVE!=1, no public advisory emitted")
+
+    # Public transparency artifact: the current pinned fingerprint_id (only).
+    write_pinned(name)
 
     # Intra-session model switch on a VENDOR target -> model-switch advisory.
     if sb_switched and not target.get("kind", "").startswith("control"):
@@ -420,7 +527,32 @@ def main() -> int:
     cfg = load_config(a.targets)
     defaults = cfg.get("defaults", {})
     budget = cfg.get("budget", {})
+    # Pull the persisted drift state from the private staging repo (if
+    # configured); otherwise fall back to local-only staging (no network). A
+    # clone failure (bad PAT, repo unreachable) must NOT kill the whole run — fall
+    # back to local-only so targets still get verdicts (no silent gaps). The
+    # RuntimeError from staging_sync is already token-scrubbed.
+    try:
+        sync = staging_sync.clone_if_configured(STAGING_DIR)
+    except Exception as e:
+        print(f"[staging] clone failed, falling back to local-only: {e}")
+        sync = {"enabled": False, "reason": "clone failed"}
+    print(f"[staging] {sync.get('log', 'drift persistence OFF (clone failed); local-only')}")
     os.makedirs(STAGING_DIR, exist_ok=True)
+    # Migration seed (persistence mode ONLY): initialize any target still missing
+    # persisted state from its most recent committed verdict.json, so the FIRST
+    # run against an empty private staging repo begins from the seed rather than
+    # re-seeding from nothing. Skipped in local-only mode so the no-PAT fallback
+    # keeps its current (inert) drift behavior exactly (AC #4).
+    if sync.get("enabled"):
+        for t in cfg.get("targets", []):
+            if t.get("agent_trace"):
+                continue
+            try:
+                if seed_state_from_history(t["name"]):
+                    print(f"[staging] seeded {t['name']} baseline from committed history")
+            except Exception as e:
+                print(f"[warn] seed {t.get('name','?')}: {e}")
     for t in cfg.get("targets", []):
         try:
             if t.get("agent_trace"):          # E2: continuous agent monitoring
@@ -445,6 +577,12 @@ def main() -> int:
     cat = build_catalog.build_signed_catalog(DATA_DIR)
     print(f"[catalog] built={cat.get('built')} verified={cat.get('verified')} "
           f"signed={cat.get('signed')}: {cat['reason']}")
+    # Push the updated drift state (baseline/state/drafts/counter) back to the
+    # private staging repo so the next run diffs against it. Only when the clone
+    # succeeded — never push a local-only/reseeded staging over the private repo.
+    if sync.get("enabled"):
+        push = staging_sync.push_if_configured(STAGING_DIR, f"staging: nightly {date.today().isoformat()}")
+        print(f"[staging] {push['log']}")
     return 0
 
 

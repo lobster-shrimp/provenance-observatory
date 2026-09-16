@@ -24,6 +24,7 @@ privacy forces it.
 | — | Run-outcome policy: retry once, then commit `no-verdict{reason}` — no silent gaps | `runner/run.py` |
 | — | Workflow security: schedule/dispatch triggers only; env-scoped secrets; least-privilege staging PAT | `.github/workflows/observatory.yml` |
 | P2b | Publication policy: the signer refuses proxy (`via_omniroute`) records without calibration+disclosure, and quarantines CONTRADICTED cross-checks — never auto-published | `lib/publish_policy.py`, `lib/signing.py`, `lib/records.py` |
+| #50 | Drift persistence: private staging repo round-trip (least-privilege PAT) so the diff + UNSTABLE damper persist; public `pinned.json` fingerprint; **DRAFT-only dry-run** gate (`OBSERVATORY_ADVISORY_LIVE`, default off) | `lib/staging_sync.py`, `runner/run.py` |
 
 > **Note:** T5's two-tier withholding + disclosure-window was **reversed to full
 > transparency** — the observatory now publishes the complete work (measurements
@@ -31,6 +32,63 @@ privacy forces it.
 > safeguards (controls, published FP rate, confidence labels, corrections), not by
 > hiding evidence. The P2b policy below is the one narrow exception: what the
 > *signer* will and won't certify.
+
+## Drift persistence — making silent-swap detection actually fire (#50)
+
+Silent-swap detection depends on state that MUST survive between nightly runs.
+On a GitHub-hosted runner `STAGING_DIR` (`~/.provenance-observatory-staging`) is
+empty at the start of every job, so without persistence `check_drift` re-seeds
+its baseline every night and never fires. The fix (locked design: option b +
+public fingerprint + DRAFT-only dry-run):
+
+- **Private staging repo round-trip** (`lib/staging_sync.py`, wired into
+  `runner/run.py`): when `STAGING_PAT` **and** `OBSERVATORY_STAGING_REPO` are
+  set, the run `git clone --depth 1`s the private staging repo into `STAGING_DIR`
+  before any target, and `git add -A && commit && push`es it back after. What
+  round-trips: `<target>/baseline.json` (the raw bundle `monitor` diffs against),
+  `<target>/state.json` (`TargetState`: pinned_baseline, recent_fingerprints,
+  UNSTABLE state), draft advisories, and `advisory-counter.json`. This keeps the
+  **gated raw bundles + tokenizer vectors PRIVATE** (never in public `data/`)
+  while making the diff + the UNSTABLE damper persist. **No PAT / no URL → clean
+  local-only fallback** (current behavior; local dev + CI need no network). The
+  PAT is least-privilege (staging repo only), never logged, and scrubbed from the
+  cloned `.git/config` remote.
+- **Public pinned baseline** (`data/<target>/pinned.json` = `{target,
+  fingerprint_id, pinned_at}`): the pinned `fingerprint_id` only — a public
+  pinned baseline is itself a transparency feature. It carries **no gated
+  content** and does **not** drive the diff (the private `baseline.json` does).
+- **Migration seed**: on a first run with an empty staging repo, each target's
+  `baseline.json`/`state.json` is seeded from its most recent committed
+  `verdict.json`, so day-1 does not re-seed drift from nothing. The 45 days of
+  `drift_seen:false` history stays (append-only); real drift detection begins
+  from the seed.
+
+### Dry-run gate — `OBSERVATORY_ADVISORY_LIVE` (default `0`, the non-negotiable)
+
+`monitor.fingerprint()` hashes `header_shape_hash` + `error_signature`, so a CDN
+or gateway header change flips the `fingerprint_id` with **no model change**
+(deepseek-direct moved several times/week on pure wire noise). Promoting a public
+advisory on that noise would manufacture a **false public accusation** — the
+project's cardinal sin (zero-FP-accusation, CONTRADICTED-quarantine). So:
+
+- **`OBSERVATORY_ADVISORY_LIVE` unset/`0` (default):** drift still opens/updates a
+  **DRAFT** in the private staging repo and logs a `::notice::`, but does **not**
+  promote to a numbered public `MPA-YYYY-NNN`, does not write `data/advisories/`,
+  and does not fire the GitHub-issue alert.
+- **`=1`:** full behavior — the drift path promotes (`advisory.promote`, same
+  machine guard as `runner/promote.py`: via_omniroute/CONTRADICTED evidence is
+  refused) and writes `data/advisories/<MPA>.json`, which the workflow's "Alert on
+  model switch" step detects.
+
+**Real drift vs wire noise.** The **UNSTABLE state machine** (`lib/baseline.py`)
+is the damper and MUST persist for this to be safe: a fingerprint change opens a
+DRAFT (not a public advisory); ≥3 distinct fingerprints or ≥3 alternations/14d
+flips the target to **UNSTABLE**, which auto-closes the open draft and does
+**not** advance the pinned baseline. Confirm those thresholds swallow the
+observed ~few-times-a-week movement over a **dry-run week** before an operator
+flips `OBSERVATORY_ADVISORY_LIVE=1`. **T9 holds throughout:** the pinned baseline
+advances only on a NORMAL advisory close or a post-stability blessing — never on
+an UNSTABLE-triggered close.
 
 ## Publication policy — what the signer certifies (P2b)
 
@@ -150,7 +208,9 @@ measured verdict. Reads the published artifact only (T7 — no probe internals i
 1. Engine-contract tests + fingerprint fix — **DONE** (provenance-probe 0.4.1).
 2. Legal + DISCLOSURE.md groundwork — **DONE** (draft, pending counsel).
 3. Runner: wire `assess` call, path mapping, retry/no-verdict, spend guard.
-4. Drift → advisory pipeline (staging repo, dedup, promotion).
+4. Drift → advisory pipeline (staging repo, dedup, promotion) — **DONE**;
+   persisted via the private staging repo round-trip, DRAFT-only until an operator
+   flips `OBSERVATORY_ADVISORY_LIVE=1` after a dry-run week (#50).
 5. Pages site (Variant C), neutral-only until gated.
 6. Negative control + FP rate (**DONE** — controls self-test, 0/2 FP);
    evidence signing (**DONE** — manifest + cosign/Rekor); probe randomization
