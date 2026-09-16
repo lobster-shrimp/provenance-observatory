@@ -31,26 +31,16 @@ python3 -m venv "$WORK/venv"
 ( cd "$ENGINE_SRC" && "$WORK/venv/bin/python" -m eval.run_eval --json ) > "$WORK/eval.json"
 
 echo "[3/3] summarize -> $OUT"
-"$WORK/venv/bin/python" - "$WORK/eval.json" "$ENGINE_SHA" "$OUT" <<'PY'
-import json, sys, datetime
-raw, sha, out = sys.argv[1], sys.argv[2], sys.argv[3]
-o = json.load(open(raw))
-m = o["matrix"]
-families = sum(1 for c in o["cases"] if "(" in c["name"])   # vocab-tier cases carry an origin annotation
-den = m["TN"] + m["FP"]
-summary = {
-    "passed": o["passed"],
-    "matrix": {k: m[k] for k in ("TP", "FP", "TN", "FN", "ERR")},
-    "false_positive_rate": (m["FP"] / den) if den else 0.0,
-    "vocab_families_exercised": families,
-    "reference_families_total": 25,
-    "generated": datetime.date.today().isoformat(),
-    "engine_commit": sha,
-    "source": "provenance-probe eval/run_eval.py (hermetic consistency+accuracy gate)",
-    "note": ("Consistency/regression gate over open-weights GGUF vocabs + scoring "
-             "bundles. NOT a live-endpoint accuracy claim; real named-vendor "
-             "accuracy is validated privately."),
-}
+# ENGINE_SRC is passed so the family total is read from the engine's real
+# tokenizer_ref.json (never hardcoded); REPO is passed so the throwaway venv can
+# import the shared, unit-tested summariser (scripts/engine_eval_summary.py).
+"$WORK/venv/bin/python" - "$WORK/eval.json" "$ENGINE_SHA" "$OUT" "$ENGINE_SRC" "$REPO" <<'PY'
+import json, os, sys
+raw_path, sha, out, engine_src, repo = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5]
+sys.path.insert(0, os.path.join(repo, "scripts"))
+from engine_eval_summary import summarize
+o = json.load(open(raw_path))
+summary = summarize(o, sha, engine_src)
 json.dump(summary, open(out, "w"), indent=2)
 print(json.dumps(summary, indent=2))
 PY

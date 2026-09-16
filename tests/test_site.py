@@ -616,3 +616,74 @@ def test_catalog_page_tolerates_malformed_and_escapes_counts(tmp_path):
     assert "OkCo" in cat and "789" in cat                    # coerced + rendered
     assert "<b>x</b>" not in cat                             # provider_count escaped
     assert "&lt;b&gt;x&lt;/b&gt;" in cat
+
+
+# --- paused-target banner (a paused finding must not read as active) ---------
+
+_PAUSED_YAML = """\
+targets:
+  - name: paused-webapp
+    kind: webapp
+    authorized: false
+    notes: "PAUSED 2026-08-05 — moved to a signed per-request API, not replay-monitorable."
+  - name: paused-no-date
+    kind: webapp
+    authorized: false
+    notes: "PAUSED — endpoint disappeared; kept for the record."
+  - name: unauth-but-active-note
+    kind: aggregator
+    authorized: false
+    notes: "Not probed until authorized; behavioral stays off."
+  - name: authorized-endpoint
+    kind: cn-direct
+    authorized: true
+    notes: "Live CN-direct control. PAUSED appears here but it IS authorized."
+"""
+
+
+def test_load_paused_targets_only_flags_unauthorized_paused(tmp_path):
+    ty = tmp_path / "targets.yaml"
+    ty.write_text(_PAUSED_YAML)
+    m = build._load_paused_targets(str(ty))
+    # authorized:false AND notes contain PAUSED -> flagged, with the date extracted.
+    assert m["paused-webapp"]["date"] == "2026-08-05"
+    assert "paused-no-date" in m and m["paused-no-date"]["date"] is None
+    # authorized:false but no PAUSED -> not flagged; authorized:true -> never flagged.
+    assert "unauth-but-active-note" not in m
+    assert "authorized-endpoint" not in m
+
+
+def test_load_paused_targets_missing_file_is_empty():
+    assert build._load_paused_targets("/nonexistent/targets.yaml") == {}
+
+
+def test_paused_banner_on_detail_page_for_paused_target_only(tmp_path, monkeypatch):
+    data = tmp_path / "data"
+    _write_verdict(str(data), "paused-webapp", "webapp",
+                   {"fingerprint_id": "aaaa1111bbbb2222", "drift_seen": False})
+    _write_verdict(str(data), "authorized-endpoint", "cn-direct",
+                   {"fingerprint_id": "cccc3333dddd4444", "drift_seen": False})
+    ty = tmp_path / "targets.yaml"
+    ty.write_text(_PAUSED_YAML)
+    monkeypatch.setattr(build, "TARGETS_YAML", str(ty))
+
+    out = build.build(str(data), str(tmp_path / "out"), now_iso="2026-09-16T12:00:00")
+    outdir = os.path.dirname(out)
+    paused_detail = open(os.path.join(outdir, "t", "paused-webapp.html")).read()
+    active_detail = open(os.path.join(outdir, "t", "authorized-endpoint.html")).read()
+
+    assert "not monitored nightly" in paused_detail          # banner present
+    assert "last observed 2026-08-05" in paused_detail        # date surfaced
+    assert "not monitored nightly" not in active_detail       # NOT on an active target
+
+
+def test_paused_badge_on_advisory_page(tmp_path):
+    adv = {"advisory_id": "MPA-2026-001", "target": "paused-webapp",
+           "promoted_at": "2026-07-25", "kind": "model_switch", "severity": "high",
+           "summary": "served model switched to GLM (Zhipu)",
+           "model_change_events": [{"turn": 7, "from": "Google Gemini",
+                                    "to": "GLM (Zhipu)", "kind": "concession"}]}
+    paused_page = build._advisory_page(adv, {"date": "2026-08-05"})
+    assert "not monitored nightly" in paused_page
+    # Same advisory, target not paused -> no banner.
+    assert "not monitored nightly" not in build._advisory_page(adv, None)

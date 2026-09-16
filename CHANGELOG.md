@@ -4,6 +4,31 @@ All notable changes to the Provenance Observatory are recorded here.
 
 ## [Unreleased]
 
+### Fixed — paused-target banner + engine-eval family count (readiness review 2026-09-16)
+
+- **Paused-target banner (finding #5)**: the site led with the `chat-z-ai-webapp`
+  model-switch finding (Gemini persona → GLM) with nothing signalling that the
+  target is PAUSED (`authorized:false`, not probed nightly since 2026-08-05), so a
+  reader assumed it was under active monitoring. `site/build.py` now loads
+  `targets.yaml` (new `_load_paused_targets`) and treats any `authorized:false`
+  target whose `notes` contain `PAUSED` as paused (extracting the date). A
+  **"Paused — last observed <date>, not monitored nightly"** banner renders on the
+  target detail page, and a small `PAUSED` qualifier appears wherever the finding
+  is surfaced (index model-switch panel + advisories rail, the advisory page, and
+  the advisories index). Data-driven — no z.ai special-case; any future paused
+  target gets the same treatment.
+- **Engine-eval "35 of 25" family count (cosmetic transparency bug)**:
+  `scripts/refresh-engine-eval.sh` counted parenthesised eval *cases* (not
+  distinct families) and hardcoded `reference_families_total: 25` while the engine
+  ships 27, so the assurance panel rendered a nonsensical "N of M" with N > M. The
+  summary logic is factored into an importable, unit-tested helper
+  `scripts/engine_eval_summary.py`: `vocab_families_exercised` is now the count of
+  DISTINCT vocab families among the origin→family consistency cases (excluding the
+  accuracy-tier hostname cases that also carry parentheses), and
+  `reference_families_total` is read from the engine's `tokenizer_ref.json`
+  (falling back to the exercised count), clamped so N > M can never render again.
+  Regenerated `data/engine_eval.json` now reads **17 of 27**.
+
 ### Added — drift persistence (#50)
 
 - **`lib/staging_sync.py`**: private staging-repo round-trip. When `STAGING_PAT`
