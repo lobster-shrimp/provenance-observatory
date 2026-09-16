@@ -26,6 +26,7 @@ import argparse
 import glob
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -198,8 +199,17 @@ def check_control(target: dict, bundle: dict) -> dict | None:
         return None
     matches = bundle.get("tokenizer_match") or []
     top = matches[0] if matches else {}
+    measured = bool((bundle.get("tokenizer") or {}).get("usable"))
     result = {"kind": kind, "top_model": top.get("model"),
-              "top_score": top.get("score"), "top_origin": top.get("origin")}
+              "top_score": top.get("score"), "top_origin": top.get("origin"),
+              "measured": measured}
+    if not measured:
+        # The tokenizer layer returned nothing (429/5xx/usage suppressed). A
+        # control that measured nothing neither passed nor failed — recording
+        # it as PASS would let an unmeasured day count toward the published
+        # 0-false-positive tally. pass=None means "not measured".
+        result["pass"] = None
+        return result
     if kind == "control-positive":
         want = target.get("expect_family")
         result["expected_family"] = want
@@ -210,6 +220,30 @@ def check_control(target: dict, bundle: dict) -> dict | None:
         result["pass"] = not (top.get("origin") == target.get("expect_not_origin")
                               and (top.get("score") or 0) >= 0.75)
     return result
+
+
+_AUTH_STATUSES = ("401", "403")
+
+
+def auth_failure_status(bundle: dict) -> str | None:
+    """Return '401'/'403' when EVERY tokenizer probe failed with that auth status
+    (and nothing was usable); None otherwise. Mixed or partial failures are
+    left alone — those are real (if degraded) measurements."""
+    tok = bundle.get("tokenizer") or {}
+    if tok.get("usable"):
+        return None
+    errs = tok.get("errors") or {}
+    if not errs:
+        return None
+    statuses = set()
+    for msg in errs.values():
+        m = re.search(r"HTTP (\d{3})", str(msg))
+        if not m:
+            return None
+        statuses.add(m.group(1))
+    if len(statuses) == 1 and statuses <= set(_AUTH_STATUSES):
+        return statuses.pop()
+    return None
 
 
 def write_no_verdict(name: str, reason: str) -> None:
@@ -266,6 +300,15 @@ def process_target(target: dict, defaults: dict, budget: dict) -> None:
         bundle = run_assess(target, defaults)
     except Exception as e:
         write_no_verdict(name, f"assess failed after retry: {e}")
+        return
+    auth_fail = auth_failure_status(bundle)
+    if auth_fail:
+        # Every probe was rejected at the door (401/403). That measures OUR
+        # credential, not the vendor's backend: publishing it as a verdict
+        # mislabels an operator misconfiguration as "degraded vendor signal"
+        # and seeds a bogus baseline fingerprint. Record a no-verdict instead.
+        write_no_verdict(name, f"auth failed (HTTP {auth_fail}) — check the "
+                               f"{target.get('auth_env') or target.get('cookie_env') or 'credential'} secret")
         return
 
     advisory.ensure_baseline(name, bundle.get("fingerprint_id", ""))
@@ -330,9 +373,12 @@ def process_target(target: dict, defaults: dict, budget: dict) -> None:
               f"{s.get('staging_id', '')}".rstrip())
 
     status = "SESSION-SWITCH" if sb_switched else ("DRIFT" if bundle["_drift_seen"] else "stable")
-    ctl = f" control={'PASS' if control['pass'] else 'FAIL'}" if control else ""
+    ctl = ""
+    if control:
+        ctl = " control=" + ("NOT-MEASURED" if control["pass"] is None
+                             else ("PASS" if control["pass"] else "FAIL"))
     print(f"[ok] {name}: {status}{ctl} → {out_dir}/verdict.json")
-    if control and not control["pass"]:
+    if control and control["pass"] is False:
         print(f"  [FP-GATE] {name}: control expectation FAILED — {control}")
 
 

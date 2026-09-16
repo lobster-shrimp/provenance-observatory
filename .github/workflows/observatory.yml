@@ -43,11 +43,18 @@ jobs:
       - uses: sigstore/cosign-installer@v3   # cosign for keyless evidence signing
       - name: Run nightly probes (builds + signs the day's manifest)
         env:
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}   # live CN positive control
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}       # live US negative control
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}   # live CN positive control + deepseek-direct
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}       # live US negative control + openai-frontier
+          # targets.yaml auth_env for the frontier/direct vendor targets. These were
+          # missing until 2026-09-16: anthropic-frontier and moonshot-direct 401'd on
+          # every probe from 2026-08-04 and the runner published the 401s as verdicts.
+          # Add both as environment secrets; the runner now records a no-verdict
+          # ("auth failed") instead of a verdict when a key is absent or stale.
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }} # anthropic-frontier
+          MOONSHOT_API_KEY: ${{ secrets.MOONSHOT_API_KEY }}   # moonshot-direct (api.moonshot.ai)
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
-          ZAI_COOKIE: ${{ secrets.ZAI_COOKIE }}   # chat.z.ai web-app session (operator-set; REQUIRED now that z.ai is authorized:true — a stale/absent cookie 401s -> no-verdict)
+          ZAI_COOKIE: ${{ secrets.ZAI_COOKIE }}   # chat.z.ai web-app session. UNUSED while chat-z-ai-webapp is authorized:false (PAUSED 2026-08-05, see targets.yaml notes); kept so re-enabling is one flag flip.
           STAGING_PAT: ${{ secrets.STAGING_PAT }}
           COSIGN_YES: "true"
           OBSERVATORY_PROBE_COMMERCIAL: "1"   # probe authorized commercial/web-app targets (z.ai). Controls run regardless.
