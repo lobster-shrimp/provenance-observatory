@@ -998,7 +998,7 @@ input[type=range]{width:100%;accent-color:var(--signal)}
 <h4>From one-off audit to continuous public record</h4>
 <li>A probe you run once is a snapshot. Drift is a time-series problem — you cannot detect a silent swap without a baseline recorded before it happened.</li>
 <li>The Observatory runs nightly against a fixed target set, signs each result with cosign, and writes it to a Rekor append-only transparency log. Corrections and retractions land in the same signed log.</li>
-<li>Note the catalogue scale: 191 providers, 6,728 models, classified into PRC-operator, first-party, aggregator and unresolved. That is the market map a procurement officer currently does not have.</li>
+<li>Note the catalogue scale: 223 providers, 7,994 models, classified into PRC-operator, first-party, aggregator and unresolved. That is the market map a procurement officer currently does not have.</li>
 <li>MPA-2026-001 is the live finding: a served model that switched identity mid-session to GLM (Zhipu) while presenting as Google Gemini. Classified as misrepresentation, high priority.</li>
 <li>Dwell on why mid-session matters: the endpoint was serving the claimed model at the start of the session. Any spot check taken at the wrong moment returns clean — which is precisely why a periodic-inspection regime would fail.</li>
 <li>Press refresh — it attempts a live read of the published site and falls back to the dated snapshot if the browser blocks the cross-origin read. Either way the live site is one click away, and that is the point: the evidence is public and checkable while you are standing here.</li>
@@ -1016,7 +1016,7 @@ input[type=range]{width:100%;accent-color:var(--signal)}
     <div class="mod ice"><div class="stat s-ice">8</div><div class="lab">Monitored endpoints across Anthropic, OpenAI, Gemini, DeepSeek and Moonshot</div></div>
     <div class="mod jade"><div class="stat s-jade">0</div><div class="lab">False positives — 1/1 negative controls clean, 1/1 positive controls caught</div></div>
     <div class="mod coral"><div class="stat s-coral">1</div><div class="lab">Model-switch alert · advisory <span class="mono">MPA-2026-001</span>, high priority</div></div>
-    <div class="mod violet"><div class="stat s-violet">6,728</div><div class="lab">Models across <strong style="color:var(--ink2)">191 providers</strong> in the signed catalogue, classified by jurisdiction</div></div>
+    <div class="mod violet"><div class="stat s-violet">7,994</div><div class="lab">Models across <strong style="color:var(--ink2)">223 providers</strong> in the signed catalogue, classified by jurisdiction</div></div>
   </div>
   <div class="g gsplit" style="margin-top:15px">
     <div class="mod coral">
@@ -1038,7 +1038,7 @@ input[type=range]{width:100%;accent-color:var(--signal)}
       </ul>
     </div>
   </div>
-  <div class="src"><a href="https://lobster-shrimp.github.io/provenance-observatory/" target="_blank" rel="noopener">Provenance Observatory</a> · <a href="https://lobster-shrimp.github.io/provenance-observatory/advisories.html" target="_blank" rel="noopener">advisories</a> · <a href="https://lobster-shrimp.github.io/provenance-observatory/catalog.html" target="_blank" rel="noopener">catalogue</a> · <a href="https://github.com/lobster-shrimp/provenance-observatory" target="_blank" rel="noopener">source</a>. Figures as published 16 Sep 2026.</div>
+  <div class="src"><a href="https://lobster-shrimp.github.io/provenance-observatory/" target="_blank" rel="noopener">Provenance Observatory</a> · <a href="https://lobster-shrimp.github.io/provenance-observatory/advisories.html" target="_blank" rel="noopener">advisories</a> · <a href="https://lobster-shrimp.github.io/provenance-observatory/catalog.html" target="_blank" rel="noopener">catalogue</a> · <a href="https://github.com/lobster-shrimp/provenance-observatory" target="_blank" rel="noopener">source</a>. Monitoring snapshot 16 Sep 2026; catalogue figures refreshed 22 Sep 2026.</div>
 </div>
 </section>
 
