@@ -4,7 +4,7 @@
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
   "provider_count": 223,
-  "model_count": 7994,
+  "model_count": 8075,
   "providers": [
     {
       "provider_id": "302ai",
@@ -13781,6 +13781,29 @@
           "last_updated": "2026-07-24"
         },
         {
+          "id": "anthropic.claude-opus-5-5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "anthropic.claude-sonnet-4-5-20250929-v1:0",
           "name": "Claude Sonnet 4.5",
           "family": "claude-sonnet",
@@ -14055,6 +14078,29 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "au.anthropic.claude-opus-5-5",
+          "name": "Claude Opus 5.5 (AU)",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4.4,
+          "cost_output": 22,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "au.anthropic.claude-sonnet-4-5-20250929-v1:0",
@@ -14467,6 +14513,29 @@
           "last_updated": "2026-07-24"
         },
         {
+          "id": "eu.anthropic.claude-opus-5-5",
+          "name": "Claude Opus 5.5 (EU)",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4.4,
+          "cost_output": 22,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "eu.anthropic.claude-sonnet-4-20250514-v1:0",
           "name": "Claude Sonnet 4 (EU)",
           "family": "claude-sonnet",
@@ -14787,6 +14856,29 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "global.anthropic.claude-opus-5-5",
+          "name": "Claude Opus 5.5 (Global)",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "global.anthropic.claude-sonnet-4-20250514-v1:0",
@@ -15287,6 +15379,29 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "jp.anthropic.claude-opus-5-5",
+          "name": "Claude Opus 5.5 (JP)",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4.4,
+          "cost_output": 22,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "jp.anthropic.claude-sonnet-4-5-20250929-v1:0",
@@ -16631,6 +16746,29 @@
           "last_updated": "2026-07-24"
         },
         {
+          "id": "us.anthropic.claude-opus-5-5",
+          "name": "Claude Opus 5.5 (US)",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4.4,
+          "cost_output": 22,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
           "name": "Claude Sonnet 4 (US)",
           "family": "claude-sonnet",
@@ -17795,6 +17933,29 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "claude-opus-5-5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "claude-sonnet-4-5",
@@ -19458,6 +19619,29 @@
           "last_updated": "2026-07-24"
         },
         {
+          "id": "claude-opus-5-5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "claude-sonnet-4-5",
           "name": "Claude Sonnet 4.5",
           "family": "claude-sonnet",
@@ -20452,6 +20636,52 @@
           "last_updated": "2026-09-04"
         },
         {
+          "id": "gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "gpt-6-sol",
+          "name": "GPT-6 Sol",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "gpt-chat-latest",
           "name": "GPT Chat Latest",
           "family": "",
@@ -21432,6 +21662,29 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "claude-opus-5-5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "claude-sonnet-4-5",
@@ -26022,6 +26275,29 @@
           "release_date": "2026-08-12",
           "knowledge": "2026-02-01",
           "last_updated": "2026-08-12"
+        },
+        {
+          "id": "xai/grok-4.7",
+          "name": "Grok 4.7",
+          "family": "grok",
+          "context": 500000,
+          "max_output": 500000,
+          "cost_input": 2,
+          "cost_output": 6,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-21",
+          "knowledge": "2026-05",
+          "last_updated": "2026-09-21"
         }
       ]
     },
@@ -31056,6 +31332,28 @@
           "last_updated": "2026-08-12"
         },
         {
+          "id": "x-ai/grok-4.7",
+          "name": "Grok 4.7",
+          "family": "grok",
+          "context": 500000,
+          "max_output": 500000,
+          "cost_input": 2,
+          "cost_output": 6,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-21",
+          "knowledge": "2026-05",
+          "last_updated": "2026-09-21"
+        },
+        {
           "id": "x-ai/grok-build-0.1",
           "name": "Grok Build 0.1",
           "family": "grok-build",
@@ -31119,6 +31417,54 @@
           "release_date": "2026-04-22",
           "knowledge": "2024-12",
           "last_updated": "2026-04-22"
+        },
+        {
+          "id": "xiaomi/mimo-v2.6-flash",
+          "name": "MiMo-V2.6-Flash",
+          "family": "mimo",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 0.16,
+          "cost_output": 0.32,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-09-22",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "xiaomi/mimo-v2.6-pro",
+          "name": "MiMo-V2.6-Pro",
+          "family": "mimo",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 0.47,
+          "cost_output": 0.94,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-09-22",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "z-ai/glm-4.7",
@@ -39263,8 +39609,8 @@
           "family": "ministral",
           "context": 100000,
           "max_output": 262144,
-          "cost_input": 0.3447,
-          "cost_output": 0.4596,
+          "cost_input": 0.34389,
+          "cost_output": 0.45852,
           "modalities_in": [
             "text"
           ],
@@ -39284,8 +39630,8 @@
           "family": "llama",
           "context": 128000,
           "max_output": 4096,
-          "cost_input": 0.74685,
-          "cost_output": 0.74685,
+          "cost_input": 0.745095,
+          "cost_output": 0.745095,
           "modalities_in": [
             "text"
           ],
@@ -39305,8 +39651,8 @@
           "family": "gpt-oss",
           "context": 131072,
           "max_output": 32768,
-          "cost_input": 0.17235,
-          "cost_output": 0.74685,
+          "cost_input": 0.171945,
+          "cost_output": 0.745095,
           "modalities_in": [
             "text"
           ],
@@ -41451,8 +41797,8 @@
           "family": "deepseek-flash",
           "context": 256000,
           "max_output": 384000,
-          "cost_input": 0.4596,
-          "cost_output": 0.9192,
+          "cost_input": 0.45852,
+          "cost_output": 0.91704,
           "modalities_in": [
             "text"
           ],
@@ -41494,8 +41840,8 @@
           "family": "gpt-oss",
           "context": 128000,
           "max_output": 32768,
-          "cost_input": 0.17235,
-          "cost_output": 0.6894,
+          "cost_input": 0.171945,
+          "cost_output": 0.68778,
           "modalities_in": [
             "text"
           ],
@@ -41515,8 +41861,8 @@
           "family": "llama",
           "context": 128000,
           "max_output": 4096,
-          "cost_input": 1.0341,
-          "cost_output": 1.0341,
+          "cost_input": 1.03167,
+          "cost_output": 1.03167,
           "modalities_in": [
             "text"
           ],
@@ -50192,6 +50538,29 @@
           "last_updated": "2025-05-22"
         },
         {
+          "id": "claude-opus-5-5@default",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "claude-opus-5@default",
           "name": "Claude Opus 5",
           "family": "claude-opus",
@@ -51410,6 +51779,29 @@
           "release_date": "2025-05-22",
           "knowledge": "2025-03-31",
           "last_updated": "2025-05-22"
+        },
+        {
+          "id": "claude-opus-5-5@default",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "claude-opus-5@default",
@@ -64451,6 +64843,29 @@
           "last_updated": "2026-07-24"
         },
         {
+          "id": "anthropic/claude-opus-5.5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "anthropic/claude-sonnet-4",
           "name": "Anthropic: Claude Sonnet 4",
           "family": "claude-sonnet",
@@ -65150,7 +65565,7 @@
           "name": "DeepSeek V4 Pro 0813",
           "family": "deepseek-thinking",
           "context": 1048576,
-          "max_output": 943718,
+          "max_output": 384000,
           "cost_input": 1.32,
           "cost_output": 3.96,
           "modalities_in": [
@@ -65171,7 +65586,7 @@
           "name": "DeepSeek V4.1 Flash",
           "family": "deepseek-flash",
           "context": 1048576,
-          "max_output": 384000,
+          "max_output": 943718,
           "cost_input": 0.3,
           "cost_output": 1.2,
           "modalities_in": [
@@ -68877,6 +69292,98 @@
           "last_updated": "2026-09-04"
         },
         {
+          "id": "openai/gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-luna-pro",
+          "name": "OpenAI: GPT-6 Luna Pro",
+          "family": "gpt",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "pdf",
+            "image",
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol",
+          "name": "GPT-6 Sol",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol-pro",
+          "name": "OpenAI: GPT-6 Sol Pro",
+          "family": "gpt",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "pdf",
+            "image",
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "openai/gpt-audio",
           "name": "OpenAI: GPT Audio",
           "family": "gpt",
@@ -68973,7 +69480,7 @@
           "name": "GPT OSS 20B",
           "family": "gpt-oss",
           "context": 131072,
-          "max_output": 117964,
+          "max_output": 32768,
           "cost_input": 0.018,
           "cost_output": 0.09,
           "modalities_in": [
@@ -70368,7 +70875,7 @@
           "name": "Qwen3.6 27B",
           "family": "qwen",
           "context": 262144,
-          "max_output": 65536,
+          "max_output": 262140,
           "cost_input": 0.45,
           "cost_output": 2.7,
           "modalities_in": [
@@ -70654,6 +71161,30 @@
           "release_date": "2026-09-02",
           "knowledge": "",
           "last_updated": "2026-09-02"
+        },
+        {
+          "id": "qwen/qwen3.8-omni-flash",
+          "name": "Qwen3.8 Omni Flash",
+          "family": "qwen",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 0.15,
+          "cost_output": 0.47,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-17",
+          "knowledge": "",
+          "last_updated": "2026-09-17"
         },
         {
           "id": "rekaai/reka-edge",
@@ -71165,8 +71696,8 @@
           "family": "Hy",
           "context": 262144,
           "max_output": 128000,
-          "cost_input": 0.13,
-          "cost_output": 0.53,
+          "cost_input": 0.0825,
+          "cost_output": 0.33,
           "modalities_in": [
             "text"
           ],
@@ -72135,8 +72666,8 @@
           "family": "claude-opus",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 5,
-          "cost_output": 25,
+          "cost_input": 4,
+          "cost_output": 20,
           "modalities_in": [
             "text",
             "image",
@@ -72181,8 +72712,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 943718,
-          "cost_input": 0.12,
-          "cost_output": 0.48,
+          "cost_input": 0.1,
+          "cost_output": 0.8,
           "modalities_in": [
             "text",
             "image"
@@ -72202,9 +72733,9 @@
           "name": "DeepSeek: DeepSeek Pro Latest",
           "family": "deepseek",
           "context": 1048576,
-          "max_output": 943718,
-          "cost_input": 0.624,
-          "cost_output": 2.88,
+          "max_output": 393216,
+          "cost_input": 0.39996,
+          "cost_output": 1.19988,
           "modalities_in": [
             "text"
           ],
@@ -72225,7 +72756,7 @@
           "context": 1048576,
           "max_output": 943718,
           "cost_input": 0.03,
-          "cost_output": 1,
+          "cost_output": 0.8,
           "modalities_in": [
             "text"
           ],
@@ -72295,8 +72826,8 @@
           "family": "kimi",
           "context": 1048576,
           "max_output": 943718,
-          "cost_input": 1.5,
-          "cost_output": 7.5,
+          "cost_input": 1.4989,
+          "cost_output": 10.758,
           "modalities_in": [
             "text",
             "image",
@@ -72341,8 +72872,8 @@
           "family": "gpt-luna",
           "context": 1050000,
           "max_output": 128000,
-          "cost_input": 0.2,
-          "cost_output": 1.2,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
           "modalities_in": [
             "pdf",
             "image",
@@ -72478,9 +73009,9 @@
           "name": "Z.ai: GLM Latest",
           "family": "glm",
           "context": 1048576,
-          "max_output": 943718,
-          "cost_input": 0.6545,
-          "cost_output": 2.057,
+          "max_output": 131072,
+          "cost_input": 0.6538,
+          "cost_output": 2.0548,
           "modalities_in": [
             "text"
           ],
@@ -73424,6 +73955,29 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "claude-opus-5-5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "claude-sonnet-4-5",
@@ -75217,6 +75771,52 @@
           "last_updated": "2026-09-03"
         },
         {
+          "id": "gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "gpt-6-sol",
+          "name": "GPT-6 Sol",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "gpt-oss-120b",
           "name": "GPT OSS 120B",
           "family": "gpt-oss",
@@ -75590,6 +76190,52 @@
           "release_date": "2026-08-28",
           "knowledge": "",
           "last_updated": "2026-08-28"
+        },
+        {
+          "id": "inkling",
+          "name": "Inkling",
+          "family": "ling",
+          "context": 524288,
+          "max_output": 1048576,
+          "cost_input": 0.95,
+          "cost_output": 4.05,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-15",
+          "knowledge": "",
+          "last_updated": "2026-07-15"
+        },
+        {
+          "id": "inkling-small",
+          "name": "Inkling Small",
+          "family": "ling",
+          "context": 524288,
+          "max_output": 1048576,
+          "cost_input": 0.45,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-30",
+          "knowledge": "",
+          "last_updated": "2026-07-30"
         },
         {
           "id": "kimi-k2",
@@ -76360,6 +77006,28 @@
           "last_updated": "2025-06-20"
         },
         {
+          "id": "muse-glimmer-30b",
+          "name": "Muse Glimmer 30B",
+          "family": "muse",
+          "context": 131072,
+          "max_output": 131072,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-10",
+          "knowledge": "2026-01-04",
+          "last_updated": "2026-08-10"
+        },
+        {
           "id": "muse-spark-1.1",
           "name": "Muse Spark 1.1",
           "family": "muse",
@@ -76497,6 +77165,27 @@
           "release_date": "2026-06-04",
           "knowledge": "",
           "last_updated": "2026-06-04"
+        },
+        {
+          "id": "nemotron-3.5-lightning",
+          "name": "Nemotron 3.5 Lightning 30B A3B",
+          "family": "nemotron",
+          "context": 262144,
+          "max_output": 262144,
+          "cost_input": 0.08,
+          "cost_output": 0.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-11",
+          "knowledge": "",
+          "last_updated": "2026-08-11"
         },
         {
           "id": "o1",
@@ -77261,6 +77950,27 @@
           "last_updated": "2026-06-02"
         },
         {
+          "id": "qwen3.8-2.4t-a95b",
+          "name": "Qwen3.8 2.4T A95B",
+          "family": "qwen",
+          "context": 1010000,
+          "max_output": 131072,
+          "cost_input": 2,
+          "cost_output": 6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-12",
+          "knowledge": "",
+          "last_updated": "2026-08-12"
+        },
+        {
           "id": "qwen3.8-flash",
           "name": "Qwen3.8 Flash",
           "family": "qwen",
@@ -77481,6 +78191,29 @@
           "release_date": "2024-01-01",
           "knowledge": "2025-09-01",
           "last_updated": "2025-09-01"
+        },
+        {
+          "id": "step-3.7-flash",
+          "name": "Step 3.7 Flash",
+          "family": "",
+          "context": 262144,
+          "max_output": 256000,
+          "cost_input": 0.2,
+          "cost_output": 1.15,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-05-29",
+          "knowledge": "2026-03-01",
+          "last_updated": "2026-05-29"
         }
       ]
     },
@@ -78338,6 +79071,29 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "anthropic/claude-opus-5-5",
+          "name": "Claude Opus 5.5 (Anthropic)",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "anthropic/claude-sonnet-4-5",
@@ -80748,6 +81504,27 @@
           "last_updated": "2026-04-07"
         },
         {
+          "id": "deepinfra/glm-5.3",
+          "name": "GLM-5.3 (DeepInfra)",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 131072,
+          "cost_input": 1.2,
+          "cost_output": 4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
           "id": "deepinfra/hy3",
           "name": "Hy3 (DeepInfra)",
           "family": "Hy",
@@ -80767,6 +81544,52 @@
           "release_date": "2026-07-06",
           "knowledge": "",
           "last_updated": "2026-07-06"
+        },
+        {
+          "id": "deepinfra/inkling",
+          "name": "Inkling (DeepInfra)",
+          "family": "ling",
+          "context": 524288,
+          "max_output": 262144,
+          "cost_input": 0.95,
+          "cost_output": 4.05,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": false,
+          "release_date": "2026-07-15",
+          "knowledge": "",
+          "last_updated": "2026-07-15"
+        },
+        {
+          "id": "deepinfra/inkling-small",
+          "name": "Inkling Small (DeepInfra)",
+          "family": "ling",
+          "context": 524288,
+          "max_output": 262144,
+          "cost_input": 0.45,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-30",
+          "knowledge": "",
+          "last_updated": "2026-07-30"
         },
         {
           "id": "deepinfra/ling-3.0-flash",
@@ -80835,6 +81658,28 @@
           "last_updated": "2026-04-22"
         },
         {
+          "id": "deepinfra/muse-glimmer-30b",
+          "name": "Muse Glimmer 30B (DeepInfra)",
+          "family": "muse",
+          "context": 131072,
+          "max_output": 16384,
+          "cost_input": 0.3,
+          "cost_output": 1.2,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-10",
+          "knowledge": "2026-01-04",
+          "last_updated": "2026-08-10"
+        },
+        {
           "id": "deepinfra/nemotron-3-ultra-550b",
           "name": "Nemotron 3 Ultra 550B (DeepInfra)",
           "family": "nemotron",
@@ -80855,6 +81700,27 @@
           "release_date": "2026-06-01",
           "knowledge": "",
           "last_updated": "2026-06-01"
+        },
+        {
+          "id": "deepinfra/nemotron-3.5-lightning",
+          "name": "Nemotron 3.5 Lightning (DeepInfra)",
+          "family": "nemotron",
+          "context": 262144,
+          "max_output": 131072,
+          "cost_input": 0.08,
+          "cost_output": 0.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-11",
+          "knowledge": "",
+          "last_updated": "2026-08-11"
         },
         {
           "id": "deepinfra/qwen3-vl-235b-a22b-instruct",
@@ -80920,6 +81786,73 @@
           "release_date": "2026-02-23",
           "knowledge": "",
           "last_updated": "2026-02-23"
+        },
+        {
+          "id": "deepinfra/qwen3.8-2.4t-a95b",
+          "name": "Qwen3.8 2.4T A95B (DeepInfra)",
+          "family": "qwen",
+          "context": 262144,
+          "max_output": 131072,
+          "cost_input": 2,
+          "cost_output": 6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-12",
+          "knowledge": "",
+          "last_updated": "2026-08-12"
+        },
+        {
+          "id": "deepinfra/qwen3.8-27b",
+          "name": "Qwen3.8 27B (DeepInfra)",
+          "family": "qwen",
+          "context": 262144,
+          "max_output": 235929,
+          "cost_input": 0.2,
+          "cost_output": 2.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
+          "id": "deepinfra/step-3.7-flash",
+          "name": "Step 3.7 Flash (DeepInfra)",
+          "family": "",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.2,
+          "cost_output": 1.15,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-05-29",
+          "knowledge": "2026-03-01",
+          "last_updated": "2026-05-29"
         },
         {
           "id": "deepseek/deepseek-v4-pro",
@@ -83487,6 +84420,27 @@
           "last_updated": "2026-05-21"
         },
         {
+          "id": "novita/qwen3.8-2.4t-a95b",
+          "name": "Qwen3.8 2.4T A95B (NovitaAI)",
+          "family": "qwen",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 2,
+          "cost_output": 6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-12",
+          "knowledge": "",
+          "last_updated": "2026-08-12"
+        },
+        {
           "id": "novita/qwen3.8-27b",
           "name": "Qwen3.8 27B (NovitaAI)",
           "family": "qwen",
@@ -83573,6 +84527,29 @@
           "release_date": "2026-02-16",
           "knowledge": "",
           "last_updated": "2026-02-16"
+        },
+        {
+          "id": "novita/step-3.7-flash",
+          "name": "Step 3.7 Flash (NovitaAI)",
+          "family": "",
+          "context": 262144,
+          "max_output": 256000,
+          "cost_input": 0.2,
+          "cost_output": 1.15,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-05-29",
+          "knowledge": "2026-03-01",
+          "last_updated": "2026-05-29"
         },
         {
           "id": "openai/gpt-3.5-turbo",
@@ -84197,6 +85174,52 @@
           "release_date": "2026-09-03",
           "knowledge": "",
           "last_updated": "2026-09-03"
+        },
+        {
+          "id": "openai/gpt-6-luna",
+          "name": "GPT-6 Luna (OpenAI)",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol",
+          "name": "GPT-6 Sol (OpenAI)",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "openai/o1",
@@ -85443,6 +86466,51 @@
           "last_updated": "2025-12-22"
         },
         {
+          "id": "together-ai/glm-5.3",
+          "name": "GLM-5.3 (Together AI)",
+          "family": "glm",
+          "context": 1048576,
+          "max_output": 943717,
+          "cost_input": 1.4,
+          "cost_output": 4.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-14",
+          "knowledge": "",
+          "last_updated": "2026-08-14"
+        },
+        {
+          "id": "together-ai/glm-5.3-flash",
+          "name": "GLM-5.3 Flash (Together AI)",
+          "family": "glm-flash",
+          "context": 1048576,
+          "max_output": 943717,
+          "cost_input": 0.15,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "video",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-26",
+          "knowledge": "",
+          "last_updated": "2026-08-26"
+        },
+        {
           "id": "together-ai/gpt-oss-120b",
           "name": "GPT OSS 120B (Together AI)",
           "family": "gpt-oss",
@@ -85462,6 +86530,29 @@
           "release_date": "2025-08-05",
           "knowledge": "",
           "last_updated": "2025-08-05"
+        },
+        {
+          "id": "together-ai/inkling",
+          "name": "Inkling (Together AI)",
+          "family": "ling",
+          "context": 524288,
+          "max_output": 471859,
+          "cost_input": 1,
+          "cost_output": 4.05,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-07-15",
+          "knowledge": "",
+          "last_updated": "2026-07-15"
         },
         {
           "id": "together-ai/kimi-k3",
@@ -85506,6 +86597,49 @@
           "release_date": "2026-06-01",
           "knowledge": "",
           "last_updated": "2026-06-01"
+        },
+        {
+          "id": "together-ai/muse-glimmer-30b",
+          "name": "Muse Glimmer 30B (Together AI)",
+          "family": "muse",
+          "context": 131072,
+          "max_output": 117964,
+          "cost_input": 0.35,
+          "cost_output": 1.5,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-10",
+          "knowledge": "2026-01-04",
+          "last_updated": "2026-08-10"
+        },
+        {
+          "id": "together-ai/qwen3.8-2.4t-a95b",
+          "name": "Qwen3.8 2.4T A95B (Together AI)",
+          "family": "qwen",
+          "context": 1010000,
+          "max_output": 909000,
+          "cost_input": 2,
+          "cost_output": 6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-08-12",
+          "knowledge": "",
+          "last_updated": "2026-08-12"
         },
         {
           "id": "vertex-anthropic/claude-haiku-4-5",
@@ -88537,6 +89671,29 @@
           "last_updated": "2026-07-24"
         },
         {
+          "id": "anthropic/claude-opus-5-5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "anthropic/claude-sonnet-4-20250514",
           "name": "Claude Sonnet 4",
           "family": "claude-sonnet",
@@ -91026,6 +92183,50 @@
           "release_date": "2026-09-04",
           "knowledge": "2026-04-30",
           "last_updated": "2026-09-04"
+        },
+        {
+          "id": "openai/gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol",
+          "name": "GPT-6 Sol",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "openai/gpt-oss-120b",
@@ -97216,7 +98417,7 @@
           "family": "",
           "context": 262144,
           "max_output": 262134,
-          "cost_input": 3,
+          "cost_input": 1,
           "cost_output": 3,
           "modalities_in": [
             "text",
@@ -97238,7 +98439,7 @@
           "family": "",
           "context": 1000000,
           "max_output": 999990,
-          "cost_input": 5,
+          "cost_input": 3,
           "cost_output": 5,
           "modalities_in": [
             "text"
@@ -97259,7 +98460,7 @@
           "family": "",
           "context": 1000000,
           "max_output": 999990,
-          "cost_input": 5,
+          "cost_input": 3,
           "cost_output": 5,
           "modalities_in": [
             "text"
@@ -98129,6 +99330,29 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "anthropic/claude-opus-5.5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "anthropic/claude-opus-latest",
@@ -99332,8 +100556,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.44,
-          "cost_output": 1.32,
+          "cost_input": 0.22,
+          "cost_output": 0.66,
           "modalities_in": [
             "text",
             "image"
@@ -103211,6 +104435,28 @@
           "last_updated": "2026-06-06"
         },
         {
+          "id": "nano/lumen-stealth",
+          "name": "Lumen Stealth",
+          "family": "",
+          "context": 200000,
+          "max_output": 16000,
+          "cost_input": 0.05,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": false,
+          "release_date": "2026-09-22",
+          "knowledge": "",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "nanogpt/coding-router",
           "name": "Coding Router",
           "family": "",
@@ -104289,6 +105535,98 @@
           "release_date": "2026-09-04",
           "knowledge": "",
           "last_updated": "2026-09-04"
+        },
+        {
+          "id": "openai/gpt-6-luna",
+          "name": "GPT 6 Luna",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.05,
+          "cost_output": 0.25,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-luna-pro",
+          "name": "GPT 6 Luna Pro",
+          "family": "gpt",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.05,
+          "cost_output": 0.25,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol",
+          "name": "GPT 6 Sol",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol-pro",
+          "name": "GPT 6 Sol Pro",
+          "family": "gpt",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "openai/gpt-astra-latest",
@@ -116211,6 +117549,29 @@
           "last_updated": "2026-07-24"
         },
         {
+          "id": "anthropic/claude-opus-5.5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "anthropic/claude-sonnet-4.5",
           "name": "Claude Sonnet 4.5 (latest)",
           "family": "claude-sonnet",
@@ -120567,6 +121928,52 @@
           "last_updated": "2026-09-04"
         },
         {
+          "id": "gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "gpt-6-sol",
+          "name": "GPT-6 Sol",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "gpt-image-1",
           "name": "gpt-image-1",
           "family": "gpt-image",
@@ -121139,6 +122546,29 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "claude-opus-5-5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "claude-sonnet-4",
@@ -122203,6 +123633,52 @@
           "release_date": "2026-09-04",
           "knowledge": "2026-04-30",
           "last_updated": "2026-09-04"
+        },
+        {
+          "id": "gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "gpt-6-sol",
+          "name": "GPT-6 Sol",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "grok-4.5",
@@ -124676,6 +126152,29 @@
           "last_updated": "2026-07-24"
         },
         {
+          "id": "anthropic/claude-opus-5.5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "anthropic/claude-sonnet-4",
           "name": "Claude Sonnet 4",
           "family": "claude-sonnet",
@@ -125291,8 +126790,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.088606,
-          "cost_output": 0.177212,
+          "cost_input": 0.049,
+          "cost_output": 0.098,
           "modalities_in": [
             "text"
           ],
@@ -125355,8 +126854,8 @@
           "family": "deepseek-thinking",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.95526,
-          "cost_output": 1.91052,
+          "cost_input": 0.887226,
+          "cost_output": 1.774452,
           "modalities_in": [
             "text"
           ],
@@ -125375,9 +126874,9 @@
           "name": "DeepSeek V4 Pro 0813",
           "family": "deepseek-thinking",
           "context": 1048576,
-          "max_output": 943718,
-          "cost_input": 0.624,
-          "cost_output": 2.88,
+          "max_output": 384000,
+          "cost_input": 0.66,
+          "cost_output": 1.98,
           "modalities_in": [
             "text"
           ],
@@ -125396,9 +126895,9 @@
           "name": "DeepSeek V4.1 Flash",
           "family": "deepseek-flash",
           "context": 1048576,
-          "max_output": 384000,
-          "cost_input": 0.3,
-          "cost_output": 1.2,
+          "max_output": 943718,
+          "cost_input": 0.1,
+          "cost_output": 0.8,
           "modalities_in": [
             "text",
             "image"
@@ -127551,7 +129050,7 @@
           "context": 262144,
           "max_output": 235929,
           "cost_input": 0.7062,
-          "cost_output": 3.21,
+          "cost_output": 3.3,
           "modalities_in": [
             "text",
             "image"
@@ -129021,6 +130520,98 @@
           "last_updated": "2026-09-04"
         },
         {
+          "id": "openai/gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-luna-pro",
+          "name": "GPT-6 Luna Pro",
+          "family": "gpt",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "pdf",
+            "image",
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol",
+          "name": "GPT-6 Sol",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol-pro",
+          "name": "GPT-6 Sol Pro",
+          "family": "gpt",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "pdf",
+            "image",
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "openai/gpt-audio",
           "name": "GPT Audio",
           "family": "gpt",
@@ -129115,9 +130706,9 @@
           "name": "GPT OSS 20B",
           "family": "gpt-oss",
           "context": 131072,
-          "max_output": 117964,
-          "cost_input": 0.03,
-          "cost_output": 0.13,
+          "max_output": 32768,
+          "cost_input": 0.018,
+          "cost_output": 0.09,
           "modalities_in": [
             "text"
           ],
@@ -130531,9 +132122,9 @@
           "name": "Qwen3.6 27B",
           "family": "qwen",
           "context": 262144,
-          "max_output": 65536,
-          "cost_input": 0.3,
-          "cost_output": 2,
+          "max_output": 262140,
+          "cost_input": 0.32,
+          "cost_output": 2.7,
           "modalities_in": [
             "text",
             "image",
@@ -130817,6 +132408,30 @@
           "release_date": "2026-09-02",
           "knowledge": "",
           "last_updated": "2026-09-02"
+        },
+        {
+          "id": "qwen/qwen3.8-omni-flash",
+          "name": "Qwen3.8 Omni Flash",
+          "family": "qwen",
+          "context": 1000000,
+          "max_output": 131072,
+          "cost_input": 0.15,
+          "cost_output": 0.47,
+          "modalities_in": [
+            "text",
+            "image",
+            "audio",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-17",
+          "knowledge": "",
+          "last_updated": "2026-09-17"
         },
         {
           "id": "rekaai/reka-edge",
@@ -131192,8 +132807,8 @@
           "family": "Hy",
           "context": 262144,
           "max_output": 128000,
-          "cost_input": 0.132,
-          "cost_output": 0.528,
+          "cost_input": 0.0825,
+          "cost_output": 0.33,
           "modalities_in": [
             "text"
           ],
@@ -132049,8 +133664,8 @@
           "family": "glm",
           "context": 1310720,
           "max_output": 131072,
-          "cost_input": 0.84,
-          "cost_output": 2.64,
+          "cost_input": 0.6538,
+          "cost_output": 2.0548,
           "modalities_in": [
             "text"
           ],
@@ -132185,8 +133800,8 @@
           "family": "claude-opus",
           "context": 1000000,
           "max_output": 128000,
-          "cost_input": 5,
-          "cost_output": 25,
+          "cost_input": 4,
+          "cost_output": 20,
           "modalities_in": [
             "text",
             "image",
@@ -132231,8 +133846,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 943718,
-          "cost_input": 0.12,
-          "cost_output": 0.48,
+          "cost_input": 0.1,
+          "cost_output": 0.8,
           "modalities_in": [
             "text",
             "image"
@@ -132252,9 +133867,9 @@
           "name": "DeepSeek Pro Latest",
           "family": "deepseek",
           "context": 1048576,
-          "max_output": 943718,
-          "cost_input": 0.624,
-          "cost_output": 2.88,
+          "max_output": 393216,
+          "cost_input": 0.39996,
+          "cost_output": 1.19988,
           "modalities_in": [
             "text"
           ],
@@ -132275,7 +133890,7 @@
           "context": 1310720,
           "max_output": 943718,
           "cost_input": 0.03,
-          "cost_output": 1,
+          "cost_output": 0.8,
           "modalities_in": [
             "text"
           ],
@@ -132345,8 +133960,8 @@
           "family": "kimi",
           "context": 1048576,
           "max_output": 943718,
-          "cost_input": 1.5,
-          "cost_output": 7.5,
+          "cost_input": 1.4989,
+          "cost_output": 10.758,
           "modalities_in": [
             "text",
             "image",
@@ -132391,8 +134006,8 @@
           "family": "gpt-luna",
           "context": 1050000,
           "max_output": 128000,
-          "cost_input": 0.2,
-          "cost_output": 1.2,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
           "modalities_in": [
             "pdf",
             "image",
@@ -132528,9 +134143,9 @@
           "name": "GLM Latest",
           "family": "glm",
           "context": 1310720,
-          "max_output": 943718,
-          "cost_input": 0.6545,
-          "cost_output": 2.057,
+          "max_output": 131072,
+          "cost_input": 0.6538,
+          "cost_output": 2.0548,
           "modalities_in": [
             "text"
           ],
@@ -146629,6 +148244,52 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "claude-opus-5-5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 5,
+          "cost_output": 25,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "claude-opus-5-5@eu",
+          "name": "Claude Opus 5.5 (EU)",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 5.5,
+          "cost_output": 27.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "claude-opus-5@eu",
@@ -161440,6 +163101,28 @@
           "last_updated": "2026-07-24"
         },
         {
+          "id": "claude-opus-5-5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4.8,
+          "cost_output": 24,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-18",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "claude-opus-5-fast",
           "name": "Claude Opus 5 Fast",
           "family": "claude-opus",
@@ -164905,6 +166588,52 @@
           "release_date": "2026-07-24",
           "knowledge": "2026-05",
           "last_updated": "2026-07-24"
+        },
+        {
+          "id": "anthropic/claude-opus-5.5",
+          "name": "Claude Opus 5.5",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "anthropic/claude-opus-5.5-fast",
+          "name": "Claude Opus 5.5 (Fast)",
+          "family": "claude-opus",
+          "context": 1000000,
+          "max_output": 128000,
+          "cost_input": 8,
+          "cost_output": 40,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-06",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "anthropic/claude-sonnet-4",
@@ -169314,6 +171043,98 @@
           "release_date": "2026-09-04",
           "knowledge": "",
           "last_updated": "2026-09-04"
+        },
+        {
+          "id": "openai/gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-luna-fast",
+          "name": "GPT-6 Luna (Fast)",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.2,
+          "cost_output": 1,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol",
+          "name": "GPT-6 Sol",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "openai/gpt-6-sol-fast",
+          "name": "GPT-6 Sol (Fast)",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 4,
+          "cost_output": 20,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
         },
         {
           "id": "openai/gpt-image-1",
@@ -173973,6 +175794,28 @@
           "release_date": "2026-09-10",
           "knowledge": "2025-05",
           "last_updated": "2026-09-10"
+        },
+        {
+          "id": "google/gemma-4-26B-A4B-it",
+          "name": "Gemma 4 26B A4B",
+          "family": "gemma",
+          "context": 262144,
+          "max_output": 262144,
+          "cost_input": 0.1,
+          "cost_output": 0.3,
+          "modalities_in": [
+            "text",
+            "image"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": true,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-04-02",
+          "knowledge": "",
+          "last_updated": "2026-04-02"
         },
         {
           "id": "google/gemma-4-31B-it",
