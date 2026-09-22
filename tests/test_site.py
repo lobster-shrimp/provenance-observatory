@@ -409,6 +409,30 @@ def test_content_pages_generated_and_linked(tmp_path):
     assert "API &amp; data records" in idx                   # footer API link (-> data dictionary)
 
 
+def test_briefing_emitted_verbatim_with_backlink_and_linked(tmp_path):
+    """The standalone "Who actually answered?" briefing is emitted verbatim from
+    site/pages/, gets an injected Observatory backlink, and is discoverable from
+    the footer and How It Works."""
+    data = tmp_path / "data"
+    _write_verdict(str(data), "t1", "aggregator", {"fingerprint_id": "fp"})
+    out = tmp_path / "out"
+    build.build(str(data), str(out), now_iso="2026-07-24T00:00:00")
+
+    page = (out / "who-answered.html").read_text()
+    # Emitted verbatim: it is the standalone deck, NOT wrapped in the _page() shell.
+    assert "Who Actually Answered" in page                    # its own <title>
+    assert "Provenance Observatory &middot;" not in page      # not the _page() title suffix
+    # Exactly one injected backlink, at the start of <body>.
+    assert page.count('aria-label="Back to the Provenance Observatory"') == 1
+    assert '<body><a href="index.html" aria-label="Back to the Provenance Observatory"' in page
+    assert (out / "index.html").exists()                      # backlink target resolves
+
+    # Discoverable: footer Resources (on every page, incl. index) + How It Works.
+    idx = (out / "index.html").read_text()
+    assert 'href="who-answered.html">Who Answered? (Briefing)' in idx
+    assert "who-answered.html" in (out / "how-it-works.html").read_text()
+
+
 def test_rekor_index_parsed_and_surfaced():
     # real committed bundle carries a Rekor logIndex; it must be parsed + shown
     import sys as _sys

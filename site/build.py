@@ -36,6 +36,7 @@ from lib import feed as _feed  # noqa: E402 — shared RSS builder (shared with 
 
 DATA_DIR = os.environ.get("OBSERVATORY_DATA_DIR", os.path.join(ROOT, "data"))
 OUT_DIR = os.environ.get("OBSERVATORY_SITE_OUT", os.path.join(ROOT, "site", "dist"))
+PAGES_DIR = os.path.join(ROOT, "site", "pages")   # standalone, pre-authored HTML pages
 TARGETS_YAML = os.path.join(ROOT, "targets.yaml")
 HOT_WINDOW_DAYS = _records.HOT_WINDOW_DAYS
 SPARK_DAYS = 7
@@ -410,6 +411,7 @@ def _footer(base: str = "") -> str:
     <div class="fcol"><h4>Resources</h4>
       <a href="{base}methodology.html">Methodology</a>
       <a href="{base}how-it-works.html">How It Works</a>
+      <a href="{base}who-answered.html">Who Answered? (Briefing)</a>
       <a href="{base}faq.html">FAQ</a>
       <a href="{base}data-dictionary.html">Data Dictionary</a>
       <a href="{base}data-dictionary.html">API &amp; data records</a></div>
@@ -1090,7 +1092,37 @@ the interpreted provenance/jurisdiction verdict, together, so you can see exactl
 how each verdict was reached. Nothing is withheld. Verdicts are probabilistic,
 not proof; each carries a confidence label, and wrong verdicts are prominently
 corrected. See <a href="methodology.html">Methodology</a> and the
-<a href="disclosure.html">Publication Policy</a>.</p>""")
+<a href="disclosure.html">Publication Policy</a>.</p>
+<h2>Why this matters</h2>
+<p>For the wider context — the runtime-provenance gap, the grey-market
+model-substitution arbitrage, NDAA &sect;1532 / &sect;6604, and the policy case for a
+measurement layer — read the briefing
+<a href="who-answered.html"><b>&ldquo;Who actually answered?&rdquo;</b></a>.</p>""")
+
+
+# Small fixed backlink injected into the standalone briefing so a visitor can
+# return to the Observatory. Styled inline (mono, muted, corner) to sit over the
+# deck without restyling it; z-index clears the briefing's own bottom bar.
+_BRIEFING_BACKLINK = (
+    '<a href="index.html" aria-label="Back to the Provenance Observatory" '
+    'style="position:fixed;top:10px;left:12px;z-index:1000;'
+    'font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;'
+    'letter-spacing:.12em;text-transform:uppercase;color:#9db0be;'
+    'background:rgba(8,13,18,.82);border:1px solid #31485a;border-radius:5px;'
+    'padding:6px 10px;text-decoration:none">&larr; Observatory</a>'
+)
+
+
+def _who_answered_page() -> str:
+    """The operator-authored "Who actually answered?" briefing.
+
+    A fully self-contained HTML deck (its own inline CSS/JS and design) committed
+    at site/pages/who-answered.html. It is NOT wrapped in the observatory _page()
+    shell — it is emitted verbatim, with only a small fixed backlink injected so a
+    visitor can get back to the Observatory."""
+    with open(os.path.join(PAGES_DIR, "who-answered.html"), encoding="utf-8") as fh:
+        doc = fh.read()
+    return doc.replace("<body>", "<body>" + _BRIEFING_BACKLINK, 1)
 
 
 def _faq_page() -> str:
@@ -1637,6 +1669,7 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
         ("advisories.html", _advisories_index(promoted, paused)),
         ("about.html", _about_page()),
         ("how-it-works.html", _how_it_works_page()),
+        ("who-answered.html", _who_answered_page()),
         ("faq.html", _faq_page()),
         ("data-dictionary.html", _data_dictionary_page()),
         ("security.html", _security_page()),

@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}</style>
+<title>Who Actually Answered</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --ground:#0b1117; --panel:#121b23; --panel2:#18242e; --sunken:#080d12;
+  --rule:#23333f; --rule2:#31485a;
+  --ink:#e9eff5; --ink2:#9db0be; --ink3:#65798a;
+  --signal:#f0a830; --ice:#6fb3e0; --jade:#45b98a; --coral:#e4594a; --violet:#9a86e8;
+  --disp:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --barh:54px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;overflow:hidden}
+
+/* ---------- deck shell ---------- */
+.deck{position:fixed;inset:0;bottom:var(--barh);overflow:hidden}
+.slide{position:absolute;inset:0;padding:40px 52px 22px;overflow-y:auto;overflow-x:hidden;
+  opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .3s ease,transform .3s ease}
+.slide.on{opacity:1;pointer-events:auto;transform:none}
+.slide::-webkit-scrollbar{width:8px}
+.slide::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:4px}
+.wrap{max-width:1500px;margin:0 auto}
+@media (max-width:700px){ .slide{padding:26px 16px 18px} }
+@media (prefers-reduced-motion:reduce){ .slide{transition:none} }
+
+.bar{position:fixed;left:0;right:0;bottom:0;height:calc(var(--barh) + env(safe-area-inset-bottom,0px));
+  padding:0 16px env(safe-area-inset-bottom,0px);background:var(--sunken);border-top:1px solid var(--rule);
+  display:flex;align-items:center;gap:10px;z-index:60}
+.bar .nm{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);
+  flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{background:var(--panel2);border:1px solid var(--rule2);color:var(--ink2);border-radius:5px;
+  padding:6px 11px;font:inherit;font-size:12px;cursor:pointer;transition:.14s;font-family:var(--body)}
+.btn:hover{border-color:var(--signal);color:var(--ink)}
+.btn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.btn.on{background:var(--signal);border-color:var(--signal);color:#1a1205;font-weight:600}
+.ctr{font-family:var(--mono);font-size:12px;color:var(--ink2);min-width:58px;text-align:center;font-variant-numeric:tabular-nums}
+.prog{position:fixed;left:0;bottom:calc(var(--barh) + env(safe-area-inset-bottom,0px));height:2px;background:var(--signal);z-index:61;transition:width .3s ease}
+
+.notes{position:fixed;left:0;right:0;bottom:calc(var(--barh) + env(safe-area-inset-bottom,0px));
+  height:0;overflow:hidden;background:var(--sunken);border-top:1px solid var(--rule2);z-index:59;transition:height .22s ease}
+body.nt .notes{height:216px;overflow-y:auto}
+body.nt .deck{bottom:calc(var(--barh) + 216px)}
+.notes-in{padding:15px 22px;max-width:1150px;font-size:13px;line-height:1.62;color:var(--ink2)}
+.notes-in h4{margin:0 0 7px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--signal)}
+.notes-in li{margin:0 0 6px}
+.notes-in strong{color:var(--ink)}
+
+/* ---------- type ---------- */
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--signal);margin-bottom:13px}
+h1{font-family:var(--disp);font-size:clamp(30px,4vw,58px);line-height:1.02;letter-spacing:-.025em;font-weight:800;margin:0 0 16px;text-wrap:balance}
+h2{font-family:var(--disp);font-size:clamp(22px,2.7vw,38px);line-height:1.08;letter-spacing:-.02em;font-weight:700;margin:0 0 10px;text-wrap:balance}
+h3{font-family:var(--disp);font-size:15.5px;font-weight:700;margin:0 0 7px;letter-spacing:-.005em}
+.deckline{font-size:clamp(14px,1.3vw,17px);color:var(--ink2);max-width:900px;margin:0 0 22px;line-height:1.5}
+p{margin:0 0 10px}
+.sm{font-size:12.5px;color:var(--ink3);line-height:1.55}
+.sm2{font-size:13px;color:var(--ink2);line-height:1.6}
+.mono{font-family:var(--mono)}
+mark{background:rgba(240,168,48,.16);color:var(--signal);padding:0 3px;border-radius:2px}
+a{color:var(--ice);text-decoration:none;border-bottom:1px solid rgba(111,179,224,.3)}
+a:hover{border-color:var(--ice)}
+.src{font-family:var(--mono);font-size:10.5px;color:var(--ink3);line-height:1.8;margin-top:16px;border-top:1px solid var(--rule);padding-top:11px}
+.src a{color:var(--ink3);border-bottom:1px dotted var(--rule2)}
+.src a:hover{color:var(--ice);border-color:var(--ice)}
+
+/* ---------- layout ---------- */
+.g{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.gsplit{grid-template-columns:1.25fr 1fr}
+.gsplit2{grid-template-columns:1fr 1.3fr}
+@media (max-width:1000px){.g2,.g3,.g4,.gsplit,.gsplit2{grid-template-columns:1fr}}
+
+/* modules — differentiated by rule, not uniform cards */
+.mod{background:var(--panel);border:1px solid var(--rule);border-radius:5px;padding:16px}
+.mod.sig{border-top:2px solid var(--signal)}
+.mod.ice{border-top:2px solid var(--ice)}
+.mod.jade{border-top:2px solid var(--jade)}
+.mod.coral{border-top:2px solid var(--coral)}
+.mod.violet{border-top:2px solid var(--violet)}
+.mod.flat{background:transparent;border:none;border-left:2px solid var(--rule2);border-radius:0;padding:2px 0 2px 15px}
+
+.stat{font-family:var(--mono);font-size:clamp(24px,2.8vw,38px);font-weight:600;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.s-sig{color:var(--signal)}.s-ice{color:var(--ice)}.s-jade{color:var(--jade)}.s-coral{color:var(--coral)}.s-violet{color:var(--violet)}
+.lab{font-size:11.5px;color:var(--ink3);margin-top:8px;line-height:1.5}
+
+.chip{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;
+  padding:3px 7px;border-radius:2px;border:1px solid var(--rule2);color:var(--ink3);white-space:nowrap}
+.c-sig{border-color:rgba(240,168,48,.5);color:var(--signal)}
+.c-ice{border-color:rgba(111,179,224,.5);color:var(--ice)}
+.c-jade{border-color:rgba(69,185,138,.5);color:var(--jade)}
+.c-coral{border-color:rgba(228,89,74,.55);color:var(--coral)}
+.c-violet{border-color:rgba(154,134,232,.5);color:var(--violet)}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:5px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:640px}
+th{text-align:left;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);
+  padding:10px;border-bottom:1px solid var(--rule2);font-weight:500;vertical-align:bottom}
+td{padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(111,179,224,.045)}
+.no{color:var(--coral);font-weight:600}.yes{color:var(--jade);font-weight:600}.part{color:var(--signal);font-weight:600}
+
+blockquote{margin:0;padding:0 0 0 14px;border-left:2px solid var(--signal);font-size:14px;line-height:1.55;color:var(--ink)}
+ul.tight{margin:8px 0 0;padding-left:17px}
+ul.tight li{margin-bottom:5px;font-size:12.5px;color:var(--ink2);line-height:1.5}
+
+select,input[type=range]{font-family:var(--body)}
+select{background:var(--panel2);color:var(--ink);border:1px solid var(--rule2);border-radius:4px;padding:7px 9px;font-size:12.5px;width:100%}
+select:focus-visible{outline:2px solid var(--signal);outline-offset:1px}
+input[type=range]{width:100%;accent-color:var(--signal)}
+.hint{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:.04em}
+
+.rowbtns{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}
+.title-pane{min-height:min(600px,calc(100vh - 200px));display:flex;flex-direction:column;justify-content:center}
+.rule{height:2px;width:64px;background:var(--signal);margin:18px 0 20px}
+.clickhint{font-family:var(--mono);font-size:10.5px;color:var(--ink3);margin-top:11px;letter-spacing:.05em}
+.pick{cursor:pointer}
+.pick:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+</style>
+</head>
+<body>
+
+
+<div class="deck" id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide on" data-n="
+<h4>Opening</h4>
+<li>One sentence to open: <strong>we now regulate what a model is and what it produces. Nobody measures which model answered.</strong></li>
+<li>This deck is dated 16 September 2026 and every figure is sourced on its slide. Where something is an allegation, a preprint or a vendor claim, the slide says so.</li>
+<li>Two weeks ago the EU exercised its new GPAI powers for the first time — information requests to 30+ providers. They asked about security, copyright and training data. They did not ask which model serves a request.</li>
+<li>Eight days ago NSA, CISA and FBI named six Chinese AI companies and the grey-market 'transfer stations' that launder API access. The advisory establishes that model lineage is a national-security concern and proposes no way to determine lineage at the point of consumption.</li>
+<li><strong>Navigation:</strong> arrows or space. <strong>N</strong> toggles these notes, <strong>F</strong> fullscreen.</li>
+">
+<div class="wrap title-pane">
+  <div class="eyebrow">Briefing · AI supply chain &amp; runtime model provenance · 16 September 2026</div>
+  <h1>Who actually answered?</h1>
+  <div class="rule"></div>
+  <p class="deckline" style="font-size:clamp(15px,1.6vw,21px);max-width:1000px">
+    Eighteen countries have signed joint guidance on securing AI systems. NIST has published a signing practice.
+    The EU has opened its first enforcement actions. <strong style="color:var(--ink)">Not one of these instruments can tell a buyer
+    which weights, at which precision, operated by whom, answered a given API call</strong> — the fact on which every other obligation silently rests.
+  </p>
+  <div class="g g4" style="margin-top:26px">
+    <div class="mod coral"><div class="stat s-coral">0</div><div class="lab">Five Eyes documents, NIST publications or US procurement instruments that address runtime model identity</div></div>
+    <div class="mod sig"><div class="stat s-sig">0 / 9</div><div class="lab">Providers whose deployed API models can be mapped to their published safety evaluations from public information — AIES-26</div></div>
+    <div class="mod ice"><div class="stat s-ice">428</div><div class="lab">Malicious-intermediary LLM routers measured in the wild; 9 actively inject code — ACM CCS 2026</div></div>
+    <div class="mod violet"><div class="stat s-violet">37%</div><div class="lab">Medical-benchmark score of a grey-market endpoint sold as "Gemini-2.5". The official API scored ~84%</div></div>
+  </div>
+  <div class="src">Reference systems: <a href="https://github.com/lobster-shrimp/provenance-probe/" target="_blank" rel="noopener">provenance-probe</a> · <a href="https://lobster-shrimp.github.io/provenance-observatory/" target="_blank" rel="noopener">Provenance Observatory</a> · <a href="https://provenance-probe-513338163479.us-central1.run.app/watch" target="_blank" rel="noopener">watch service</a> (authenticated)</div>
+</div>
+</section>
+
+<!-- 2 THREE PROVENANCES -->
+<section class="slide" data-n="
+<h4>The taxonomy everything else depends on</h4>
+<li>If the room takes one thing away, make it this. Three different things are called AI provenance and conflating them is the central analytical error in the field.</li>
+<li><strong>Artifact</strong> — what went into the model. Mature: AI-BOM, model signing, G7 minimum elements.</li>
+<li><strong>Content</strong> — was this output machine-generated. Mature standard, weak adoption; EU Art. 50 in force since 2 Aug 2026.</li>
+<li><strong>Runtime</strong> — which weights answered. No standard, no regulation, no retention duty, no deployed general mechanism.</li>
+<li>Pre-empt the obvious objection: 'the API returns a model name.' That string is the one the client sent, echoed back. It is an assertion, not a measurement. Nothing anywhere requires it to be true.</li>
+<li>Click each column to expand.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">The distinction everything else hangs on</div>
+  <h2>Three different things are called &ldquo;AI provenance&rdquo;</h2>
+  <p class="deckline">Two are covered by standards, tooling and now regulation. The third — the one that decides whether the other two mean anything at the point of use — has none.</p>
+  <div class="g g3" id="prov">
+    <div class="mod jade pick" data-p="1" tabindex="0" role="button" aria-expanded="false">
+      <span class="chip c-jade">Covered</span>
+      <h3 style="margin-top:11px">Artifact provenance</h3>
+      <p class="sm2">What went <em>into</em> the model — datasets, code, weights, licences, training compute.</p>
+      <div class="det sm" hidden style="margin-top:11px;border-top:1px solid var(--rule);padding-top:11px">
+        <strong style="color:var(--ink)">Instruments:</strong> CycloneDX ML-BOM v1.7 · SPDX 3.0 AI &amp; Dataset profiles · OpenSSF Model Signing + Sigstore/Rekor · NIST SP 800-218A PS.2.1 · G7/CISA <em>SBOM for AI — Minimum Elements</em> (14 May 2026, explicitly non-mandatory).<br><br>
+        <strong style="color:var(--coral)">Stops at:</strong> artifacts at rest. A signed model on a hub says nothing about an inference endpoint. Only <mark>&lt;2%</mark> of Hugging Face commits are signed at all.
+      </div>
+    </div>
+    <div class="mod jade pick" data-p="2" tabindex="0" role="button" aria-expanded="false">
+      <span class="chip c-jade">Covered</span>
+      <h3 style="margin-top:11px">Content provenance</h3>
+      <p class="sm2">Was <em>this output</em> machine-generated, and how was it edited?</p>
+      <div class="det sm" hidden style="margin-top:11px;border-top:1px solid var(--rule);padding-top:11px">
+        <strong style="color:var(--ink)">Instruments:</strong> C2PA / Content Credentials 2.4 · EU AI Act Article 50 machine-readable marking of synthetic content, applicable since <strong>2 Aug 2026</strong> (grace to 2 Dec 2026).<br><br>
+        <strong style="color:var(--coral)">Stops at:</strong> a compliant marking says &ldquo;this was AI-generated.&rdquo; It does not say <em>by what</em>. It is also media-oriented and does not attach usefully to LLM text — the dominant commercial modality.
+      </div>
+    </div>
+    <div class="mod coral pick" data-p="3" tabindex="0" role="button" aria-expanded="false">
+      <span class="chip c-coral">Uncovered</span>
+      <h3 style="margin-top:11px">Runtime provenance</h3>
+      <p class="sm2"><strong style="color:var(--ink)">Which weights, at which numerical precision, operated by whom, in which jurisdiction, produced <em>this response</em>?</strong></p>
+      <div class="det sm" hidden style="margin-top:11px;border-top:1px solid var(--rule);padding-top:11px">
+        <strong style="color:var(--ink)">Instruments:</strong> TEE attestation — provider opt-in, and no CPU or GPU attestation in existence carries a claim about the model. Statistical black-box audits — probabilistic, reference-dependent, and now demonstrably spoofable. Client-side fingerprinting — slides 21&ndash;23.<br><br>
+        <strong style="color:var(--coral)">Status:</strong> no standard, no regulation, no retention duty for routing decisions, and no enforcement action anywhere alleging an API served model B while billing for model A.
+      </div>
+    </div>
+  </div>
+  <div class="clickhint">▸ select a column to expand</div>
+  <div class="src">G7/CISA <a href="https://www.cisa.gov/resources-tools/resources/software-bill-materials-ai-minimum-elements" target="_blank" rel="noopener">SBOM for AI minimum elements</a> · <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218A.pdf" target="_blank" rel="noopener">NIST SP 800-218A</a> · <a href="https://digital-strategy.ec.europa.eu/en/factpages/quick-facts-transparency-rules-ai-systems" target="_blank" rel="noopener">EC Article 50 transparency</a> · signing-adoption figure from <a href="https://arxiv.org/pdf/2505.22778" target="_blank" rel="noopener">arXiv:2505.22778</a></div>
+</div>
+</section>
+
+<!-- 3 ARBITRAGE -->
+<section class="slide" data-n="
+<h4>The economics — run this live</h4>
+<li>Move the sliders while you talk. The number moving is what lands.</li>
+<li>Prices are real, from vendor pricing pages. Output-token prices span roughly two orders of magnitude; within a single vendor's own lineup the spread is already 10x to 25x.</li>
+<li>A router that silently moves a fraction of requests down-tier keeps almost all the revenue on those requests. At 15% dilution no individual customer can tell.</li>
+<li><strong>Be scrupulous:</strong> this models an incentive, not an accusation. No named provider is alleged to do this. The regulatory point is that an incentive this large, with no measurement regime and no disclosure duty, is a policy problem regardless of anyone's intentions.</li>
+<li>Then note who now owns the largest gateway: Stripe, since 19 August 2026, reportedly for over $7B.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Why this is a policy problem, not a curiosity</div>
+  <h2>The arbitrage is two orders of magnitude</h2>
+  <p class="deckline">Silent substitution needs no sophistication. It is the highest-margin available action in the stack, and nothing measures it.</p>
+  <div class="g gsplit2">
+    <div class="mod sig">
+      <h3>Substitution margin model</h3>
+      <div style="margin:13px 0 9px">
+        <div class="sm" style="margin-bottom:5px">Model the customer believes they are buying</div>
+        <label for="mClaim" class="hint" style="display:none">Claimed model</label>
+        <select id="mClaim"></select>
+      </div>
+      <div style="margin:13px 0 9px">
+        <div class="sm" style="margin-bottom:5px">Model actually serving the diluted share</div>
+        <label for="mServe" class="hint" style="display:none">Served model</label>
+        <select id="mServe"></select>
+      </div>
+      <div style="margin:16px 0 4px">
+        <div class="sm" style="display:flex;justify-content:space-between"><span>Share of requests silently rerouted</span><span class="mono s-sig" id="dilL">15%</span></div>
+        <input type="range" id="dil" min="1" max="100" value="15" aria-label="Share of requests rerouted">
+      </div>
+      <div style="margin:14px 0 4px">
+        <div class="sm" style="display:flex;justify-content:space-between"><span>Monthly output tokens billed</span><span class="mono s-ice" id="volL">500M</span></div>
+        <input type="range" id="vol" min="1" max="100" value="54" aria-label="Monthly output token volume">
+      </div>
+      <p class="hint" style="margin-top:13px">Billed at the claimed model&rsquo;s rate. Output tokens only — they dominate both spend and spread.</p>
+    </div>
+    <div>
+      <div class="g g2">
+        <div class="mod sig"><div class="stat s-sig" id="oM">$—</div><div class="lab">Undetected monthly margin on the rerouted share</div></div>
+        <div class="mod ice"><div class="stat s-ice" id="oR">—×</div><div class="lab">Output-price ratio, claimed vs. served</div></div>
+        <div class="mod coral"><div class="stat s-coral" id="oP">—%</div><div class="lab">Share of revenue on rerouted requests that is pure margin</div></div>
+        <div class="mod violet"><div class="stat s-violet" id="oY">$—</div><div class="lab">Annualised, this one customer</div></div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:14px">
+        <table><caption class="sm" style="text-align:left;padding:11px 10px 3px;color:var(--ink2)">Reference prices — USD per 1M tokens</caption>
+        <thead><tr><th>Model</th><th style="text-align:right">Input</th><th style="text-align:right">Output</th></tr></thead>
+        <tbody id="pTab"></tbody></table>
+      </div>
+    </div>
+  </div>
+  <div class="src">Vendor pricing pages: <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Anthropic</a> · <a href="https://developers.openai.com/api/docs/pricing" target="_blank" rel="noopener">OpenAI</a> · <a href="https://openrouter.ai/deepseek/deepseek-v3.2" target="_blank" rel="noopener">OpenRouter</a>. Illustrative model of incentive; no named provider is alleged to reroute.</div>
+</div>
+</section>
+
+<!-- 4 MARKET STRUCTURE -->
+<section class="slide" data-n="
+<h4>The layer where this happens is now systemically important</h4>
+<li>Four facts, one conclusion: the intermediary layer got big, got bought, got foreign, and got opaque — in about thirty days.</li>
+<li><strong>19 Aug 2026</strong> — Stripe agreed to acquire OpenRouter, reportedly $7B+. A payments company now owns the dominant multi-model gateway. Collison: 'Tokens are the central currency for companies building with AI.'</li>
+<li><strong>Aug 2026</strong> — Fortune reports Chinese models held all top five positions on OpenRouter and more than 60% of platform traffic; US models fell from roughly 70% to 30% year over year. Pin the denominator before quoting — platform-wide and US-firm-token figures differ across sources.</li>
+<li><strong>30-day window</strong> — Ramp Router (20 Aug), Snowflake Cortex AI Gateway auto-routing (18 Aug), GitHub HydraFusion (4 Sep), plus OpenRouter's new auto-router (10 Aug). In none of the four does the reporting confirm the end user is told which model answered.</li>
+<li>For a federal audience: this is the layer through which an entity prohibition has to be enforced, and it is the layer with the least visibility.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">The intermediary layer, August–September 2026</div>
+  <h2>Routing became systemically important in about thirty days</h2>
+  <p class="deckline">The layer that decides which model answers got bigger, changed hands, shifted foreign, and shipped four new products — none of which is confirmed to tell the user what served the request.</p>
+  <div class="g g4">
+    <div class="mod ice"><div class="stat s-ice">$7B+</div><div class="lab"><strong style="color:var(--ink)">Stripe agrees to acquire OpenRouter</strong>, 19 Aug 2026. 400+ models, 80+ providers. A payments company now owns the dominant gateway.</div></div>
+    <div class="mod coral"><div class="stat s-coral">&gt;60%</div><div class="lab">Share of OpenRouter traffic going to Chinese models, July 2026, with all top five positions — Fortune, 21 Aug 2026. US models fell ~70% → ~30% YoY.</div></div>
+    <div class="mod sig"><div class="stat s-sig">4</div><div class="lab">New cost-routing products shipped 10 Aug – 4 Sep 2026: OpenRouter auto-router, Snowflake Cortex, Ramp Router, GitHub HydraFusion.</div></div>
+    <div class="mod violet"><div class="stat s-violet">0</div><div class="lab">Of those four where reporting confirms the end user is told which model served each request.</div></div>
+  </div>
+  <div class="g g2" style="margin-top:16px">
+    <div class="mod">
+      <h3>What the routers optimise for</h3>
+      <ul class="tight">
+        <li><strong>Snowflake Cortex</strong> — &ldquo;enterprises can select &lsquo;auto&rsquo; instead of a fixed model, and the system routes each task to whichever model offers the best combination of quality and cost.&rdquo; Claims up to 3× token-cost reduction.</li>
+        <li><strong>GitHub HydraFusion</strong> — measured against Opus 5: TerminalBench 2.1 <span class="mono">+4.9pp at 67% lower cost</span>; DeepSWE <span class="mono">−1.5pp at 36% lower</span>; CheckpointBench <span class="mono">−0.1pp at 65% lower</span>. VentureBeat's own headline: it &ldquo;only matches quality in one.&rdquo;</li>
+        <li><strong>Ramp Router</strong> — routes across OpenAI, Anthropic, DeepSeek, Moonshot, MiniMax, NVIDIA, xAI and Z.ai. Retains model inputs, outputs and tool calls for one year by default.</li>
+        <li><strong>OpenRouter Auto Exacto</strong> — reorders providers on every tool-calling request from live telemetry. On by default; opt out with <span class="mono">sort: "price"</span> or by pinning.</li>
+      </ul>
+    </div>
+    <div class="mod sig">
+      <h3>Why a federal audience should care first</h3>
+      <p class="sm2" style="margin-top:9px">FY2026 NDAA §1532 requires DoD to exclude DeepSeek and High-Flyer by name within 30 days. §6604 requires the DNI to remove DeepSeek from IC systems within 60 days.</p>
+      <p class="sm2">Both are <strong style="color:var(--ink)">entity prohibitions</strong>. Neither creates any obligation on a vendor to disclose what model is serving a request, and neither creates any capability to detect a prohibited model arriving through an intermediary, a reseller, a router, or a distilled derivative.</p>
+      <p class="sm2" style="color:var(--signal);margin-bottom:0"><strong>A prohibition that cannot be verified at the point of consumption is the cleanest statement of the gap available in US law.</strong></p>
+    </div>
+  </div>
+  <div class="src"><a href="https://stripe.com/newsroom/news/stripe-agrees-to-acquire-openrouter" target="_blank" rel="noopener">Stripe newsroom, 19 Aug 2026</a> · <a href="https://fortune.com/2026/08/21/what-is-ai-death-zone-china-models-open-source/" target="_blank" rel="noopener">Fortune, 21 Aug 2026</a> · <a href="https://venturebeat.com/orchestration/enterprises-are-overpaying-for-simple-ai-queries-snowflakes-gateway-now-auto-routes-to-cut-costs-up-to-3x" target="_blank" rel="noopener">VentureBeat / Snowflake</a> · <a href="https://venturebeat.com/orchestration/githubs-hydrafusion-cuts-ai-coding-costs-in-every-benchmark-it-only-matches-quality-in-one" target="_blank" rel="noopener">VentureBeat / HydraFusion</a> · <a href="https://techcrunch.com/2026/08/20/ramp-launches-its-own-ai-model-router-called-router/" target="_blank" rel="noopener">TechCrunch / Ramp</a> · <a href="https://www.congress.gov/119/plaws/publ60/PLAW-119publ60.pdf" target="_blank" rel="noopener">P.L. 119-60</a></div>
+</div>
+</section>
+
+<!-- 5 TIMELINE -->
+<section class="slide" data-n="
+<h4>Walk the timeline — click through</h4>
+<li>The arc: isolated scandal in 2024, structural by 2026, and now a named national-security concern.</li>
+<li>The two strongest items are admissions. <strong>Cursor/Composer 2</strong> — a co-founder acknowledged not disclosing the Chinese base model, after a developer read the model ID off a debug proxy in under a day. <strong>Anthropic, twice</strong> — Sept 2025 and again April 2026.</li>
+<li>Be fair on Anthropic: both were disclosed voluntarily, both were bugs or product-layer defaults rather than deception, and the company states plainly it never intentionally degrades models. That is exactly why they are the strongest evidence — if a first-party lab with full access to its own stack needed about six weeks, twice, then no external party has any independent means at all.</li>
+<li>Reflection 70B has still never been adjudicated. Two years on.</li>
+<li>Flag the allegations as allegations: Pascual and the related Anthropic suits are untested, and no court has ruled.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Documented record, 2024–2026</div>
+  <h2>Two years of the model you were sold not being the model you got</h2>
+  <p class="deckline">Isolated scandal in 2024. Structural by 2026. A named national-security concern by September.</p>
+  <div id="tl" style="margin:18px 0 6px"></div>
+  <div class="mod" id="tlD" style="min-height:158px"></div>
+  <div class="clickhint">▸ select a marker · ◆ vendor admission or first-party disclosure</div>
+</div>
+</section>
+
+<!-- 6 GREY MARKET -->
+<section class="slide" data-n="
+<h4>The security slide — this is where it stops being a pricing dispute</h4>
+<li>Lead with CCS 2026. This is peer-reviewed, top-tier, and it measures the intermediary layer directly: 428 routers, 28 bought on Taobao and Shopify, 400 free community ones.</li>
+<li>Nine actively inject malicious code. Two deploy adaptive evasion triggers. Seventeen abused researcher-planted AWS credentials. One drained Ethereum from a planted private key. 99 credentials exposed across 440 sessions, and 401 of those sessions were already running in autonomous mode.</li>
+<li>Then the Oxford China Policy Lab / CISPA audit: proxy access marketed as Gemini-2.5 scored <strong>37%</strong> on a medical benchmark where the official API scored nearly <strong>84%</strong>. That is the cleanest documented case anywhere of paid-for-A, served-B.</li>
+<li>Then AA26-251A, eight days ago: NSA, CISA and FBI name six Chinese AI companies and describe 'a gray market of API proxies known as transfer stations' used to 'undermine traceability.'</li>
+<li>The through-line: the grey market was documented by academics in April and May 2026. The government confirmed the mechanism in September. Nothing in between gave any buyer a way to detect it.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Where this stops being a pricing dispute</div>
+  <h2>The intermediary layer is measurably adversarial</h2>
+  <p class="deckline">Model substitution is not only a commercial-integrity question. It is a measured security incident class with a peer-reviewed empirical base and, since 8 September, a federal advisory.</p>
+  <div class="g gsplit">
+    <div class="mod coral">
+      <span class="chip c-coral">ACM CCS 2026 · peer-reviewed</span>
+      <h3 style="margin-top:11px">&ldquo;Your Agent Is Mine&rdquo; — 428 intermediaries measured</h3>
+      <p class="sm2">UC Santa Barbara, UCSD, Fuzzland and World Liberty Financial. 28 paid routers purchased on Taobao and Shopify; 400 free community routers.</p>
+      <div class="g g4" style="margin-top:13px;gap:10px">
+        <div><div class="stat s-coral" style="font-size:26px">9</div><div class="lab">actively inject malicious code</div></div>
+        <div><div class="stat s-coral" style="font-size:26px">17</div><div class="lab">abused planted AWS credentials</div></div>
+        <div><div class="stat s-coral" style="font-size:26px">99</div><div class="lab">credentials exposed across 440 sessions</div></div>
+        <div><div class="stat s-coral" style="font-size:26px">401</div><div class="lab">of those sessions already in autonomous mode</div></div>
+      </div>
+      <p class="sm" style="margin-top:12px">Leaked upstream credentials generated <mark>100M GPT-5.4 tokens</mark>; weak relay decoys served <mark>~2 billion tokens</mark>. Two routers deploy adaptive evasion triggers. One drained Ethereum from a researcher-planted private key.</p>
+      <p class="sm" style="margin-bottom:0"><strong style="color:var(--ink2)">Authors' own limit:</strong> commodity public router markets only. Enterprise and invite-only deployments are unmeasured.</p>
+    </div>
+    <div>
+      <div class="mod sig" style="margin-bottom:14px">
+        <span class="chip c-sig">Oxford China Policy Lab + CISPA · 9 May 2026</span>
+        <h3 style="margin-top:11px">The cleanest documented paid-A / served-B case</h3>
+        <blockquote style="margin:11px 0">&ldquo;Users requesting Claude Opus may instead receive responses from cheaper models such as Sonnet, Haiku, or even domestic Chinese alternatives like Qwen, <strong>with the output fraudulently relabeled</strong>.&rdquo;</blockquote>
+        <p class="sm2" style="margin-bottom:0">Audit of 17 proxy services. Proxy access marketed as &ldquo;Gemini-2.5&rdquo; scored <mark>37%</mark> on a medical benchmark where the official API scored <mark>~84%</mark>. Claude access sold at up to 90% off official rates.</p>
+      </div>
+      <div class="mod violet">
+        <span class="chip c-violet">NSA · CISA · FBI · AA26-251A · 8 Sep 2026</span>
+        <h3 style="margin-top:11px">&ldquo;Transfer stations&rdquo;</h3>
+        <blockquote style="margin:11px 0;border-color:var(--violet)">&ldquo;They use a gray market of API proxies known as transfer stations to bypass geographic restrictions, evade safeguards, and <strong>undermine traceability</strong>.&rdquo;</blockquote>
+        <p class="sm2">Six companies named: DeepSeek, Moonshot AI, Alibaba, MiniMax, StepFun, Z.AI. &ldquo;Industry disclosures document proxy networks managing tens of thousands of fraudulent accounts simultaneously.&rdquo;</p>
+        <p class="sm" style="margin-bottom:0"><strong style="color:var(--signal)">Note the asymmetry:</strong> the advisory is framed as protecting US labs <em>from</em> extraction. It establishes that model lineage is a national-security concern — and proposes no means of determining lineage at the point of consumption.</p>
+      </div>
+    </div>
+  </div>
+  <div class="src"><a href="https://arxiv.org/html/2604.08407" target="_blank" rel="noopener">Liu et al., &ldquo;Your Agent Is Mine,&rdquo; ACM CCS 2026 (arXiv:2604.08407)</a> · <a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/chinese-grey-market-sells-claude-api-access-at-90-percent-off-through-proxy-networks-that-harvest-user-data" target="_blank" rel="noopener">Tom's Hardware on Qian (Oxford China Policy Lab) + CISPA audit, 9 May 2026</a> · <a href="https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/4592113/nsa-and-others-warn-china-based-ai-companies-are-distilling-us-frontier-ai-mode/" target="_blank" rel="noopener">NSA release on AA26-251A</a>. Advisory quotes via secondary reporting; NSA/CISA PDFs returned 403 to automated retrieval — verify against the original before citing formally.</div>
+</div>
+</section>
+
+<!-- 7 PRACTITIONER -->
+<section class="slide" data-n="
+<h4>The practitioner record — and an honesty note</h4>
+<li>State the Reddit position plainly and early: Reddit was verified unreachable from the research environment by nine distinct methods on 16 September 2026 — direct fetch, old.reddit, the JSON API, search with domain filters, seven mirror front-ends, third-party engines and the Wayback Machine. Rather than paraphrase threads nobody could read, this deck uses Hacker News comments pulled verbatim from the Algolia API with exact UTC timestamps and item IDs, which anyone in the room can verify live.</li>
+<li>That is arguably a better evidentiary base for a regulatory audience anyway: dated, attributed, machine-verifiable.</li>
+<li>The Moustafa measurements from 7 September are the strongest new practitioner evidence — actual benchmarks across hosts, not impressions.</li>
+<li>Read the 'pretend everything is 200 OK' line aloud. Silent capability failure with a success status code is the purest form of the problem.</li>
+<li>Note the movement on the record: OpenRouter's COO in Sept 2025 said there was no good evidence of material provider variance. On 11 Sep 2026 he states underperforming providers are kicked out of the routing pool when variance exceeds one standard deviation. Give them credit for that.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">What practitioners could see — and could not prove</div>
+  <h2>&ldquo;They&rsquo;ll pretend everything is 200 OK&rdquo;</h2>
+  <p class="deckline">The recurring structure of every report below: a user with a strong signal, no instrument, and no standing.</p>
+  <div class="g g3">
+    <div class="mod sig">
+      <span class="chip c-sig">Moustafa · 7 Sep 2026 · measured</span>
+      <h3 style="margin-top:11px">Independent host benchmarking</h3>
+      <p class="sm2">DeepSeek V4 Flash on GPQA Diamond ranged <mark>90% (first-party) to 75% (DigitalOcean)</mark>. Tool-calling scores dropped 20+ points on some hosts.</p>
+      <blockquote style="margin:11px 0;font-size:13px">&ldquo;Venice and Together didn&rsquo;t see the MiniMax images at all. The model page says it supports image input, but two of its providers don&rsquo;t — and even worse, <strong>they&rsquo;ll pretend everything is 200 OK</strong>.&rdquo;</blockquote>
+      <p class="sm" style="margin-bottom:0">Also documents empty responses returned with HTTP 200 and null content, and missing reasoning fields. 763 points on Hacker News.</p>
+    </div>
+    <div class="mod ice">
+      <span class="chip c-ice">Hacker News · verbatim, via API</span>
+      <h3 style="margin-top:11px">Six years of the same complaint</h3>
+      <p class="sm2" style="font-size:12.5px">&ldquo;I suspect that the OpenRouter result originates from a quantized hosting provider. The difference compared to the direct API call from Moonshot is striking.&rdquo; <span class="mono" style="color:var(--ink3)">— mrbonner, 2025-11-07</span></p>
+      <p class="sm2" style="font-size:12.5px">&ldquo;Some providers are clearly running heavily quantized versions of the model because their eval performance is terrible.&rdquo; <span class="mono" style="color:var(--ink3)">— Aurornis, 2026-09-11</span></p>
+      <p class="sm2" style="font-size:12.5px">&ldquo;It should be OpenRouter&rsquo;s responsibility to protect you against it, by regularly benchmarking providers.&rdquo; <span class="mono" style="color:var(--ink3)">— joelthelion, 2026-09-11</span></p>
+      <p class="sm" style="margin-bottom:0">One commenter maintains <strong>25 separate provider integrations</strong> because of continuous degradation.</p>
+    </div>
+    <div class="mod jade">
+      <span class="chip c-jade">On the record · movement</span>
+      <h3 style="margin-top:11px">The gateway&rsquo;s position has shifted</h3>
+      <p class="sm2" style="font-size:12.5px"><strong>Sep 2025</strong> — OpenRouter COO: &ldquo;We are heavily incentivized to prioritize/make transparent high-quality inference and have no incentive to offer quantized alternatives.&rdquo;</p>
+      <p class="sm2" style="font-size:12.5px"><strong>Mar 2026</strong> — ships Auto Exacto, deranking outlier providers. Reported tool-call error-rate drops: GLM-5 &minus;88%, GLM-4.7 &minus;80%, gpt-oss-120b &minus;36%.</p>
+      <p class="sm2" style="font-size:12.5px"><strong>11 Sep 2026</strong> — same executive states benchmarks run continuously and underperforming providers are <em>&ldquo;kicked out of routing pool&rdquo;</em> when variance exceeds one standard deviation.</p>
+      <p class="sm" style="margin-bottom:0">That is a materially stronger commitment than a year ago, and worth citing as progress — achieved voluntarily, with no obligation behind it.</p>
+    </div>
+  </div>
+  <div class="mod coral" style="margin-top:15px">
+    <h3>Honesty note on Reddit</h3>
+    <p class="sm2" style="margin-bottom:0">You asked for Reddit. <strong style="color:var(--ink)">Reddit was verified unreachable from the research environment by nine distinct methods on 16 September 2026</strong> — direct fetch, <span class="mono">old.reddit.com</span>, the JSON API, search with domain filters, seven mirror front-ends, four third-party engines, and the Wayback Machine. Rather than paraphrase threads that could not be read, this deck substitutes Hacker News comments retrieved verbatim from the Algolia API with exact UTC timestamps and live item IDs, plus the Cursor forum, Microsoft Q&amp;A, GitHub and LessWrong. <strong>No Reddit content is quoted or paraphrased anywhere in this deck.</strong> One third-party reference survives: a Hacker News commenter (30 Sep 2025) describing &ldquo;a fiasco I saw posted on r/localllama where many of the OpenRouter providers were degraded on benchmarks&rdquo; — cite that as a contemporaneous reference to a discussion, never as the discussion itself.</p>
+  </div>
+  <div class="src"><a href="https://mmoustafa.com/blog/so-you-want-to-use-openrouter/" target="_blank" rel="noopener">Moustafa, 7 Sep 2026</a> · <a href="https://simonwillison.net/2026/Sep/11/so-you-want-to-use-openrouter/" target="_blank" rel="noopener">Willison writeup, 11 Sep 2026</a> · <a href="https://news.ycombinator.com/item?id=45842152" target="_blank" rel="noopener">HN 45842152</a> · <a href="https://news.ycombinator.com/item?id=49621546" target="_blank" rel="noopener">HN 49621546</a> · <a href="https://openrouter.ai/blog/announcements/auto-exacto/" target="_blank" rel="noopener">OpenRouter Auto Exacto</a></div>
+</div>
+</section>
+
+<!-- 8 MEASUREMENT -->
+<section class="slide" data-n="
+<h4>The peer-reviewed evidence — leave this one up</h4>
+<li>Anecdote is not evidence. This is the evidence. Five independent groups, five methods, one conclusion.</li>
+<li><strong>Model Equality Testing</strong> (Gao, Liang, Guestrin — Stanford, ICLR 2025) remains the strongest single citation: 11 of 31 endpoints across 9 commercial providers serve distributions differing from Meta's reference weights, detected at median 77.4% power on about ten samples per prompt.</li>
+<li>One caution if anyone asks which providers: the paper names nine providers as a set but I could not extract which specific eleven endpoints were flagged. Do not name individual companies from this without opening Figure 1.</li>
+<li><strong>CISPA</strong> is the one that matters most for a safety regulator: identical weights, different serving stack, up to 16.6 percentage points of benchmark accuracy. A safety evaluation conducted against one serving stack does not transfer to another.</li>
+<li><strong>IRIS</strong> names routing dilution — only a fraction of requests reach the promised model. That defeats spot-check inspection by construction.</li>
+<li>Close on the load-bearing line: 'the same model' is not a well-defined object at the API boundary. Every instrument that names a model is naming something undefined.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Independent measurement · five groups, five methods</div>
+  <h2>&ldquo;The same model&rdquo; is not a well-defined object at the API boundary</h2>
+  <p class="deckline">This reaches past consumer protection. Every safety evaluation, benchmark result and compliance attestation is made against <em>a serving configuration</em> and silently generalised to a model name.</p>
+  <div class="g gsplit">
+    <div class="mod">
+      <h3>Measured divergence between endpoints nominally serving the same model</h3>
+      <div id="chEv" style="margin-top:14px"></div>
+    </div>
+    <div>
+      <div class="mod coral" style="margin-bottom:13px">
+        <span class="chip c-coral">Stanford · ICLR 2025</span>
+        <div class="stat s-coral" style="margin:11px 0 0">11 / 31</div>
+        <div class="lab">Llama endpoints across 9 commercial providers serving distributions that differ from Meta&rsquo;s reference weights. Median test power 77.4% at ~10 samples per prompt. Named causes: providers &ldquo;may quantize or prune large model weights; they may also watermark outputs or incorrectly implement some decoding parameters.&rdquo;</div>
+      </div>
+      <div class="mod sig" style="margin-bottom:13px">
+        <span class="chip c-sig">CISPA · May 2026</span>
+        <div class="stat s-sig" style="margin:11px 0 0">16.6pp</div>
+        <div class="lab">Benchmark accuracy swing from <strong>inference backend alone</strong>, identical weights and decoding parameters. Survey of 200 inference engines and 35,000 ML papers finds the serving stack is almost never reported.</div>
+      </div>
+      <div class="mod ice">
+        <span class="chip c-ice">IRIS · Jul 2026 · preprint</span>
+        <div class="stat s-ice">14 / 15</div>
+        <div class="lab">Same-model provider pairs showing genuine distributional differences. Introduces <strong>routing dilution</strong> — only a fraction &epsilon; of requests reach the promised model. 0.85 power at &epsilon;=0.3, FPR 0.017.</div>
+      </div>
+    </div>
+  </div>
+  <div class="src"><a href="https://arxiv.org/abs/2410.20247" target="_blank" rel="noopener">Gao, Liang &amp; Guestrin, &ldquo;Model Equality Testing,&rdquo; ICLR 2025</a> · <a href="https://arxiv.org/abs/2605.19537" target="_blank" rel="noopener">Pape, Evertz &amp; Schönherr (CISPA), arXiv:2605.19537</a> · <a href="https://arxiv.org/abs/2607.20860" target="_blank" rel="noopener">Zhang et al., IRIS</a> · <a href="https://artificialanalysis.ai/articles/endpoint-accuracy-index" target="_blank" rel="noopener">Artificial Analysis Endpoint Accuracy Index, 4 Aug 2026</a> · <a href="https://mmoustafa.com/blog/so-you-want-to-use-openrouter/" target="_blank" rel="noopener">Moustafa, 7 Sep 2026</a>. IRIS is a preprint, not peer-reviewed.</div>
+</div>
+</section>
+
+<!-- 9 STEELMAN -->
+<section class="slide" data-n="
+<h4>Steelman the other side — do this before the room does</h4>
+<li>Put the strongest counterarguments up yourself. It is the fastest way to earn the room, and every one of these will be raised.</li>
+<li><strong>One: precision is a bad proxy.</strong> Moustafa found fp4 hosts landing in the middle of the fp8 pack. So a rule that simply mandates quantization disclosure would not actually predict quality. Concede it — and note that it strengthens the case for identity plus configuration disclosure rather than precision labels alone.</li>
+<li><strong>Two: legitimate variation is large.</strong> CISPA's 16.6 points cuts both ways. It means a measured difference may be an honest backend change, not substitution. Any detection method has to separate the two and none currently does cleanly.</li>
+<li><strong>Three: fingerprints can be faked.</strong> GhostPrint, June 2026 — slide 23. Do not oversell detection.</li>
+<li><strong>Four, and the awkward one:</strong> AA26-251A recommends providers 'deploy targeted response changes that subtly alter responses to suspected malicious distillation attempts.' That is a federal advisory recommending undisclosed per-account response differentiation — which is in direct tension with a per-request identity duty. Name the tension; propose that the carve-out be explicit and narrow rather than pretending it isn't there.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Steelman · the four strongest objections</div>
+  <h2>What cuts against this case</h2>
+  <p class="deckline">Every one of these will be raised. Raising them first is cheaper than being corrected.</p>
+  <div class="g g2">
+    <div class="mod sig">
+      <h3>1 &nbsp;&ldquo;Precision is a bad proxy for quality&rdquo;</h3>
+      <p class="sm2">Moustafa, 7 Sep 2026, measured directly: <em>&ldquo;The fp4 hosts land in the middle of the fp8 pack&hellip; precision is a bad proxy for quality.&rdquo;</em></p>
+      <p class="sm2" style="margin-bottom:0"><strong style="color:var(--signal)">Concede it.</strong> A rule mandating quantization labels alone would not predict quality and would create false assurance. The finding argues for disclosing <em>identity and serving configuration</em>, not for precision labels as a standalone remedy.</p>
+    </div>
+    <div class="mod sig">
+      <h3>2 &nbsp;Legitimate variation is genuinely large</h3>
+      <p class="sm2">CISPA&rsquo;s 16.6 percentage points is the confound that breaks every behavioural detection method, including Model Equality Testing and IRIS.</p>
+      <p class="sm2" style="margin-bottom:0"><strong style="color:var(--signal)">Concede it.</strong> A measured distributional difference may be an honest engine upgrade. No published method separates honest backend variation from substitution cleanly. This is why the answer is a disclosure duty backed by measurement — not measurement alone.</p>
+    </div>
+    <div class="mod sig">
+      <h3>3 &nbsp;Fingerprints can be deliberately faked</h3>
+      <p class="sm2">GhostPrint (Penn State, June 2026) fine-tunes a weaker model to mimic a stronger model&rsquo;s fingerprint, defeating LLMmap, Model Equality Testing and LLM-idiosyncrasies <em>by name</em>.</p>
+      <p class="sm2" style="margin-bottom:0"><strong style="color:var(--signal)">Concede it.</strong> Black-box verification is an arms race with a cost asymmetry favouring the provider. Slide 23 deals with this properly — no slide in this deck claims detection is settled.</p>
+    </div>
+    <div class="mod coral">
+      <h3>4 &nbsp;A federal advisory cuts the other way</h3>
+      <p class="sm2">AA26-251A (8 Sep 2026) recommends providers <em>&ldquo;deploy targeted response changes that subtly alter responses to suspected malicious distillation attempts.&rdquo;</em></p>
+      <p class="sm2" style="margin-bottom:0"><strong style="color:var(--coral)">This is a real tension, not a gotcha.</strong> A US advisory endorses undisclosed per-account response differentiation for an anti-extraction purpose, eight days after the EU asked 30+ providers about transparency. If a per-request identity duty is written, the counter-distillation carve-out has to be explicit, narrow and logged — not left implicit for every provider to interpret.</p>
+    </div>
+  </div>
+  <div class="src"><a href="https://mmoustafa.com/blog/so-you-want-to-use-openrouter/" target="_blank" rel="noopener">Moustafa, 7 Sep 2026</a> · <a href="https://arxiv.org/abs/2605.19537" target="_blank" rel="noopener">CISPA, arXiv:2605.19537</a> · <a href="https://arxiv.org/html/2606.16100" target="_blank" rel="noopener">GhostPrint, arXiv:2606.16100</a> · AA26-251A via <a href="https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/4592113/nsa-and-others-warn-china-based-ai-companies-are-distilling-us-frontier-ai-mode/" target="_blank" rel="noopener">NSA release</a> and secondary reporting</div>
+</div>
+</section>
+
+<!-- 10 FAILURE MODES -->
+<section class="slide" data-n="
+<h4>Give the failure a vocabulary</h4>
+<li>Regulators need named categories to legislate against. These four are distinguishable, separately detectable, and carry different intent.</li>
+<li>Stress the point: only one of the four requires bad intent. A rule aimed solely at fraud would miss three quarters of the problem.</li>
+<li><strong>Dilution</strong> is the one to dwell on for an inspection regime: at low epsilon any individual spot check most likely returns clean. A periodic-inspection rule would systematically miss it and would issue clean findings that are worse than no finding at all.</li>
+<li><strong>Drift</strong> is usually entirely lawful — 'we may update models' — and silently expires every prior evaluation of that alias. The Silent Updates study found one stable identifier covering ten releases over nineteen months.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">A vocabulary for the rule you would have to write</div>
+  <h2>Four distinct failures. One requires bad intent.</h2>
+  <p class="deckline">An instrument aimed solely at deception would miss three quarters of the problem.</p>
+  <div class="rowbtns" id="taxT"></div>
+  <div class="mod" id="taxB" style="min-height:250px"></div>
+</div>
+</section>
+
+<!-- 11 SILENT UPDATES -->
+<section class="slide" data-n="
+<h4>Transparency without verifiability</h4>
+<li>This study is six weeks old and it is the most directly damaging finding in the deck for anyone who believes the current disclosure regime works.</li>
+<li>Abraham and Bucknall, AIES-26, scored 16 organisations — nine first-party providers and seven inference hosts.</li>
+<li><strong>Zero of nine</strong> providers could have their deployed API models mapped to published safety evaluations from public information. <strong>Zero of nine</strong> explicitly linked usage policies to specific model versions. <strong>One of nine</strong> precisely named the evaluated model version — Anthropic.</li>
+<li>One provider's stable identifier covered ten releases over nineteen months. Name fixed, served artifact swapped ten times.</li>
+<li>The coined phrase is the one to use with regulators: <strong>transparency without verifiability</strong>. Every disclosure regime currently on the books produces documents. None produces a checkable fact.</li>
+<li>Caveat honestly: the authors flag it as preliminary, single-rater, with no inter-rater reliability. Get the AIES-26 paper before formal citation.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">AIES-26 · Abraham &amp; Bucknall · 12 August 2026</div>
+  <h2>Transparency without verifiability</h2>
+  <p class="deckline">A scorecard across 16 organisations — nine first-party providers and seven inference hosts — on whether published disclosures can be tied to what is actually served.</p>
+  <div class="g g4">
+    <div class="mod coral"><div class="stat s-coral">0 / 9</div><div class="lab">providers whose <strong style="color:var(--ink2)">deployed API models</strong> could be mapped to published safety evaluations from public information</div></div>
+    <div class="mod coral"><div class="stat s-coral">0 / 9</div><div class="lab">providers explicitly linking <strong style="color:var(--ink2)">usage policies</strong> to specific model versions</div></div>
+    <div class="mod sig"><div class="stat s-sig">1 / 9</div><div class="lab">providers precisely naming the <strong style="color:var(--ink2)">evaluated model version</strong> — Anthropic alone</div></div>
+    <div class="mod ice"><div class="stat s-ice">44.4%</div><div class="lab">average score, 16.4 of 37 points across all 16 organisations</div></div>
+  </div>
+  <div class="g gsplit" style="margin-top:16px">
+    <div class="mod sig">
+      <h3>The single most quotable finding</h3>
+      <blockquote style="margin:12px 0;font-size:16px">One provider&rsquo;s stable public identifier covered <strong>&ldquo;10 releases / 19 months&rdquo;</strong> — name fixed, served artifact swapped ten times.</blockquote>
+      <p class="sm2" style="margin-bottom:0">Every benchmark result, safety assessment, procurement attestation and academic citation referencing that identifier during those nineteen months refers to something that changed underneath it, without notice, ten times over.</p>
+    </div>
+    <div class="mod">
+      <h3>Why this indicts the disclosure model itself</h3>
+      <p class="sm2">Three of nine providers permit publishing benchmark results at all; the rest restrict it through terms of service — so independent verification is contractually constrained even where it is technically possible.</p>
+      <p class="sm2">The authors&rsquo; framing is the one to carry into a rulemaking: the industry has produced <strong style="color:var(--ink)">transparency without verifiability</strong>. Model cards, system cards, framework publications and technical documentation all exist. None of them is checkable against what a customer receives.</p>
+      <p class="sm" style="margin-bottom:0"><strong style="color:var(--signal)">Caveat:</strong> the authors flag this as preliminary — single-rater, no inter-rater reliability established. Obtain the AIES-26 paper before formal citation.</p>
+    </div>
+  </div>
+  <div class="src">Abraham &amp; Bucknall, &ldquo;Silent Updates,&rdquo; AIES-26, 12 Aug 2026 — summarised at <a href="https://blog.pebblous.ai/report/silent-model-updates-disclosure-gap/en/" target="_blank" rel="noopener">blog.pebblous.ai</a>. Figures via that summary; primary paper not obtained.</div>
+</div>
+</section>
+
+<!-- 12 STANFORD -->
+<section class="slide" data-n="
+<h4>Stanford — disclosure is going backwards</h4>
+<li>The Foundation Model Transparency Index is the most cited transparency measurement in the field. Three editions: October 2023, May 2024, December 2025.</li>
+<li>The trend is the story: <strong>37 to 58 to 40</strong>. Transparency improved 21 points, then fell 18 in a single year. Net gain over two years: three points.</li>
+<li>Where the opacity concentrates has not moved: training data and training compute, every edition. In the first edition all ten developers together scored just 20% of available points in the data subdomain.</li>
+<li>The ranking reversal is worth noting: Meta and OpenAI fell from first and second in 2023 to fifth and sixth in 2025; AI21 and Anthropic rose from fourth and fifth to first and second. IBM tops at 95; xAI and Midjourney bottom at 14.</li>
+<li><strong>The load-bearing limitation:</strong> FMTI scores developer disclosure documents, not deployed endpoints. A developer can score 95 and its model still be resold through a gateway that quantizes it. No FMTI indicator addresses per-request model identity.</li>
+<li>Small honesty point: the arXiv paper and the AI Index say mean 40; the CRFM website says 41. Use 40.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Stanford CRFM · Foundation Model Transparency Index</div>
+  <h2>Disclosure improved, then went backwards</h2>
+  <p class="deckline">One hundred indicators, three editions, up to fourteen developers. Two years of work produced a net gain of three points — and none of the indicators asks which model answered.</p>
+  <div class="g gsplit">
+    <div class="mod">
+      <h3>Mean transparency score across assessed developers</h3>
+      <div id="chFmti" style="margin-top:12px"></div>
+      <p class="hint" style="margin-top:10px">v1.0 Oct 2023 (10 developers) · v1.1 May 2024 (14) · 3rd edition Dec 2025 (13). 100 indicators throughout.</p>
+    </div>
+    <div>
+      <div class="mod coral" style="margin-bottom:13px">
+        <h3>Where the opacity concentrates — unchanged, all three editions</h3>
+        <p class="sm2" style="margin-bottom:0">2025, verbatim: <em>&ldquo;Companies are most opaque about their training data and training compute as well as the post-deployment usage and impact of their flagship models.&rdquo;</em> In the 2023 edition all ten developers together scored <mark>20%</mark> of available points in the data subdomain; data, labour and compute were named &ldquo;blind spots across developers.&rdquo;</p>
+      </div>
+      <div class="mod ice" style="margin-bottom:13px">
+        <h3>The ranking reversed</h3>
+        <p class="sm2" style="margin-bottom:0">Meta and OpenAI fell from <strong>1st and 2nd</strong> (2023) to <strong>5th and 6th</strong> (2025). AI21 and Anthropic rose from 4th and 5th to 1st and 2nd. Top: <strong>IBM 95</strong>. Bottom: <strong>xAI and Midjourney, 14</strong>. First-time coverage of Alibaba, DeepSeek and xAI.</p>
+      </div>
+      <div class="mod sig">
+        <h3>What FMTI cannot reach</h3>
+        <p class="sm2" style="margin-bottom:0">It scores <strong style="color:var(--ink)">developer disclosure documents, not deployed endpoints</strong>. A developer can score 95 and its model still be resold through a gateway that quantizes it, dilutes it, or substitutes it. <strong>No FMTI indicator addresses per-request model identity.</strong></p>
+      </div>
+    </div>
+  </div>
+  <div class="src"><a href="https://crfm.stanford.edu/fmti/October-2023/" target="_blank" rel="noopener">FMTI v1.0</a> · <a href="https://crfm.stanford.edu/fmti/May-2024/" target="_blank" rel="noopener">FMTI 2024</a> · <a href="https://crfm.stanford.edu/fmti/December-2025" target="_blank" rel="noopener">FMTI 2025</a> · <a href="https://arxiv.org/abs/2512.10169" target="_blank" rel="noopener">arXiv:2512.10169</a> · <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener">Stanford HAI AI Index 2026</a> (documented AI incidents: 362, up from 233). Mean given as 40 on arXiv and in the AI Index, 41 on the CRFM site; 40 used here. No 2026 edition exists as of 16 Sep 2026.</div>
+</div>
+</section>
+
+<!-- 13 MIT -->
+<section class="slide" data-n="
+<h4>MIT — and the category that doesn't exist</h4>
+<li>The Data Provenance Initiative is the most rigorous audit of the upstream supply chain anyone has done: 1,858 text datasets across 44 collections, published in Nature Machine Intelligence.</li>
+<li>Over 70% of licences marked unspecified; 66% of Hugging Face licences categorised differently from what the original authors specified; between 16% and 29% labelled too permissively depending on platform.</li>
+<li>Consent in Crisis then showed the commons closing: over 5% of all tokens in C4 fully restricted within a single year, 28% of the most actively maintained critical sources.</li>
+<li>Now the punchline, and it is the strongest single slide-line in the deck: the <strong>MIT AI Risk Repository</strong> — 1,725 distinct risks extracted from 74 frameworks, seven domains, twenty-four subdomains, published in Patterns in May 2026 — <strong>has no entry for a provider serving a different model than the one you paid for.</strong> The nearest subdomain, 7.4, is about opacity of a model's decision-making, not opacity of which model you got.</li>
+<li>That is not a criticism of MIT. It is evidence that the risk has not yet been named by the field's most comprehensive taxonomy — which is exactly why it has no regulation.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">MIT · data provenance and the risk taxonomy</div>
+  <h2>The most complete risk taxonomy has no category for this</h2>
+  <p class="deckline">MIT has done the field&rsquo;s most rigorous work on upstream provenance and built its most comprehensive risk database. Neither reaches the endpoint.</p>
+  <div class="g gsplit2">
+    <div>
+      <div class="mod ice" style="margin-bottom:13px">
+        <span class="chip c-ice">Nature Machine Intelligence · Aug 2024</span>
+        <h3 style="margin-top:11px">A large-scale audit of dataset licensing</h3>
+        <p class="sm2"><strong>1,858 text datasets</strong> across 44 instruction/alignment collections. Over <mark>70%</mark> of licences marked &ldquo;unspecified&rdquo;; <mark>66%</mark> of Hugging Face licences categorised differently from the original authors&rsquo; specification; 16&ndash;29% labelled <em>too permissively</em> depending on platform.</p>
+        <p class="sm" style="margin-bottom:0">Longpre, Mahari, Chen et al., MIT Data Provenance Initiative.</p>
+      </div>
+      <div class="mod ice">
+        <span class="chip c-ice">NeurIPS 2024 · Consent in Crisis</span>
+        <h3 style="margin-top:11px">The commons closed inside one year</h3>
+        <p class="sm2" style="margin-bottom:0">Longitudinal audit of 14,000 web domains across C4, RefinedWeb and Dolma. In a single year <mark>&gt;5% of all tokens in C4</mark> became fully restricted by robots.txt, and <mark>28%+ of the most actively maintained critical sources</mark>. 45% of C4 is now restricted under terms-of-service crawling limits.</p>
+      </div>
+    </div>
+    <div class="mod coral">
+      <span class="chip c-coral">Patterns (Cell Press) · 8 May 2026</span>
+      <h3 style="margin-top:11px">MIT AI Risk Repository</h3>
+      <div class="g g3" style="margin:14px 0 4px;gap:12px">
+        <div><div class="stat s-coral" style="font-size:30px">1,725</div><div class="lab">distinct risks extracted</div></div>
+        <div><div class="stat s-coral" style="font-size:30px">74</div><div class="lab">source frameworks and taxonomies</div></div>
+        <div><div class="stat s-coral" style="font-size:30px">7 / 24</div><div class="lab">domains / subdomains</div></div>
+      </div>
+      <p class="sm2" style="margin-top:14px">The most comprehensive AI risk taxonomy in existence, run by MIT FutureTech, live at version 4.</p>
+      <p style="font-size:15.5px;line-height:1.5;color:var(--ink);margin:12px 0 8px"><strong>It contains no supply-chain or model-provenance category, and no entry for a provider serving a different model than the one you paid for.</strong></p>
+      <p class="sm2" style="margin-bottom:0">The nearest subdomain, <span class="mono">7.4 &ldquo;lack of transparency or interpretability&rdquo;</span>, concerns opacity of a model&rsquo;s <em>decision-making</em> — not opacity of which model you were served. Domain 7 does not cover misrepresentation of model identity at all.</p>
+      <p class="sm" style="margin-top:12px;margin-bottom:0"><strong style="color:var(--signal)">This is not a criticism of MIT.</strong> It is evidence that the risk has not yet been named by the field&rsquo;s most complete taxonomy — which is a large part of why it has no regulation.</p>
+    </div>
+  </div>
+  <div class="src"><a href="https://www.nature.com/articles/s42256-024-00878-8" target="_blank" rel="noopener">Nature MI 6:975–987</a> · <a href="https://arxiv.org/abs/2407.14933" target="_blank" rel="noopener">Consent in Crisis, NeurIPS 2024</a> · <a href="https://www.dataprovenance.org/" target="_blank" rel="noopener">Data Provenance Explorer</a> · <a href="https://airisk.mit.edu" target="_blank" rel="noopener">MIT AI Risk Repository</a> · <a href="https://www.sciencedirect.com/science/article/pii/S2666389926000267" target="_blank" rel="noopener">Patterns, May 2026</a>. Risk counts differ by version — the 2024 preprint reported 777 risks from 43 taxonomies; Patterns 2026 figures used here.</div>
+</div>
+</section>
+
+<!-- 14 FIVE EYES -->
+<section class="slide" data-n="
+<h4>Five Eyes — what eighteen countries agreed, and where it stops</h4>
+<li>This is the slide for a national-security audience. Click each document.</li>
+<li>The arc is remarkably consistent. 2023: document cryptographic hashes or signatures of models. 2024: confirm each artifact's origin and integrity. 2025: a cryptographically signed, immutable, append-only provenance ledger — for training data. 2026: integrity checking before a model file is loaded. And then April 2026 guidance specifically about agentic AI services that never raises model identity at all.</li>
+<li>Every control terminates the moment the weights stop being a file you control. The word runtime never attaches to model identity in any of these documents.</li>
+<li>The sharpest line for the room: <strong>five Western signals-intelligence agencies jointly recommend a cryptographically signed, immutable, append-only provenance ledger — and apply it to training data only. The identical mechanism applied to routing decisions would close this gap, and is proposed nowhere.</strong></li>
+<li>Note the March 2026 expansion: first AI-security joint seal to add Japan, Republic of Korea and Singapore to the Five Eyes core. Eight agencies, eight countries.</li>
+<li>Verification caveat: the March 2026 and September 2026 PDF bodies could not be retrieved — media.defense.gov returns 403 and cyber.gov.au is robots-disallowed. Titles, dates and signatories are confirmed against government primaries.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Five Eyes and partners · joint guidance 2023–2026</div>
+  <h2>Eighteen countries agreed how to secure AI. None of it asks which model answered.</h2>
+  <p class="deckline">Select a document to see what it says on provenance — and precisely where it stops.</p>
+  <div class="rowbtns" id="feT"></div>
+  <div class="mod" id="feB" style="min-height:230px"></div>
+  <div class="mod sig" style="margin-top:14px">
+    <p style="font-size:15.5px;line-height:1.5;margin:0"><strong>Five Western signals-intelligence agencies jointly recommend &ldquo;a secure provenance database that is cryptographically signed and maintains an immutable, append-only ledger&rdquo; — and apply it to training data only.</strong> <span style="color:var(--ink2)">The identical mechanism, applied to routing decisions, would close the runtime gap. It is proposed nowhere in any of these documents.</span></p>
+  </div>
+</div>
+</section>
+
+<!-- 15 NIST -->
+<section class="slide" data-n="
+<h4>NIST — the signing duty already exists</h4>
+<li>Click through. The key finding is constructive rather than critical: much of the machinery is already in NIST language. It stops one step short.</li>
+<li><strong>SP 800-218A, PS.2.1</strong> is the strongest text NIST has produced: producers must 'generate and provide cryptographic hashes or digital signatures for an AI model and its components' and 'provide digital signatures for AI model changes.' That is a signing duty including a duty to sign changes.</li>
+<li>Why it stops: it is a voluntary community profile for model producers, and verification is performed on acquired artifacts 'before using them.' A customer of a hosted endpoint acquires no artifact, so there is nothing to check the signature against.</li>
+<li><strong>The recommended line:</strong> the signing obligation already exists in NIST guidance. What is missing is the requirement to bind that signature to a served response.</li>
+<li><strong>AI 600-1 GV-1.6-003</strong> is the second hook: inventories must record 'underlying foundation models, versions of underlying models, and access modes.' The concept already exists in NIST language — it needs only to be made per-request and verifiable.</li>
+<li><strong>AI 100-2e2025</strong>, the adversarial ML taxonomy, has no category for a provider substituting a model as a commercial act. It is not an attack in that taxonomy, so it has no terminology and no mitigation.</li>
+<li><strong>COSAIS</strong> has published no overlay — not even an initial public draft. Concept paper Aug 2025, annotated outline Jan 2026. Present that as an open intervention point, not a closed gap. Overlay 1 is where a runtime identity control would naturally sit.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">NIST · what already exists and what is one step short</div>
+  <h2>The signing duty is already written. It stops at the API boundary.</h2>
+  <p class="deckline">This is the constructive half of the diagnosis: most of the machinery exists in NIST language today. Select a publication.</p>
+  <div class="rowbtns" id="niT"></div>
+  <div class="mod" id="niB" style="min-height:215px"></div>
+  <div class="g g2" style="margin-top:14px">
+    <div class="mod jade">
+      <h3>The one-line ask this supports</h3>
+      <p class="sm2" style="margin-bottom:0"><strong style="color:var(--ink)">The signing obligation already exists in NIST guidance (SP 800-218A PS.2.1). What is missing is the requirement to bind that signature to a served response.</strong> That is a materially smaller drafting problem than creating a new regime.</p>
+    </div>
+    <div class="mod sig">
+      <h3>The open intervention point</h3>
+      <p class="sm2" style="margin-bottom:0">COSAIS has published <strong>no overlay — not even an initial public draft</strong>. Overlay 1, &ldquo;Adapting and Using Generative AI,&rdquo; is exactly where a runtime model-identity control would sit. This is a gap that is still open, not one that has been closed against you.</p>
+    </div>
+  </div>
+  <div class="src"><a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218A.pdf" target="_blank" rel="noopener">SP 800-218A</a> · <a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf" target="_blank" rel="noopener">AI 600-1</a> · <a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-2e2025.pdf" target="_blank" rel="noopener">AI 100-2e2025</a> · <a href="https://csrc.nist.gov/projects/cosais" target="_blank" rel="noopener">COSAIS project</a> · <a href="https://www.nist.gov/caisi" target="_blank" rel="noopener">CAISI</a></div>
+</div>
+</section>
+
+<!-- 16 US PROCUREMENT -->
+<section class="slide" data-n="
+<h4>US procurement — the nearest thing to an answer, and why it misses</h4>
+<li>This is the most actionable slide for anyone selling into or buying for the federal government.</li>
+<li>Proposed GSAR 552.239-7001(i)(1)(i) is, as far as this review establishes, the only instrument in US federal procurement that would require a vendor to tell the government it has swapped the model: thirty days' advance notice of 'adding, replacing, or materially changing any LLMs, LLM's Developer(s), System.'</li>
+<li>Five reasons it misses: it is proposed not final; notice is contract-level and prospective, not per-request; it applies to GSA Schedule contracts, not government-wide; it creates no verification right, no audit mechanism and no retention duty; and it is entirely self-reporting.</li>
+<li><strong>The decisive one:</strong> a vendor operating a request-level router arguably triggers no obligation at all, because no discrete replacement event occurs.</li>
+<li>M-26-04 is in force and requires disclosure of any training or development that occurred outside the United States — then expressly says agencies 'should avoid requirements that compel a vendor to disclose sensitive technical data, such as specific model weights.'</li>
+<li>FedRAMP has no AI-specific framework. Swapping the LLM behind an authorised service — same data flows, same architecture, different weights — does not clearly trigger any significant-change tier.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">US federal procurement · September 2026</div>
+  <h2>One clause comes close. A request-level router walks through it.</h2>
+  <p class="deckline">The federal government bans named models it cannot detect, and requires disclosures that expire at contract award.</p>
+  <div class="g gsplit">
+    <div class="mod sig">
+      <span class="chip c-sig">Proposed · comments closed 3 Aug 2026 · 79 received · no final rule</span>
+      <h3 style="margin-top:11px">GSAR 552.239-7001(i)(1)(i)</h3>
+      <blockquote style="margin:12px 0">Thirty days&rsquo; advance notice to the Contracting Officer of <strong>&ldquo;Adding, replacing, or materially changing any LLMs, LLM&rsquo;s Developer(s), System.&rdquo;</strong></blockquote>
+      <p class="sm2">The only instrument in US federal procurement that would require a vendor to disclose a model swap. It proves the drafting problem is tractable.</p>
+      <p class="sm2" style="margin-bottom:0"><strong style="color:var(--coral)">Why it misses:</strong> proposed, not final · contract-level and prospective, not per-request · GSA Schedules only, not government-wide · no verification right, no audit mechanism, no retention duty, no penalty for silent non-notification · entirely self-reporting. <strong style="color:var(--ink)">And a vendor running a request-level router arguably triggers no obligation at all, because no discrete &ldquo;replacement&rdquo; event occurs.</strong></p>
+      <p class="sm" style="margin-top:11px;margin-bottom:0">Companion provision (f)(3) would require disclosure of whether an LLM &ldquo;has been modified or configured to comply with any non-U.S. federal government statutes, regulations, or policies.&rdquo;</p>
+    </div>
+    <div>
+      <div class="mod violet" style="margin-bottom:13px">
+        <span class="chip c-violet">OMB M-26-04 · in force since 11 Dec 2025</span>
+        <h3 style="margin-top:11px">Country of origin, and the stopping point</h3>
+        <p class="sm2">Requires disclosure of <em>&ldquo;any training or development that occurred outside the United States, to include the type of activity and the country in which it occurred.&rdquo;</em></p>
+        <p class="sm2" style="margin-bottom:0">And then, verbatim: <em>&ldquo;Where practicable, agencies should avoid requirements that compel a vendor to disclose sensitive technical data, such as <strong>specific model weights</strong>.&rdquo;</em> Disclosure is a contract-formation artefact. Nothing refreshes it, nothing binds it to what is served, nothing detects divergence.</p>
+      </div>
+      <div class="mod coral">
+        <span class="chip c-coral">FedRAMP · FY2026 NDAA</span>
+        <h3 style="margin-top:11px">The unverifiable prohibition</h3>
+        <p class="sm2"><strong>FedRAMP has no AI-specific framework.</strong> Its 2026 significant-change taxonomy is data-handling-oriented; swapping the LLM behind an authorised service — same data flows, same architecture, different weights — does not clearly trigger any tier.</p>
+        <p class="sm2" style="margin-bottom:0"><strong>NDAA §1532 / §6604</strong> ban DeepSeek and High-Flyer by name, with 30- and 60-day removal deadlines. Entity prohibitions with no disclosure duty and no detection capability at the point of consumption.</p>
+      </div>
+    </div>
+  </div>
+  <div class="src"><a href="https://www.federalregister.gov/documents/2026/06/17/2026-12205/general-services-acquisition-regulation-acquisition-of-information-and-communication-technology" target="_blank" rel="noopener">GSAR draft, 91 FR 36559, 17 Jun 2026</a> · <a href="https://www.whitehouse.gov/wp-content/uploads/2025/12/M-26-04-Increasing-Public-Trust-in-Artificial-Intelligence-Through-Unbiased-AI-Principles-1.pdf" target="_blank" rel="noopener">OMB M-26-04</a> · <a href="https://www.fedramp.gov/2026/reference/20x/b/significant-change-notification/" target="_blank" rel="noopener">FedRAMP significant change</a> · <a href="https://www.congress.gov/119/plaws/publ60/PLAW-119publ60.pdf" target="_blank" rel="noopener">P.L. 119-60</a></div>
+</div>
+</section>
+
+<!-- 17 EU -->
+<section class="slide" data-n="
+<h4>The EU exercised its powers — and asked about something else</h4>
+<li>This is the freshest regulatory item in the deck and the most instructive.</li>
+<li>Article 101 enforcement powers over GPAI providers commenced 2 August 2026. Article 50 transparency applies from the same date. Fines reach 3% of worldwide turnover or fifteen million euros, whichever is higher.</li>
+<li>Late August into 1 September 2026, the Commission issued its first Article 91 information requests to more than thirty AI providers. Two strands, per spokesperson Thomas Regnier: safety and security of the most advanced models, and copyright and transparency — targeting companies that had not published training-data summaries.</li>
+<li>Article 101(1)(b) separately penalises incomplete or misleading responses. No recipients were officially named.</li>
+<li><strong>The point to make:</strong> the EU's first exercise of its new powers asked how labs prevent model theft, who gets evaluator access, and what is in the training data. It did not ask which model serves a request, at what precision, from what jurisdiction. The gap survived first contact with enforcement.</li>
+<li>And note the Digital Omnibus: high-risk deadlines slipped to Dec 2027 and Aug 2028, but GPAI obligations and Article 50 did not move. Anyone claiming the AI Act was paused is describing a different part of it.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">European Union · first exercise of GPAI enforcement powers</div>
+  <h2>The EU asked thirty providers a lot of questions. Not this one.</h2>
+  <p class="deckline">Enforcement powers commenced 2 August 2026. Four weeks later the Commission used them — and the runtime gap survived first contact.</p>
+  <div class="g g3">
+    <div class="mod violet"><div class="stat s-violet">30+</div><div class="lab">AI providers issued <strong style="color:var(--ink2)">Article 91</strong> information requests, late Aug – 1 Sep 2026. No recipients officially named.</div></div>
+    <div class="mod violet"><div class="stat s-violet">3% / €15M</div><div class="lab">Article 101 ceiling — worldwide annual turnover or fifteen million euros, whichever is higher. Art. 101(1)(b) separately penalises incomplete or misleading responses.</div></div>
+    <div class="mod coral"><div class="stat s-coral">0</div><div class="lab">Questions in either strand concerning which model, at which precision, in which jurisdiction, serves a given request.</div></div>
+  </div>
+  <div class="g gsplit" style="margin-top:16px">
+    <div class="mod">
+      <h3>What was actually asked</h3>
+      <p class="sm2">Commission spokesperson Thomas Regnier, on the two strands: <em>&ldquo;The first concerns safety and security, notably the use of and the most advanced AI models. The second focuses more on copyright and transparency issues.&rdquo;</em></p>
+      <ul class="tight">
+        <li>How labs prevent model theft</li>
+        <li>External evaluator access</li>
+        <li>Post-deployment monitoring</li>
+        <li>Training-data content summaries — targeting providers that had not published them and had not joined informal compliance dialogues</li>
+      </ul>
+      <p class="sm" style="margin-top:11px;margin-bottom:0">Dates differ across sources: announced by Commissioner Virkkunen ~29 Aug 2026; Agence Europe dates the action 1 Sep 2026. Treat as late August – 1 September.</p>
+    </div>
+    <div class="mod sig">
+      <h3>And what did not move</h3>
+      <p class="sm2">The Digital Omnibus (political agreement 6 May 2026) slipped high-risk deadlines — Annex III stand-alone systems to 2 Dec 2027, Annex I embedded systems to 2 Aug 2028.</p>
+      <p class="sm2"><strong style="color:var(--ink)">GPAI obligations under Articles 51&ndash;56 are unchanged. Article 50 transparency remains at 2 August 2026.</strong> Anyone claiming the AI Act has been paused is describing a different part of it.</p>
+      <p class="sm2" style="margin-bottom:0">Article 53(1)(b) and Annex XII run developer → downstream provider. Nothing requires per-request disclosure of model version, weights or precision, and nothing requires retention of routing records. <strong style="color:var(--signal)">A provider can comply fully with Articles 50 and 53 while silently routing traffic between variants.</strong></p>
+    </div>
+  </div>
+  <div class="src"><a href="https://agenceurope.eu/en/bulletin/article/13929/31/european-commission-sends-first-requests-for-information-to-more-than-30-ai-providers" target="_blank" rel="noopener">Agence Europe</a> · <a href="https://artificialintelligenceact.substack.com/p/the-eu-ai-act-newsletter-110-powers" target="_blank" rel="noopener">EU AI Act Newsletter #110, 8 Sep 2026</a> · <a href="https://artificialintelligenceact.eu/article/91/" target="_blank" rel="noopener">Article 91</a> · <a href="https://www.wsgr.com/en/insights/eu-ai-act-enforcement-phase-begins.html" target="_blank" rel="noopener">Wilson Sonsini</a> · <a href="https://www.gibsondunn.com/eu-ai-act-omnibus-agreement-postponed-high-risk-deadlines-and-other-key-changes/" target="_blank" rel="noopener">Gibson Dunn on the Omnibus</a></div>
+</div>
+</section>
+
+<!-- 18 ATTESTATION LADDER -->
+<section class="slide" data-n="
+<h4>The attestation ladder — the most useful framing in the deck</h4>
+<li>This four-tier ladder is how to cut through vendor marketing. Almost the whole market sells Tier 0 or Tier 1 while marketing it as Tier 2.</li>
+<li><strong>Tier 0</strong> — the enclave is genuine. Answers nobody's model-identity question.</li>
+<li><strong>Tier 1</strong> — plus a measured boot image. Proves which serving stack, not which weights. This is where Google Confidential Space, AWS Nitro Enclaves and most CSP offerings sit.</li>
+<li><strong>Tier 2</strong> — plus a cryptographic commitment to the exact weight bytes, enforced at read time. This actually answers 'which weights'.</li>
+<li><strong>Tier 3</strong> — plus a signature over this specific request and response, chained to the Tier 2 measurement. Answers 'which weights answered this call'.</li>
+<li>Use this as a procurement question. When a vendor claims attested inference, ask which tier, and ask them to show you where the weights commitment is enforced.</li>
+<li>Click each tier.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">A procurement instrument · four tiers of attested inference</div>
+  <h2>Almost the whole market sells Tier 1 and markets it as Tier 2</h2>
+  <p class="deckline">When a vendor claims &ldquo;attested inference,&rdquo; this is the question to ask. Select a tier.</p>
+  <div class="rowbtns" id="tierT"></div>
+  <div class="mod" id="tierB" style="min-height:190px"></div>
+  <div class="mod coral" style="margin-top:14px">
+    <p style="font-size:15px;line-height:1.5;margin:0"><strong>Hardware attestation proves the box is honest. It does not prove the box contains what the label says.</strong> <span style="color:var(--ink2)">No CPU or GPU attestation in existence carries a claim about the model. Everything above the boot image is the deployer&rsquo;s problem — and almost no deployer solves it.</span></p>
+  </div>
+</div>
+</section>
+
+<!-- 19 SILICON -->
+<section class="slide" data-n="
+<h4>What the silicon actually attests — the Intel and NVIDIA slide</h4>
+<li>Be precise here, because this is where marketing and engineering diverge most sharply.</li>
+<li><strong>NVIDIA's detached EAT claims schema v3.0 contains 31 claims.</strong> Certificate and signature validation, integrity measurements of driver and VBIOS, secure boot and debug status, architecture, OCSP, nonce, UEID, OEM ID, hardware model. <strong>Zero claims about the workload, container, process or model.</strong> An NVIDIA developer-forum thread from 14 August 2026 asks exactly this question; I could not retrieve a reply.</li>
+<li><strong>Intel TDX</strong> gives you MRTD — a launch measurement — plus four runtime measurement registers. Intel's own IMA-to-RTMR path is the only documented route by which a weights file could land inside a quote, and Intel's paper on it measures system binaries, not model weights. Intel Trust Authority attests SGX, TDX, TPM, NVIDIA GPUs and AMD SEV-SNP in preview.</li>
+<li><strong>AMD SEV-SNP</strong> has no runtime measurement registers at all — anything loaded after launch is outside MEASUREMENT unless the guest implements its own measured-load discipline.</li>
+<li>Intel's own whitepaper is honest: attestation is 'cryptographic confirmation that TEE is genuine, correctly configured, and software is exactly as expected.' Intel's Confidential AI press kit contains no claim about model identity verification.</li>
+<li>Two more things to say. First, performance is not the blocker: Phala's H100 measurements show −0.13% throughput overhead on a 70B model, and NVIDIA's own Blackwell figures are 1–8%. Second, attestation has its own unresolved flaw — CVE-2026-33697, CVSS 7.5 as reported, on attested TLS binding.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">What the silicon actually attests</div>
+  <h2>NVIDIA&rsquo;s attestation has 31 claims. None is about the model.</h2>
+  <p class="deckline">The gap between what confidential computing proves and what buyers believe it proves is the widest in this deck.</p>
+  <div class="g g3">
+    <div class="mod jade">
+      <h3>NVIDIA H100 / H200 / Blackwell</h3>
+      <p class="sm2" style="margin-bottom:6px"><strong style="color:var(--jade)">Proves:</strong> genuine Hopper or Blackwell silicon, confidential-compute mode active, secure boot on, debug off, running exactly the VBIOS and driver versions NVIDIA has published reference measurements for.</p>
+      <p class="sm2" style="margin-bottom:0"><strong style="color:var(--coral)">Does not prove:</strong> which weights were loaded, which model served the request, what precision was used, or anything about userspace. The detached EAT claims schema v3.0 has <mark>31 claims</mark> covering certificates, signatures, firmware measurements and system state — and <strong>zero workload claims</strong>.</p>
+    </div>
+    <div class="mod ice">
+      <h3>Intel TDX + Trust Authority</h3>
+      <p class="sm2" style="margin-bottom:6px"><strong style="color:var(--jade)">Proves:</strong> a genuine Trust Domain on genuine patched silicon, launched from a measured image (<span class="mono">MRTD</span>), with measured subsequent events (<span class="mono">RTMR0-3</span>), and 32 caller-chosen bytes bound into the quote via <span class="mono">report_data</span>.</p>
+      <p class="sm2" style="margin-bottom:0"><strong style="color:var(--coral)">Does not prove:</strong> <span class="mono">MRTD</span> is a <em>launch</em> measurement — anything loaded later is invisible unless explicitly extended into an RTMR. Intel&rsquo;s IMA-to-RTMR path is the only documented route for a weights file to reach a quote, and Intel&rsquo;s own paper on it measures system binaries, not weights. Trust Domain Integrity is explicitly scoped to virtual BIOS and kernel.</p>
+    </div>
+    <div class="mod violet">
+      <h3>AMD SEV-SNP</h3>
+      <p class="sm2" style="margin-bottom:6px"><strong style="color:var(--jade)">Proves:</strong> a genuine SEV-SNP guest launched from a specific measured image, on a specific chip, at a specific TCB level, with 64 caller-chosen bytes in <span class="mono">REPORT_DATA</span>.</p>
+      <p class="sm2" style="margin-bottom:0"><strong style="color:var(--coral)">Does not prove:</strong> post-launch state. SEV-SNP has <strong>no runtime measurement registers</strong> analogous to TDX RTMRs, so anything loaded after launch — i.e. the weights — sits outside <span class="mono">MEASUREMENT</span> unless the guest implements its own measured-load discipline.</p>
+    </div>
+  </div>
+  <div class="g g3" style="margin-top:15px">
+    <div class="mod sig"><div class="stat s-sig">&minus;0.13%</div><div class="lab"><strong style="color:var(--ink2)">Throughput overhead of GPU confidential computing on a 70B model</strong> (Llama-3.1-70B, H100). 6.85% on 8B, 4.58% on 14B — overhead vanishes at frontier size and long sequences. NVIDIA's own Blackwell figures: 1&ndash;8%. <strong style="color:var(--signal)">Performance is not the blocker.</strong> Phala/Fudan; vendor-affiliated.</div></div>
+    <div class="mod coral"><div class="stat s-coral">CVE-2026-33697</div><div class="lab">Attested TLS <strong style="color:var(--ink2)">verifies software integrity, not location</strong>. A client can verify a legitimate attestation and still be talking to a different machine running identical code. Formal work concludes level-three binding &ldquo;may not be possible&rdquo; without breaking TLS 1.3. CVSS 7.5 as reported by The Register, 4 Jul 2026; not checked against NVD.</div></div>
+    <div class="mod"><h3>Intel&rsquo;s own framing, verbatim</h3><p class="sm2" style="margin-bottom:0">Attestation is <em>&ldquo;cryptographic confirmation that TEE is genuine, correctly configured, and software is exactly as expected.&rdquo;</em> Intel&rsquo;s Confidential AI press kit — SGX, TDX, Trust Authority — contains <strong>no claim about model integrity verification, model identity, or model provenance at inference time</strong>. The building blocks are Intel&rsquo;s; the assembly is someone else&rsquo;s.</p></div>
+  </div>
+  <div class="src"><a href="https://docs.nvidia.com/attestation/advanced-documentation/latest/claims-guide/gpu_claims.html" target="_blank" rel="noopener">NVIDIA GPU claims schema</a> · <a href="https://docs.trustauthority.intel.com/" target="_blank" rel="noopener">Intel Trust Authority docs</a> · <a href="https://www.intel.com/content/www/us/en/developer/articles/community/runtime-integrity-measure-and-attest-trust-domain.html" target="_blank" rel="noopener">Intel: runtime integrity measurement in a Trust Domain</a> · <a href="https://newsroom.intel.com/press-kit/confidential-ai" target="_blank" rel="noopener">Intel Confidential AI press kit</a> · <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/snp-attestation.html" target="_blank" rel="noopener">AWS on SEV-SNP attestation</a> · <a href="https://arxiv.org/html/2409.03992v2" target="_blank" rel="noopener">H100 confidential computing measurements</a> · <a href="https://www.theregister.com/security/2026/07/04/confidential_computings_trust_mechanism_is_broken/" target="_blank" rel="noopener">The Register on attested TLS, 4 Jul 2026</a></div>
+</div>
+</section>
+
+<!-- 20 TINFOIL / PARADOX -->
+<section class="slide" data-n="
+<h4>One company does it properly — and that reveals the paradox</h4>
+<li>Tinfoil is the only shipping implementation found that actually proves which model is running. Walk the mechanism, because it is elegant and it is the template.</li>
+<li>Weights hashed into a Merkle tree. The 32-byte root hash goes on the kernel command line, which is covered by the enclave measurement. Then dm-verity intercepts every disk read and verifies the block against the attested root — the enclave literally cannot read a byte that does not match the commitment. Client-side verification chains the attestation to a Sigstore bundle from the GitHub Actions build, and TLS is bound to the attested public key.</li>
+<li>Now the paradox, and it is the most important idea on this slide. <strong>This works because Tinfoil serves open-weight models whose reference hashes anyone can check.</strong> For a closed frontier model, a published hash of weights nobody outside the lab can obtain proves only self-consistency. It detects a silent swap between published versions. It cannot prove the weights are the advertised model, because there is no independent reference.</li>
+<li>Say the consequence plainly: <strong>weight openness is a precondition for runtime verifiability</strong>. That is an argument neither Stanford's open-weights work nor the FMTI makes, and it cuts against the usual framing of open weights as purely a risk.</li>
+<li>And the commercial sting: the only case where verification fully works is the case where the incentive to substitute is lowest.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">The one shipping implementation — and what it exposes</div>
+  <h2>Verification works exactly where the incentive to cheat is lowest</h2>
+  <p class="deckline">One company proves which model is running. The mechanism is sound, replicable, and structurally unavailable to closed frontier models.</p>
+  <div class="g gsplit">
+    <div class="mod jade">
+      <span class="chip c-jade">Tinfoil · &ldquo;Modelwrap&rdquo; · 3 Feb 2026 · Tier 2/3</span>
+      <h3 style="margin-top:11px">How to actually prove which weights are loaded</h3>
+      <ol style="margin:12px 0 0;padding-left:19px">
+        <li class="sm2" style="margin-bottom:7px">Model weights hashed into a <strong>Merkle tree</strong>; the 32-byte root hash is the commitment.</li>
+        <li class="sm2" style="margin-bottom:7px">The root hash is passed on the <strong>kernel command line</strong>, which is covered by the enclave measurement.</li>
+        <li class="sm2" style="margin-bottom:7px"><strong>dm-verity</strong> intercepts every disk read and verifies the block against the attested root — <em>&ldquo;throwing an error if even a single bit of the disk does not correspond to the committed weights.&rdquo;</em></li>
+        <li class="sm2" style="margin-bottom:7px">Client verifies the hardware-signed attestation to the CPU vendor root, compares measurements against a <strong>Sigstore</strong> bundle published by the GitHub Actions build, and establishes <strong>TLS bound to the attested public key</strong>.</li>
+      </ol>
+      <p class="sm" style="margin-top:12px;margin-bottom:0">AMD SEV-SNP CPUs plus NVIDIA Hopper/Blackwell in CC mode. Explicitly does not protect against network metadata, hardware implementation flaws, physical attacks, side channels or client compromise — and requires trusting AMD, Intel, NVIDIA, Tinfoil&rsquo;s GitHub org and Sigstore.</p>
+    </div>
+    <div>
+      <div class="mod coral" style="margin-bottom:13px">
+        <h3>The closed-weight paradox</h3>
+        <p class="sm2">For a model whose weights nobody outside the lab can obtain, <strong style="color:var(--ink)">a published hash proves only self-consistency</strong>. It detects a silent swap <em>between</em> published versions. It cannot prove the weights are the advertised model, because there is no independent reference to compare against.</p>
+        <p class="sm2" style="margin-bottom:0">The same limitation ends Model Equality Testing and IRIS: both need a reference distribution, which exists only for open weights.</p>
+      </div>
+      <div class="mod sig">
+        <h3>The consequence nobody has drawn</h3>
+        <p style="font-size:15px;line-height:1.5;margin:0 0 9px"><strong>Weight openness is a precondition for runtime verifiability.</strong></p>
+        <p class="sm2" style="margin-bottom:0">Stanford&rsquo;s open-foundation-models work argues open weights should be assessed on marginal risk. Neither that paper nor the FMTI makes this argument — that openness is what makes independent verification <em>possible at all</em>. And the commercial sting: <strong style="color:var(--ink)">the only configuration where verification fully works is the one where the incentive to substitute is lowest.</strong></p>
+      </div>
+    </div>
+  </div>
+  <div class="src"><a href="https://tinfoil.sh/blog/2026-02-03-proving-model-identity" target="_blank" rel="noopener">Tinfoil: Proving Model Identity</a> · <a href="https://tinfoil.sh/security-and-privacy-faq" target="_blank" rel="noopener">Tinfoil security FAQ</a> · <a href="https://arxiv.org/abs/2403.07918" target="_blank" rel="noopener">Kapoor, Bommasani et al., &ldquo;On the Societal Impact of Open Foundation Models,&rdquo; ICML 2024</a>. Tinfoil mechanism described from its own published materials.</div>
+</div>
+</section>
+
+<!-- 21 PROBE -->
+<section class="slide" data-n="
+<h4>Transition — from diagnosis to instrument</h4>
+<li>Shift tone. Everything so far was the gap. The rest is what a measurement layer looks like when built.</li>
+<li>The design principle that matters to a regulator: <strong>no vendor cooperation required</strong>. Everything runs client-side against the endpoint the customer already pays for. That is what makes it usable as an audit instrument rather than a compliance self-report.</li>
+<li>Five independent layers combined by log-odds into two separate verdicts — provenance and jurisdiction — because they are different risks with different remedies.</li>
+<li>The safety property is the one to highlight: <strong>when the strongest layer returns nothing, the verdict floors at INDETERMINATE — never a false clean bill.</strong> A system that can produce evidence of a problem but never an unearned all-clear is the right shape for regulatory use.</li>
+<li>Click each layer.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">An instrument for the gap · <span class="mono" style="text-transform:none;letter-spacing:0">provenance-probe</span></div>
+  <h2>Measure the endpoint you are already paying for</h2>
+  <p class="deckline">Open source, local execution, no vendor cooperation, no API key required for the strongest signal. Five independent layers combined by log-odds into two separate verdicts.</p>
+  <div class="rowbtns" id="lyT"></div>
+  <div class="g gsplit">
+    <div class="mod" id="lyB" style="min-height:205px"></div>
+    <div>
+      <div class="mod jade" style="margin-bottom:13px">
+        <h3>The safety property</h3>
+        <p class="sm2">&ldquo;When the strongest layer returns nothing, the verdict <strong style="color:var(--jade)">floors at INDETERMINATE</strong> — never a false clean bill.&rdquo;</p>
+        <p class="sm2" style="margin-bottom:0">An endpoint that suppresses token counts yields a degraded-confidence assessment from wire and latency alone. It cannot be manoeuvred into producing an unearned all-clear — a hard-evidence floor means a model&rsquo;s own self-report can never drive the verdict — which is what makes it usable as evidence rather than as marketing.</p>
+      </div>
+      <div class="mod">
+        <h3>Two verdicts, five tiers</h3>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin:10px 0 11px">
+          <span class="chip c-coral">Confirmed</span><span class="chip c-sig">Likely</span><span class="chip">Indeterminate</span><span class="chip c-ice">Unlikely</span><span class="chip c-jade">No evidence</span>
+        </div>
+        <p class="sm2" style="margin-bottom:0">Issued independently — one for <strong>provenance</strong> (weight origin, an integrity risk) and one for <strong>jurisdiction</strong> (who operates the inference and under whose legal compulsion, a data risk). Fusing them produces a rule that over-blocks in one direction and under-blocks in the other.</p>
+      </div>
+    </div>
+  </div>
+  <div class="src"><a href="https://github.com/lobster-shrimp/provenance-probe/" target="_blank" rel="noopener">github.com/lobster-shrimp/provenance-probe</a> · <a href="https://lobster-shrimp.github.io/provenance-observatory/methodology.html" target="_blank" rel="noopener">published methodology</a></div>
+</div>
+</section>
+
+<!-- 22 TOKENIZER DEMO -->
+<section class="slide" data-n="
+<h4>The demo — run it slowly</h4>
+<li>Explain the physics in one sentence: every model family splits text into tokens differently, and the API reports how many tokens it used in order to bill you. The billing metadata is the fingerprint, and a provider cannot suppress it without breaking its own commercial relationship.</li>
+<li>Pick northstar-secure-1 and press probe. Let the counts land one at a time. The Han-script probes are the decisive ones — a tokenizer trained with heavy Chinese coverage compresses Han characters far more efficiently, and that ratio is hard to disguise.</li>
+<li>Then switch to the honest endpoint so the room sees the instrument return clean. An instrument that only ever finds problems is not an instrument.</li>
+<li><strong>Say this out loud:</strong> this panel is a faithful simulation of the published method for presentation purposes, not a live probe of any third party. Real assessment requires written authorisation; the tool aborts without it.</li>
+<li>The corroborating real case is the best part: in March 2026 Moonshot's Head of Pretraining identified Cursor's Composer 2 as Kimi-derived because the tokenizer was 'completely identical to our Kimi tokenizer.' This method resolved a real public dispute in under a day.</li>
+<li>Do not oversell it — the next slide is the counterweight, and go there immediately.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Interactive demonstration · tokenizer fingerprinting</div>
+  <h2>The billing metadata is the fingerprint</h2>
+  <p class="deckline">Every model family segments text differently. The API returns a token count in order to charge you — so the one signal a provider cannot suppress without breaking its own commercial relationship is precisely the one that identifies the weights.</p>
+  <div class="g gsplit2">
+    <div class="mod sig">
+      <h3>Probe an endpoint</h3>
+      <div style="margin:12px 0 9px">
+        <div class="sm" style="margin-bottom:5px">Endpoint under assessment</div>
+        <select id="simT"></select>
+      </div>
+      <div class="sm" style="margin:11px 0 5px">Vendor&rsquo;s claim</div>
+      <div style="background:var(--sunken);border:1px solid var(--rule);border-radius:4px;padding:10px 12px">
+        <div class="mono" style="font-size:12px;line-height:1.75" id="simC"></div>
+      </div>
+      <button class="btn on" id="simGo" style="width:100%;margin-top:13px;padding:10px">▶ Run tokenizer probe</button>
+      <p class="hint" style="margin-top:9px">Sends 20 calibrated snippets, reads <span class="mono">usage.prompt_tokens</span>, corrects for chat-template overhead, scores against 27 reference tokenizer families.</p>
+      <div id="simS" style="margin-top:12px"></div>
+    </div>
+    <div>
+      <div class="mod" style="min-height:180px">
+        <h3>Probe results <span class="hint" style="font-weight:400">· 6 representative snippets of 20, 4 of 27 families</span></h3>
+        <div id="simTab" style="margin-top:10px"></div>
+      </div>
+      <div class="mod" id="simV" style="margin-top:13px;min-height:120px">
+        <p class="sm">Awaiting probe.</p>
+      </div>
+    </div>
+  </div>
+  <div class="src"><span style="color:var(--signal)">Faithful simulation of the published method for presentation use — not a live probe of any third party.</span> Real assessment requires written authorisation; the tool aborts without an <span class="mono">authorized</span> flag. 27-family reference corpus per <a href="https://github.com/lobster-shrimp/provenance-probe/" target="_blank" rel="noopener">provenance-probe</a>; its Chinese-origin families are blind-validated (nine families, held-out). Corroborating real case: Moonshot AI on Cursor Composer 2, Mar 2026 — tokenizer &ldquo;completely identical to our Kimi tokenizer.&rdquo;</div>
+</div>
+</section>
+
+<!-- 23 GHOSTPRINT -->
+<section class="slide" data-n="
+<h4>The counterweight — do not skip this</h4>
+<li>Go here immediately after the demo. Credibility with a technical or regulatory audience comes from being first to state your own error bars.</li>
+<li>GhostPrint, Penn State, 15 June 2026. It introduces fingerprint spoofing: a malicious provider serves a weaker model that has been parameter-efficiently fine-tuned to mimic the stronger model's fingerprint.</li>
+<li>It explicitly targets and defeats LLMmap, Model Equality Testing and LLM-idiosyncrasies — by name. That is Stanford's ICLR 2025 paper and the ICML 2025 paper.</li>
+<li>The authors concede universal spoofing is mathematically impossible under infinite resources — but prove it succeeds under finite query budgets and weak classifiers, which is every real audit.</li>
+<li>The honest conclusion: black-box behavioural verification is an arms race with a cost asymmetry favouring the provider. That is exactly the information asymmetry Berkeley named.</li>
+<li><strong>And then the constructive turn:</strong> this is precisely why the answer is not 'build a better detector.' It is a disclosure duty with retention, backed by independent measurement, with hardware attestation where a provider will cooperate. Detection alone loses the arms race. Detection plus a legal obligation to have recorded the truth does not.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">The counterweight · error bars first</div>
+  <h2>Fingerprints can be deliberately faked</h2>
+  <p class="deckline">Published three months ago. Any slide claiming behavioural detection is settled is now wrong, including the one before this.</p>
+  <div class="g gsplit">
+    <div class="mod coral">
+      <span class="chip c-coral">GhostPrint · Penn State · 15 Jun 2026 · preprint</span>
+      <h3 style="margin-top:11px">&ldquo;Your &lsquo;Pro&rsquo; LLM Subscription May Actually Be &lsquo;Free&rsquo;&rdquo;</h3>
+      <p class="sm2">Introduces <strong>fingerprint spoofing</strong>: a provider serves a weaker model that has been parameter-efficiently fine-tuned to mimic the stronger model&rsquo;s fingerprint — surrogate modelling, reward-ranked fine-tuning and distillation — defeating user-side verification.</p>
+      <p class="sm2">It <strong style="color:var(--ink)">explicitly targets and defeats LLMmap, Model Equality Testing and LLM-idiosyncrasies by name</strong> — Stanford&rsquo;s ICLR 2025 paper and the ICML 2025 paper among them.</p>
+      <p class="sm2" style="margin-bottom:0">The authors concede universal spoofing is mathematically impossible under infinite resources — and prove it succeeds <strong>under finite query budgets and weak classifiers</strong>, which describes every real audit. No attack success rates or named commercial providers are disclosed; preprint, not peer-reviewed.</p>
+    </div>
+    <div>
+      <div class="mod sig" style="margin-bottom:13px">
+        <h3>What this actually means</h3>
+        <p class="sm2">Black-box behavioural verification is an <strong style="color:var(--ink)">arms race with a cost asymmetry favouring the provider</strong> — the same information asymmetry UC Berkeley named in 2025, now demonstrated constructively.</p>
+        <p class="sm2" style="margin-bottom:0">Add the confound from CISPA: a measured difference may be an honest backend change. And the negative result from August 2026 showing token-count similarity failing on holdout — sensitivity 0.50 — a caution against cheap proxies. The field is self-correcting in public, which is a good sign about the field and a bad sign about relying on detection alone.</p>
+      </div>
+      <div class="mod jade">
+        <h3>And why that strengthens the policy case</h3>
+        <p style="font-size:15px;line-height:1.5;margin:0 0 9px"><strong>The answer is not &ldquo;build a better detector.&rdquo;</strong></p>
+        <p class="sm2" style="margin-bottom:0">Detection alone loses an arms race against a well-resourced provider. Detection plus a <strong>legal obligation to have recorded the truth</strong> does not — because then spoofing a fingerprint is not a clever engineering result, it is falsification of a required record. Measurement makes a disclosure duty enforceable; the duty is what makes measurement matter.</p>
+      </div>
+    </div>
+  </div>
+  <div class="src"><a href="https://arxiv.org/html/2606.16100" target="_blank" rel="noopener">Zhang, Li &amp; Wang, GhostPrint, arXiv:2606.16100</a> · <a href="https://arxiv.org/abs/2504.04715" target="_blank" rel="noopener">Cai, Shi, Zhao &amp; Song (UC Berkeley), arXiv:2504.04715</a> · <a href="https://arxiv.org/abs/2608.29930" target="_blank" rel="noopener">Chen, &ldquo;Token Counts Are Not Model Lineage,&rdquo; 30 Aug 2026</a> · <a href="https://arxiv.org/html/2605.29979v1" target="_blank" rel="noopener">Wimbauer et al. (BIFOLD/TU Berlin), Fingerprinting Inference Systems</a></div>
+</div>
+</section>
+
+<!-- 24 OBSERVATORY -->
+<section class="slide" data-n="
+<h4>From one-off audit to continuous public record</h4>
+<li>A probe you run once is a snapshot. Drift is a time-series problem — you cannot detect a silent swap without a baseline recorded before it happened.</li>
+<li>The Observatory runs nightly against a fixed target set, signs each result with cosign, and writes it to a Rekor append-only transparency log. Corrections and retractions land in the same signed log.</li>
+<li>Note the catalogue scale: 191 providers, 6,728 models, classified into PRC-operator, first-party, aggregator and unresolved. That is the market map a procurement officer currently does not have.</li>
+<li>MPA-2026-001 is the live finding: a served model that switched identity mid-session to GLM (Zhipu) while presenting as Google Gemini. Classified as misrepresentation, high priority.</li>
+<li>Dwell on why mid-session matters: the endpoint was serving the claimed model at the start of the session. Any spot check taken at the wrong moment returns clean — which is precisely why a periodic-inspection regime would fail.</li>
+<li>Press refresh — it attempts a live read of the published site and falls back to the dated snapshot if the browser blocks the cross-origin read. Either way the live site is one click away, and that is the point: the evidence is public and checkable while you are standing here.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Continuous public record · Provenance Observatory</div>
+  <h2>An audit is a snapshot. Drift is a time series.</h2>
+  <p class="deckline">Nightly probing of a fixed target set, cosign-signed, written to a Rekor append-only transparency log, published with the measurements beside the verdicts so a reader can audit the conclusion rather than trust it.</p>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+    <button class="btn" id="obsR">⟳ Refresh live data</button>
+    <span class="hint" id="obsS">Snapshot: 2026-09-16 19:49 UTC</span>
+    <a href="https://lobster-shrimp.github.io/provenance-observatory/" target="_blank" rel="noopener" class="hint" style="margin-left:auto;color:var(--ice)">open the live observatory ↗</a>
+  </div>
+  <div class="g g4">
+    <div class="mod ice"><div class="stat s-ice">8</div><div class="lab">Monitored endpoints across Anthropic, OpenAI, Gemini, DeepSeek and Moonshot</div></div>
+    <div class="mod jade"><div class="stat s-jade">0</div><div class="lab">False positives — 1/1 negative controls clean, 1/1 positive controls caught</div></div>
+    <div class="mod coral"><div class="stat s-coral">1</div><div class="lab">Model-switch alert · advisory <span class="mono">MPA-2026-001</span>, high priority</div></div>
+    <div class="mod violet"><div class="stat s-violet">6,728</div><div class="lab">Models across <strong style="color:var(--ink2)">191 providers</strong> in the signed catalogue, classified by jurisdiction</div></div>
+  </div>
+  <div class="g gsplit" style="margin-top:15px">
+    <div class="mod coral">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <span class="chip c-coral">MPA-2026-001 · HIGH</span><span class="mono" style="font-size:10.5px;color:var(--ink3)">misrepresentation</span>
+      </div>
+      <p style="font-size:15px;margin:13px 0 0;line-height:1.5"><span class="mono s-sig">chat-z-ai-webapp</span> — &ldquo;served model switched identity <strong>mid-session</strong> to GLM (Zhipu)&rdquo; <span style="color:var(--ink2)">(claimed: Google Gemini)</span>.</p>
+      <p class="sm2" style="margin-top:12px;margin-bottom:0"><strong style="color:var(--ink)">A mid-session switch defeats every sampling-based inspection regime by construction.</strong> The endpoint was serving the claimed model at the start of the session. Any spot check taken at the wrong moment returns clean — and a clean finding that is wrong is worse than no finding. The probe now ships a <span class="mono">soak</span> monitor that polls an endpoint&rsquo;s model card and tokenizer fingerprint continuously over a set duration — the tokenizer is the switch authority — so a substitution is caught when it happens rather than missed between spot checks.</p>
+    </div>
+    <div class="mod">
+      <h3>What makes it usable in a proceeding</h3>
+      <ul class="tight">
+        <li><strong>Numbered advisories</strong> in <span class="mono">MPA-YYYY-NNN</span> form, for citation in compliance filings</li>
+        <li><strong>Cosign + Rekor</strong> tamper-evident append-only log — the record cannot be silently revised</li>
+        <li><strong>Published false-positive rates</strong> from known-answer controls, live on the homepage</li>
+        <li><strong>Publication policy:</strong> proxy measurements require calibration disclosure; contradicted cross-checks are quarantined for human review before publication</li>
+        <li><strong>Corrections and retractions</strong> land in the same signed log</li>
+        <li>Per-target <strong>drift timelines</strong> and RSS</li>
+      </ul>
+    </div>
+  </div>
+  <div class="src"><a href="https://lobster-shrimp.github.io/provenance-observatory/" target="_blank" rel="noopener">Provenance Observatory</a> · <a href="https://lobster-shrimp.github.io/provenance-observatory/advisories.html" target="_blank" rel="noopener">advisories</a> · <a href="https://lobster-shrimp.github.io/provenance-observatory/catalog.html" target="_blank" rel="noopener">catalogue</a> · <a href="https://github.com/lobster-shrimp/provenance-observatory" target="_blank" rel="noopener">source</a>. Figures as published 16 Sep 2026.</div>
+</div>
+</section>
+
+<!-- 25 LANDSCAPE -->
+<section class="slide" data-n="
+<h4>Who else is working on this, honestly assessed</h4>
+<li>Do not claim this is the only or best answer. Claim it occupies a position nothing else occupies: works without vendor cooperation, runs continuously, publishes signed evidence.</li>
+<li>TEE attestation with a weights commitment is strictly stronger where it exists — but it requires the provider to opt in, own the right hardware, publish a reproducible boot image and enforce the commitment at read time. Four refusals in practice for closed frontier models.</li>
+<li>Note the newest entrant, because it matters: Tencent open-sourced Ventor-QTest inside AI-Infra-Guard in August 2026. Endpoint-fidelity auditing has moved from academia into a hyperscaler's security tooling.</li>
+<li>If asked why a regulator should trust an independent project — the answer is you shouldn't have to. Measurements are published alongside verdicts in a signed append-only log. That is a stronger position than any vendor self-attestation currently on offer.</li>
+<li>These are complements, not competitors: attestation for the cooperative case, fingerprinting for the adversarial one. A workable regime needs both, because the providers most worth auditing are the least likely to opt in.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Honest positioning · the landscape as of September 2026</div>
+  <h2>Who else is working on this, and where each one stops</h2>
+  <p class="deckline">Nothing here is a complete answer. The question for a regulator is which combination yields evidence that survives challenge.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:17%">Approach</th><th style="width:28%">What it does</th><th style="width:31%">Where it stops</th><th>No vendor<br>coop.</th><th>Contin-<br>uous</th><th>Signed<br>evidence</th></tr></thead>
+      <tbody>
+        <tr><td><strong>TEE + weights commitment</strong><br><span class="sm">Tinfoil, Feb 2026</span></td><td>Merkle root on the kernel command line, dm-verity enforcement, Sigstore-published measurements, attestation-bound TLS</td><td>Provider must opt in, own the hardware, publish a reproducible boot image. Only meaningful against publicly checkable open weights.</td><td class="no">No</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+        <tr><td><strong>TEE, enclave only</strong><br><span class="sm">Azure, GCP, AWS, Phala, Fortanix, Edgeless</span></td><td>Attests the enclave and usually the boot image; protects data and model confidentiality from the operator</td><td>Tier 0–1. No CPU or GPU attestation carries a claim about the model. Vendors routinely market this as if it answered model identity.</td><td class="no">No</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+        <tr><td><strong>Model Equality Testing</strong><br><span class="sm">Stanford, ICLR 2025</span></td><td>MMD two-sample test against reference weights; found 11/31 endpoints deviating</td><td>Needs reference weights — open models only. Batch study, not a service. Now shown spoofable by GhostPrint.</td><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td></tr>
+        <tr><td><strong>IRIS</strong><br><span class="sm">arXiv, Jul 2026</span></td><td>Budgeted black-box audit of substitution <em>and</em> routing dilution; 0.99 AUROC on backend verification</td><td>Probabilistic and budgeted, not per-request. Reference-dependent. Research artefact, no public record.</td><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td></tr>
+        <tr><td><strong>Ventor-QTest</strong><br><span class="sm">Tencent, Aug 2026</span></td><td>Fidelity-loss metrics (AFL/EFL) needing no logprobs; open-sourced in AI-Infra-Guard</td><td>Measures fidelity drift, not identity. Notable because endpoint auditing has moved into a hyperscaler&rsquo;s security tooling.</td><td class="yes">Yes</td><td class="part">Partly</td><td class="no">No</td></tr>
+        <tr><td><strong>Artificial Analysis</strong><br><span class="sm">Endpoint Accuracy Index</span></td><td>Independent endpoint benchmarking — the most-cited source on serving quality</td><td>Model version and precision are <em>confirmed by the provider on request</em> — self-attestation. Benchmark traffic is identifiable.</td><td class="part">Partly</td><td class="yes">Yes</td><td class="no">No</td></tr>
+        <tr><td><strong>Model signing / AI-BOM</strong><br><span class="sm">OpenSSF · CycloneDX · G7</span></td><td>Cryptographic integrity and declared composition of the artifact</td><td>Artifact at rest. Says nothing about a hosted endpoint. G7 elements are explicitly non-mandatory; &lt;2% of HF commits are signed.</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
+        <tr style="background:rgba(240,168,48,.06)"><td><strong>Probe + Observatory</strong></td><td>Client-side multi-layer fingerprinting, nightly, cosign+Rekor signed public record with numbered advisories</td><td>Probabilistic, not cryptographic proof. Confidence degrades where token counts are suppressed. Passive mode floors at INDETERMINATE. Spoofable in principle per GhostPrint.</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="deckline" style="margin-top:16px;max-width:1100px"><strong style="color:var(--ink)">These are complements, not competitors: attestation for the cooperative case, fingerprinting for the adversarial one.</strong> A workable regime needs both, because the providers most worth auditing are the least likely to opt in.</p>
+</div>
+</section>
+
+<!-- 26 ASKS -->
+<section class="slide" data-n="
+<h4>The asks — the operative slide</h4>
+<li>Six measures, cheapest first. None requires reopening the EU AI Act, and three need no new legislation at all.</li>
+<li><strong>#1 is the whole game and costs almost nothing.</strong> Providers already hold every one of those values internally — it is what they bill and route from. Making it a response field is a serialisation change. And note the NIST hook: SP 800-218A already requires producers to sign models and model changes. This binds that signature to a served response.</li>
+<li><strong>#2</strong> — a retention duty. Today these logs have no standardised retention requirement anywhere, so in an investigation there is nothing to compel because nothing is required to exist.</li>
+<li><strong>#3</strong> — procurement is the fastest lever and the drafting already exists: GSAR 552.239-7001(i)(1)(i). Fix its three defects — make it per-request, add an audit right, add retention.</li>
+<li><strong>#4</strong> — a safe harbour. Every measurement cited in this deck was produced by people operating without legal protection. A disclosure duty with no auditors is decorative.</li>
+<li><strong>#5</strong> — evaluations must name the serving configuration. CISPA's 16.6 points means an evaluation that omits the stack is not reproducible.</li>
+<li><strong>#6</strong> is new and comes from the honest reading of AA26-251A: if counter-distillation response differentiation is going to be officially encouraged, it needs an explicit, narrow, logged carve-out rather than a silent one.</li>
+<li>Close by asking them to pick one. Number one alone would change the field.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">What could actually be required</div>
+  <h2>Six measures. Three need no new legislation.</h2>
+  <p class="deckline">Ordered from lowest cost to highest. Select each for the mechanism and the existing legal hook.</p>
+  <div id="asks"></div>
+</div>
+</section>
+
+<!-- 27 LIMITS -->
+<section class="slide" data-n="
+<h4>The limits slide — never skip it</h4>
+<li>Put this in before anyone else does. With a regulatory or national-security audience, credibility comes from being first to state your own error bars.</li>
+<li>Fingerprinting yields probabilistic evidence with a stated confidence, not cryptographic proof. It supports an investigation or a contractual audit right. It would not by itself sustain a finding of fraud, and it should never be presented as if it would.</li>
+<li>Confidence degrades under suppression — which is exactly what a sophisticated adversary would do, at the cost of removing the usage transparency its own customers bill against.</li>
+<li>Attribution is bounded: a tokenizer match identifies a family, not a checkpoint, fine-tune or precision. Catalogue provenance entries are labelled sub-confirmed pointers, not measurements.</li>
+<li>Ethics and legality: active probing requires written authorisation and the tool aborts without it. Behavioural probes transmit politically sensitive prompts and are separately gated. An unauthorised probing regime would itself be a legal problem.</li>
+<li>Land on the ask: the point of an independent instrument is to make a disclosure duty enforceable, not to replace one.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Error bars, stated first</div>
+  <h2>What this cannot do</h2>
+  <p class="deckline">An instrument presented without its limits is advocacy, not measurement.</p>
+  <div class="g g3">
+    <div class="mod sig"><h3>Evidence, not proof</h3><p class="sm2" style="margin-bottom:0">Tokenizer and behavioural fingerprinting yield probabilistic verdicts with an explicit confidence label. That supports an investigation, a contractual audit right, or a regulatory information request. It does not by itself sustain a finding of fraud and must not be presented as if it did.</p></div>
+    <div class="mod sig"><h3>Spoofable in principle</h3><p class="sm2" style="margin-bottom:0">GhostPrint demonstrates that a provider willing to fine-tune can mimic a target fingerprint under finite query budgets. Detection is an arms race with a cost asymmetry favouring the provider. This is the strongest single argument <em>against</em> relying on measurement alone — and for pairing it with a legal record.</p></div>
+    <div class="mod sig"><h3>Degrades under suppression</h3><p class="sm2" style="margin-bottom:0">Full confidence requires the endpoint to report token usage. Endpoints that suppress token counts force a degraded assessment on wire and latency alone. A determined adversary can raise the cost of measurement — at the price of removing the usage transparency its own customers bill against.</p></div>
+    <div class="mod"><h3>Passive observation has a ceiling</h3><p class="sm2" style="margin-bottom:0">Trace-only assessment through the sentinel proxy cannot run active tokenizer probes, so it floors at INDETERMINATE. Reaching CONFIRMED requires active probing of the backend — which requires authorisation.</p></div>
+    <div class="mod"><h3>Probing is gated, and must be</h3><p class="sm2" style="margin-bottom:0">Targets carry an <span class="mono">authorized</span> flag and active probing aborts without it. Behavioural probes transmit politically sensitive prompts and are separately gated. API keys stay in memory and never enter report files. An unauthorised probing regime would be its own legal problem.</p></div>
+    <div class="mod"><h3>Attribution is bounded</h3><p class="sm2" style="margin-bottom:0">A tokenizer match identifies a <em>family</em>, not a specific checkpoint, fine-tune or numerical precision. Latency is corroborating only and never decides. Catalogue provenance entries are labelled &ldquo;sub-confirmed pointers,&rdquo; not measurements.</p></div>
+  </div>
+  <p class="deckline" style="margin-top:18px;max-width:1100px"><strong style="color:var(--signal)">The correct claim:</strong> an independent instrument does not replace a disclosure duty. It is what makes a disclosure duty <em>enforceable</em> — the difference between regulating self-report and regulating a fact.</p>
+</div>
+</section>
+
+<!-- 28 CLOSE -->
+<section class="slide" data-n="
+<h4>Close</h4>
+<li>Return to the opening line. We regulate what a model is and what it produces. Nobody measures which model answered.</li>
+<li>Everything downstream — safety evaluation, country-of-origin restriction, contractual warranty, evidentiary authentication, the entire GPAI transparency regime, a named entity ban in the NDAA — assumes a fact that nobody currently establishes.</li>
+<li>The gap is closable. The instruments exist and are open source. What is missing is the requirement, the retention duty, and the safe harbour for the people doing the measuring.</li>
+<li>Concrete next step: the Observatory is public and running tonight. Anyone in the room can add a target and read the signed record tomorrow morning.</li>
+<li>Leave the sources slide up during questions.</li>
+">
+<div class="wrap title-pane">
+  <div class="eyebrow">In one sentence</div>
+  <h1 style="max-width:1050px">We regulate what a model <em>is</em>, and what it <em>produces</em>.<br>Nobody measures which model <span style="color:var(--signal)">answered</span>.</h1>
+  <div class="rule"></div>
+  <p class="deckline" style="font-size:clamp(14px,1.5vw,19px);max-width:980px">
+    Safety evaluation, origin restriction, express warranty, evidentiary authentication, a named entity ban in the FY2026 NDAA and the entire GPAI transparency regime
+    all rest on a fact that no instrument currently establishes and no law currently requires anyone to record.
+    The gap is closable — the instruments are open source and running tonight. What is missing is the requirement.
+  </p>
+  <div class="g g3" style="margin-top:24px">
+    <div class="mod sig"><h3>Require the record</h3><p class="sm2" style="margin-bottom:0">Per-request resolved model identity, precision and serving jurisdiction as a response field. Twelve-month retention of routing decisions. The NIST signing duty already exists — bind it to a served response.</p></div>
+    <div class="mod sig"><h3>Protect the measurers</h3><p class="sm2" style="margin-bottom:0">A safe harbour for good-faith independent verification, so a disclosure duty has auditors capable of testing it. Every measurement in this deck was produced without one.</p></div>
+    <div class="mod sig"><h3>Read the evidence</h3><p class="sm2" style="margin-bottom:0"><a href="https://lobster-shrimp.github.io/provenance-observatory/" target="_blank" rel="noopener">lobster-shrimp.github.io/provenance-observatory</a> — signed, append-only, published nightly, corrections in the same log.</p></div>
+  </div>
+  <div class="src"><a href="https://github.com/lobster-shrimp/provenance-probe/" target="_blank" rel="noopener">provenance-probe</a> · <a href="https://github.com/lobster-shrimp/provenance-observatory" target="_blank" rel="noopener">provenance-observatory</a> · <a href="https://lobster-shrimp.github.io/provenance-observatory/" target="_blank" rel="noopener">live observatory</a> · <a href="https://provenance-probe-513338163479.us-central1.run.app/watch" target="_blank" rel="noopener">watch service</a> (authenticated)</div>
+</div>
+</section>
+
+<!-- 29 SOURCES -->
+<section class="slide" data-n="
+<h4>Sources — leave up during Q&amp;A</h4>
+<li>Every figure traces to one of these. Where sources conflicted or could not be verified, the slide said so.</li>
+<li>The verification panel is not boilerplate — read it if challenged. Reddit unreachable by nine methods; two NSA/CISA PDFs unretrievable behind 403; the Pascual docket needs a PACER pull; several key papers are preprints.</li>
+<li>Offer the full annotated research dossier — it runs several times longer than this deck and is in the project.</li>
+">
+<div class="wrap">
+  <div class="eyebrow">Sources &amp; verification notes</div>
+  <h2>Where every number came from</h2>
+  <div class="g g4" style="margin-top:14px">
+    <div class="mod ice">
+      <h3>Measurement &amp; research</h3>
+      <p class="sm" style="line-height:2;margin-bottom:0">
+        <a href="https://arxiv.org/abs/2410.20247" target="_blank" rel="noopener">Model Equality Testing · ICLR 2025</a><br>
+        <a href="https://arxiv.org/html/2604.08407" target="_blank" rel="noopener">Your Agent Is Mine · ACM CCS 2026</a><br>
+        <a href="https://arxiv.org/abs/2605.19537" target="_blank" rel="noopener">The Silent Hyperparameter · CISPA</a><br>
+        <a href="https://arxiv.org/abs/2607.20860" target="_blank" rel="noopener">IRIS · routing dilution</a><br>
+        <a href="https://arxiv.org/html/2606.16100" target="_blank" rel="noopener">GhostPrint · fingerprint spoofing</a><br>
+        <a href="https://arxiv.org/abs/2504.04715" target="_blank" rel="noopener">Are You Getting What You Pay For? · Berkeley</a><br>
+        <a href="https://arxiv.org/html/2605.29979v1" target="_blank" rel="noopener">Fingerprinting Inference Systems · BIFOLD</a><br>
+        <a href="https://arxiv.org/abs/2608.16391" target="_blank" rel="noopener">Ventor-QTest · Tencent</a>
+      </p>
+    </div>
+    <div class="mod violet">
+      <h3>MIT &amp; Stanford</h3>
+      <p class="sm" style="line-height:2;margin-bottom:0">
+        <a href="https://www.nature.com/articles/s42256-024-00878-8" target="_blank" rel="noopener">Dataset licensing audit · Nature MI</a><br>
+        <a href="https://arxiv.org/abs/2407.14933" target="_blank" rel="noopener">Consent in Crisis · NeurIPS 2024</a><br>
+        <a href="https://www.dataprovenance.org/" target="_blank" rel="noopener">Data Provenance Initiative</a><br>
+        <a href="https://airisk.mit.edu" target="_blank" rel="noopener">MIT AI Risk Repository</a><br>
+        <a href="https://crfm.stanford.edu/fmti/December-2025" target="_blank" rel="noopener">FMTI 2025 · Stanford CRFM</a><br>
+        <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener">AI Index 2026 · Stanford HAI</a><br>
+        <a href="https://arxiv.org/abs/2403.07918" target="_blank" rel="noopener">Open Foundation Models · ICML 2024</a>
+      </p>
+    </div>
+    <div class="mod jade">
+      <h3>Government &amp; standards</h3>
+      <p class="sm" style="line-height:2;margin-bottom:0">
+        <a href="https://www.ncsc.gov.uk/collection/guidelines-secure-ai-system-development" target="_blank" rel="noopener">Secure AI System Development · 18 countries</a><br>
+        <a href="https://media.defense.gov/2024/Apr/15/2003439257/-1/-1/0/CSI-DEPLOYING-AI-SYSTEMS-SECURELY.PDF" target="_blank" rel="noopener">Deploying AI Systems Securely · NSA AISC</a><br>
+        <a href="https://media.defense.gov/2025/May/22/2003720601/-1/-1/0/CSI_AI_DATA_SECURITY.PDF" target="_blank" rel="noopener">AI Data Security · May 2025</a><br>
+        <a href="https://www.cyber.gc.ca/en/news-events/joint-guidance-supply-chain-risks-mitigations-artificial-intelligence-machine-learning" target="_blank" rel="noopener">AI/ML Supply Chain · Mar 2026</a><br>
+        <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218A.pdf" target="_blank" rel="noopener">NIST SP 800-218A</a><br>
+        <a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf" target="_blank" rel="noopener">NIST AI 600-1</a><br>
+        <a href="https://csrc.nist.gov/projects/cosais" target="_blank" rel="noopener">NIST COSAIS</a><br>
+        <a href="https://artificialintelligenceact.eu/article/91/" target="_blank" rel="noopener">EU AI Act Article 91</a>
+      </p>
+    </div>
+    <div class="mod sig">
+      <h3>Industry &amp; incidents</h3>
+      <p class="sm" style="line-height:2;margin-bottom:0">
+        <a href="https://www.anthropic.com/engineering/a-postmortem-of-three-recent-issues" target="_blank" rel="noopener">Anthropic postmortems</a><br>
+        <a href="https://tinfoil.sh/blog/2026-02-03-proving-model-identity" target="_blank" rel="noopener">Tinfoil · proving model identity</a><br>
+        <a href="https://docs.nvidia.com/attestation/advanced-documentation/latest/claims-guide/gpu_claims.html" target="_blank" rel="noopener">NVIDIA GPU claims schema</a><br>
+        <a href="https://docs.trustauthority.intel.com/" target="_blank" rel="noopener">Intel Trust Authority</a><br>
+        <a href="https://mmoustafa.com/blog/so-you-want-to-use-openrouter/" target="_blank" rel="noopener">Moustafa · OpenRouter measurements</a><br>
+        <a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/chinese-grey-market-sells-claude-api-access-at-90-percent-off-through-proxy-networks-that-harvest-user-data" target="_blank" rel="noopener">Grey-market proxy study</a><br>
+        <a href="https://stripe.com/newsroom/news/stripe-agrees-to-acquire-openrouter" target="_blank" rel="noopener">Stripe acquires OpenRouter</a><br>
+        <a href="https://artificialanalysis.ai/articles/endpoint-accuracy-index" target="_blank" rel="noopener">Endpoint Accuracy Index</a>
+      </p>
+    </div>
+  </div>
+  <div class="mod coral" style="margin-top:16px">
+    <h3>Verification notes — stated for the record</h3>
+    <p class="sm2" style="margin-bottom:0">
+      <strong style="color:var(--ink)">Reddit was verified unreachable</strong> by nine distinct methods on 16 Sep 2026; no Reddit content is quoted or paraphrased anywhere in this deck.
+      <strong style="color:var(--ink)">Unretrieved primaries:</strong> the March 2026 Five Eyes supply-chain PDF and the September 2026 distillation advisory both returned HTTP 403 to automated retrieval — titles, dates and signatories are confirmed against government sites, but body quotes come from press releases and secondary reporting and should be checked against the originals before formal citation.
+      <strong style="color:var(--ink)">Preprints, not peer-reviewed:</strong> IRIS, GhostPrint, Ventor-QTest, the token-count negative result. Peer-reviewed without qualification: Nature MI 2024, NeurIPS 2024, ICLR 2025, ICML 2024 and 2025, Patterns 2026, and ACM CCS 2026.
+      <strong style="color:var(--ink)">Vendor claims flagged as such:</strong> Tinfoil, Phala, Fortanix and NVIDIA performance figures come from each party&rsquo;s own materials.
+      <strong style="color:var(--ink)">Allegations, not findings:</strong> <em>Pascual v. Anthropic</em> (filed 24 Jul 2026, N.D. Cal. 3:26-cv-07699) and the related Anthropic consumer suits are untested; no court has ruled and no class is certified; the docket needs a PACER pull for current status. Reflection 70B was never adjudicated.
+      <strong style="color:var(--ink)">Conflicting figures:</strong> FMTI 2025 mean is 40 on arXiv and in the AI Index, 41 on the CRFM site — 40 used here. Chinese-share-of-traffic figures vary by denominator across sources.
+    </p>
+  </div>
+</div>
+</section>
+
+</div><!-- /deck -->
+
+<div class="prog" id="prog" style="width:0"></div>
+<div class="notes" id="notes"><div class="notes-in" id="notesIn"></div></div>
+<div class="bar">
+  <div class="nm">Who Actually Answered · AI supply-chain provenance · Sep 2026</div>
+  <button class="btn" id="bPrev" aria-label="Previous slide">←</button>
+  <div class="ctr" id="ctr">1 / 29</div>
+  <button class="btn" id="bNext" aria-label="Next slide">→</button>
+  <button class="btn" id="bNotes">Notes (N)</button>
+  <button class="btn" id="bFs" aria-label="Fullscreen">⛶</button>
+</div>
+
+<script>
+(function(){
+"use strict";
+var slides=[].slice.call(document.querySelectorAll('.slide'));
+var cur=0;
+function render(){
+  slides.forEach(function(s,i){ s.classList.toggle('on', i===cur); });
+  document.getElementById('ctr').textContent=(cur+1)+' / '+slides.length;
+  document.getElementById('prog').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('notesIn').innerHTML=slides[cur].getAttribute('data-n')||'<h4>Notes</h4><li>—</li>';
+  slides[cur].scrollTop=0;
+}
+function go(d){ cur=Math.max(0,Math.min(slides.length-1,cur+d)); render(); }
+function toggleNotes(){ document.body.classList.toggle('nt'); }
+function fs(){ try{ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen(); }catch(e){} }
+document.getElementById('bPrev').onclick=function(){go(-1)};
+document.getElementById('bNext').onclick=function(){go(1)};
+document.getElementById('bNotes').onclick=toggleNotes;
+document.getElementById('bFs').onclick=fs;
+document.addEventListener('keydown',function(e){
+  var t=e.target.tagName;
+  if(t==='INPUT'||t==='SELECT'||t==='TEXTAREA')return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1);}
+  else if(e.key.toLowerCase()==='n'){toggleNotes();}
+  else if(e.key.toLowerCase()==='f'){fs();}
+  else if(e.key==='Home'){cur=0;render();}
+  else if(e.key==='End'){cur=slides.length-1;render();}
+});
+
+/* --- slide 2 expanders --- */
+[].forEach.call(document.querySelectorAll('#prov .pick'),function(c){
+  function t(){ var d=c.querySelector('.det'); d.hidden=!d.hidden; c.setAttribute('aria-expanded', String(!d.hidden)); }
+  c.addEventListener('click',t);
+  c.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();t();} });
+});
+
+/* --- slide 3 calculator --- */
+var PRICES=[
+ {n:'Claude Fable 5 / Mythos 5',i:10,o:50},{n:'Claude Opus 5',i:5,o:25},
+ {n:'GPT-5.6-sol',i:2.5,o:15},{n:'Claude Sonnet 5',i:2,o:10},
+ {n:'GPT-5.6-terra',i:1,o:6},{n:'Claude Haiku 4.5',i:1,o:5},
+ {n:'GPT-5.6-luna',i:0.10,o:0.60},{n:'DeepSeek V3.2 (cheapest endpoint)',i:0.2088,o:0.3096}];
+var mC=document.getElementById('mClaim'),mS=document.getElementById('mServe');
+PRICES.forEach(function(p,i){
+  mC.insertAdjacentHTML('beforeend','<option value="'+i+'">'+p.n+' — $'+p.o+'/M out</option>');
+  mS.insertAdjacentHTML('beforeend','<option value="'+i+'">'+p.n+' — $'+p.o+'/M out</option>');
+});
+mC.value='1'; mS.value='7';
+document.getElementById('pTab').innerHTML=PRICES.map(function(p){
+  return '<tr><td>'+p.n+'</td><td style="text-align:right" class="mono">$'+p.i.toFixed(2)+'</td><td style="text-align:right" class="mono">$'+p.o.toFixed(2)+'</td></tr>';}).join('');
+function money(x){ if(x>=1e9)return '$'+(x/1e9).toFixed(2)+'B'; if(x>=1e6)return '$'+(x/1e6).toFixed(2)+'M'; if(x>=1e3)return '$'+(x/1e3).toFixed(1)+'K'; return '$'+x.toFixed(0); }
+function calc(){
+  var a=PRICES[+mC.value], b=PRICES[+mS.value];
+  var dil=+document.getElementById('dil').value;
+  var v=+document.getElementById('vol').value;
+  var volM=Math.exp(Math.log(1)+(Math.log(100000)-Math.log(1))*(v-1)/99);
+  document.getElementById('dilL').textContent=dil+'%';
+  document.getElementById('volL').textContent=(volM>=1000?(volM/1000).toFixed(1)+'B':Math.round(volM)+'M');
+  var routed=volM*(dil/100), billed=routed*a.o, cost=routed*b.o, margin=Math.max(0,billed-cost);
+  var ratio=b.o>0?a.o/b.o:0, pct=billed>0?margin/billed*100:0;
+  document.getElementById('oM').textContent=money(margin);
+  document.getElementById('oR').textContent=(ratio>=1?ratio.toFixed(1):ratio.toFixed(2))+'×';
+  document.getElementById('oP').textContent=pct.toFixed(1)+'%';
+  document.getElementById('oY').textContent=money(margin*12);
+}
+['mClaim','mServe','dil','vol'].forEach(function(id){ document.getElementById(id).addEventListener('input',calc); });
+calc();
+
+/* --- slide 5 timeline --- */
+var TL=[
+{d:'Sep 2024',t:'Reflection 70B',c:'coral',b:'Claimed a state-of-the-art open model. Independent testers found the hosted API behaved like Claude, not Llama: it could not emit the string &ldquo;Claude,&rdquo; and the API consistently did not match the base model tokenizer. The founder denied serving other providers&rsquo; models. <strong>Never adjudicated by any regulator — two years on, the record is still open.</strong>'},
+{d:'Apr 2025',t:'Meta · Llama 4 on LMArena ◆',c:'sig',b:'Meta submitted <span class="mono">Llama-4-Maverick-03-26-Experimental</span>, &ldquo;optimized for conversationality,&rdquo; to the leaderboard. The shipped model then ranked around 32nd — below GPT-4o, Claude 3.5 Sonnet and Gemini 1.5 Pro. LMArena apologised and changed its policies. <strong>The benchmarked artifact was not the shipped artifact.</strong>'},
+{d:'Aug–Sep 2025',t:'Anthropic · postmortem #1 ◆',c:'sig',b:'A context-window routing error ran 5 Aug – 18 Sep 2025, affecting 0.8% of Sonnet 4 requests initially and <strong>16% at peak on 31 August</strong>; roughly 30% of Claude Code users saw at least one degraded response. Plus TPU output corruption and an XLA:TPU miscompilation. Disclosed voluntarily; Anthropic states it &ldquo;never reduce[s] model quality due to demand, time of day, or server load.&rdquo;<br><br><strong style="color:var(--signal)">Why it matters:</strong> a first-party lab with full access to its own stack took roughly six weeks to characterise which requests were served by which configuration.'},
+{d:'Sep 2025',t:'OpenAI · undisclosed safety router ◆',c:'sig',b:'Subscribers protested &ldquo;silent overrides, secret safety routers.&rdquo; OpenAI confirmed a routing system that activates for sensitive and emotional topics on a per-message, temporary basis. Whatever one thinks of the purpose, the mechanism is the same: <strong>the model identifier the user selected ceased to determine which model answered.</strong>'},
+{d:'Nov 2025',t:'Windsurf · SWE-1.5 via Z.ai',c:'coral',b:'Windsurf confirmed its core model was provided by Z.ai (formerly Zhipu AI) only after Z.ai&rsquo;s own account reposted the launch announcement with a congratulatory note. Reported in the same period: developers noticing Chinese-language text appearing in code generated by a competing tool. <strong>Origin surfaced through a social-media repost, not disclosure.</strong>'},
+{d:'19 Mar 2026',t:'Cursor · Composer 2 ◆',c:'coral',b:'Composer 2 launched as &ldquo;continued pre-training of a base model combined with reinforcement learning.&rdquo; Within about 24 hours a developer routed the API traffic through a local debug proxy and read the model ID: <span class="mono">accounts/anysphere/models/kimi-k2p5-rl-0317-s515-fast</span> — Moonshot AI&rsquo;s Kimi K2.5.<br><br>Moonshot&rsquo;s Head of Pretraining confirmed the tokenizer was <strong>&ldquo;completely identical to our Kimi tokenizer.&rdquo;</strong> Cursor&rsquo;s co-founder acknowledged that not disclosing the base model was a mistake.<br><br><strong style="color:var(--signal)">Tokenizer fingerprinting resolving a real public dispute in under a day.</strong>'},
+{d:'Apr 2026',t:'Anthropic · postmortem #2 ◆',c:'sig',b:'A second postmortem, 23 April 2026, on three product-layer changes: reasoning-effort default dropped from <span class="mono">high</span> to <span class="mono">medium</span> for Claude Code on 4 Mar (reverted 7 Apr); a caching bug clearing thinking history every turn from 26 Mar (fixed 10 Apr); a system-prompt verbosity limit from 16 Apr costing a measured <strong>3% quality drop</strong> (reverted 20 Apr).<br><br>Anthropic, verbatim: <em>&ldquo;We take reports about degradation very seriously. We never intentionally degrade our models.&rdquo;</em> <strong>A second instance of the same structural point — and the factual substrate of the consumer litigation that followed.</strong>'},
+{d:'9 May 2026',t:'Grey-market substitution documented',c:'coral',b:'Research by Zilan Qian (Oxford China Policy Lab) plus a CISPA audit of 17 proxy services: <em>&ldquo;Users requesting Claude Opus may instead receive responses from cheaper models such as Sonnet, Haiku, or even domestic Chinese alternatives like Qwen, with the output fraudulently relabeled.&rdquo;</em><br><br>Proxy access marketed as &ldquo;Gemini-2.5&rdquo; scored <strong>37%</strong> on a medical benchmark where the official API scored nearly <strong>84%</strong>. Claude access sold at up to 90% below official rates. <strong>The cleanest documented paid-A / served-B case anywhere.</strong>'},
+{d:'15 Jun 2026',t:'GhostPrint · detection defeated',c:'violet',b:'Penn State publishes fingerprint spoofing: a provider serves a weaker model fine-tuned to mimic the stronger model&rsquo;s fingerprint, <strong>explicitly defeating LLMmap, Model Equality Testing and LLM-idiosyncrasies by name</strong> under finite query budgets.<br><br>This is the moment the field&rsquo;s main verification technique acquired a published counter-technique. Slide 23 deals with it properly.'},
+{d:'24 Jul 2026',t:'Pascual v. Anthropic — alleged',c:'coral',b:'<span class="chip c-sig">Allegation, untested</span><br><br>Consumer class action (N.D. Cal., 3:26-cv-07699) alleging March–May 2026 backend changes &ldquo;reduced the tool&rsquo;s reasoning capability, caused it to lose context, repeat tasks and generate cache misses,&rdquo; so subscribers &ldquo;received materially diminished services without refunds or credits.&rdquo; One of a cluster of at least four N.D. Cal. suits; Anthropic has moved to dismiss in a related case. <strong>No court has ruled; no class certified.</strong><br><br>Whatever its merits, note what it requires: a factual record of which configuration served which requests. <strong>No such record is required to exist.</strong>'},
+{d:'19 Aug 2026',t:'Stripe acquires OpenRouter',c:'ice',b:'Reported at $7B+. A payments company acquires the dominant multi-model gateway — 400+ models, 80+ providers — which &ldquo;lets businesses dynamically evaluate each request, routing it to the optimal model based on task complexity, price, speed, and reliability.&rdquo; Patrick Collison: <em>&ldquo;Tokens are the central currency for companies building with AI.&rdquo;</em><br><br>The layer that decides which model answers is now systemically important financial infrastructure.'},
+{d:'~1 Sep 2026',t:'EU · first Article 91 requests',c:'violet',b:'The Commission issues its first information requests under Article 91 to <strong>more than 30 AI providers</strong>, in two strands: safety and security of the most advanced models, and copyright and transparency — targeting providers that had not published training-data summaries. Article 101(1)(b) separately penalises incomplete or misleading responses. No recipients officially named.<br><br><strong style="color:var(--signal)">The first exercise of the new powers did not ask which model serves a request.</strong>'},
+{d:'8 Sep 2026',t:'NSA / CISA / FBI · AA26-251A',c:'coral',b:'A joint advisory names six China-based AI companies — DeepSeek, Moonshot AI, Alibaba, MiniMax, StepFun, Z.AI — conducting &ldquo;industrial-scale distillation campaigns&rdquo; against US frontier models, and describes <em>&ldquo;a gray market of API proxies known as transfer stations&rdquo;</em> used to &ldquo;bypass geographic restrictions, evade safeguards, and undermine traceability.&rdquo;<br><br><strong>Model lineage is now, officially, a national-security concern — with no proposed means of determining lineage at the point of consumption.</strong>'}];
+(function(){
+  var w=document.getElementById('tl');
+  var h='<div style="position:relative;padding:22px 0 6px"><div style="position:absolute;left:0;right:0;top:46px;height:1px;background:var(--rule2)"></div><div style="display:flex;justify-content:space-between;position:relative;gap:2px">';
+  TL.forEach(function(e,i){
+    h+='<div class="tli pick" data-i="'+i+'" tabindex="0" role="button" style="flex:1;text-align:center;min-width:0">'+
+       '<div class="mono" style="font-size:9px;color:var(--ink3);height:24px;line-height:1.3">'+e.d+'</div>'+
+       '<div class="tld" style="width:11px;height:11px;border-radius:50%;background:var(--ground);border:2px solid var(--'+e.c+');margin:0 auto;transition:.18s"></div>'+
+       '<div style="font-size:9.5px;color:var(--ink2);margin-top:8px;line-height:1.3;min-height:38px;padding:0 2px">'+e.t+'</div></div>';
+  });
+  w.innerHTML=h+'</div></div>';
+  function show(i){
+    var e=TL[i];
+    document.getElementById('tlD').innerHTML='<div style="display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-bottom:11px"><span class="chip c-'+e.c+'">'+e.d+'</span><h3 style="margin:0;font-size:19px">'+e.t+'</h3></div><p style="font-size:13.5px;line-height:1.6;margin:0;max-width:1120px">'+e.b+'</p>';
+    [].forEach.call(document.querySelectorAll('.tli'),function(n){
+      var d=n.querySelector('.tld'), on=+n.getAttribute('data-i')===i;
+      d.style.transform=on?'scale(1.5)':'scale(1)';
+      d.style.background=on?'var(--'+TL[+n.getAttribute('data-i')].c+')':'var(--ground)';
+    });
+  }
+  [].forEach.call(document.querySelectorAll('.tli'),function(n){
+    n.addEventListener('click',function(){show(+n.getAttribute('data-i'))});
+    n.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();show(+n.getAttribute('data-i'));}});
+  });
+  show(5);
+})();
+
+/* --- slide 8 evidence chart --- */
+(function(){
+  var rows=[
+    {l:'gpt-oss-120b · tool calling across endpoints',lo:22,hi:37,u:'% accuracy · Artificial Analysis, Aug 2026',c:'#6fb3e0'},
+    {l:'DeepSeek V4 Flash · GPQA Diamond across hosts',lo:75,hi:90,u:'% accuracy · Moustafa, Sep 2026',c:'#45b98a'},
+    {l:'Benchmark swing from inference backend alone',lo:0,hi:16.6,u:'percentage points · CISPA, May 2026',c:'#f0a830'},
+    {l:'Adversarial-prompt vulnerability, same weights',lo:0,hi:8.9,u:'percentage points · CISPA, May 2026',c:'#e4594a'}
+  ];
+  var W=540,rowH=58,H=rows.length*rowH+16,P=10,maxV=100,bw=W-P-150;
+  var g='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto" role="img" aria-label="Measured divergence between endpoints">';
+  [0,25,50,75,100].forEach(function(v){
+    var x=P+v/maxV*bw;
+    g+='<line x1="'+x+'" y1="4" x2="'+x+'" y2="'+(H-14)+'" stroke="#23333f" stroke-width="1"/>';
+    g+='<text x="'+x+'" y="'+(H-3)+'" fill="#65798a" font-size="8.5" text-anchor="middle" font-family="IBM Plex Mono,monospace">'+v+'</text>';
+  });
+  rows.forEach(function(r,i){
+    var y=P+i*rowH;
+    g+='<text x="'+P+'" y="'+(y+10)+'" fill="#e9eff5" font-size="10.5" font-family="IBM Plex Sans,sans-serif">'+r.l+'</text>';
+    g+='<rect x="'+P+'" y="'+(y+18)+'" width="'+bw+'" height="8" rx="4" fill="#18242e"/>';
+    var x1=P+r.lo/maxV*bw, x2=P+r.hi/maxV*bw;
+    g+='<rect x="'+x1+'" y="'+(y+18)+'" width="'+Math.max(3,x2-x1)+'" height="8" rx="4" fill="'+r.c+'"/>';
+    g+='<text x="'+(x2+8)+'" y="'+(y+26)+'" fill="'+r.c+'" font-size="10.5" font-family="IBM Plex Mono,monospace" font-weight="600">'+(r.lo>0?r.lo+'–'+r.hi:'+'+r.hi)+'</text>';
+    g+='<text x="'+P+'" y="'+(y+42)+'" fill="#65798a" font-size="8.5" font-family="IBM Plex Sans,sans-serif">'+r.u+'</text>';
+  });
+  document.getElementById('chEv').innerHTML=g+'</svg>';
+})();
+
+/* --- slide 12 FMTI chart --- */
+(function(){
+  var pts=[{x:'Oct 2023',v:37,n:'10 developers'},{x:'May 2024',v:58,n:'14 developers'},{x:'Dec 2025',v:40,n:'13 developers'}];
+  var W=460,H=230,L=40,R=20,T=24,B=42, iw=W-L-R, ih=H-T-B;
+  var xs=function(i){return L+iw*(i/(pts.length-1));};
+  var ys=function(v){return T+ih*(1-v/100);};
+  var g='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto" role="img" aria-label="FMTI mean transparency score 37, 58, 40">';
+  [0,25,50,75,100].forEach(function(v){
+    g+='<line x1="'+L+'" y1="'+ys(v)+'" x2="'+(W-R)+'" y2="'+ys(v)+'" stroke="#23333f" stroke-width="1"/>';
+    g+='<text x="'+(L-7)+'" y="'+(ys(v)+3.5)+'" fill="#65798a" font-size="9" text-anchor="end" font-family="IBM Plex Mono,monospace">'+v+'</text>';
+  });
+  g+='<polyline fill="none" stroke="#f0a830" stroke-width="2.5" points="'+pts.map(function(p,i){return xs(i)+','+ys(p.v);}).join(' ')+'"/>';
+  pts.forEach(function(p,i){
+    g+='<circle cx="'+xs(i)+'" cy="'+ys(p.v)+'" r="5" fill="#0b1117" stroke="#f0a830" stroke-width="2.5"/>';
+    g+='<text x="'+xs(i)+'" y="'+(ys(p.v)-13)+'" fill="#f0a830" font-size="15" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-weight="600">'+p.v+'</text>';
+    g+='<text x="'+xs(i)+'" y="'+(H-22)+'" fill="#9db0be" font-size="9.5" text-anchor="middle" font-family="IBM Plex Sans,sans-serif">'+p.x+'</text>';
+    g+='<text x="'+xs(i)+'" y="'+(H-9)+'" fill="#65798a" font-size="8.5" text-anchor="middle" font-family="IBM Plex Sans,sans-serif">'+p.n+'</text>';
+  });
+  g+='<text x="'+((xs(1)+xs(2))/2)+'" y="'+(ys(50)-4)+'" fill="#e4594a" font-size="10" text-anchor="middle" font-family="IBM Plex Mono,monospace">−18 in one year</text>';
+  document.getElementById('chFmti').innerHTML=g+'</svg>';
+})();
+
+/* --- generic tab builder --- */
+function tabs(tabId,bodyId,data,start,render){
+  var t=document.getElementById(tabId);
+  t.innerHTML=data.map(function(d,i){return '<button class="btn tb-'+tabId+'" data-i="'+i+'">'+d.k+'</button>';}).join('');
+  function show(i){
+    [].forEach.call(document.querySelectorAll('.tb-'+tabId),function(b){ b.classList.toggle('on', +b.getAttribute('data-i')===i); });
+    document.getElementById(bodyId).innerHTML=render(data[i]);
+  }
+  [].forEach.call(document.querySelectorAll('.tb-'+tabId),function(b){ b.addEventListener('click',function(){show(+b.getAttribute('data-i'));}); });
+  show(start);
+}
+
+/* --- slide 10 taxonomy --- */
+tabs('taxT','taxB',[
+{k:'Substitution',sub:'Requires intent',c:'coral',b:'<p style="font-size:14px;line-height:1.55;max-width:1000px">A different model answers while the advertised identifier is billed. The clearest case and the easiest to argue as deception — and the easiest for a competent operator to avoid being caught at, because nothing measures it.</p><div class="g g2" style="margin-top:14px"><div class="mod"><h3>Detection</h3><p class="sm2" style="margin-bottom:0">Moderate. Cross-family substitution produces a strong tokenizer signal; Stanford&rsquo;s MMD test reached 77.4% median power on about ten samples per prompt. Now demonstrably spoofable by a provider willing to fine-tune (GhostPrint).</p></div><div class="mod"><h3>Legal hook today</h3><p class="sm2" style="margin-bottom:0">FTC Act §5 deception; UCC §2-313 express warranty; general consumer-protection statutes. No AI-specific instrument required — but no action has ever been brought.</p></div></div>'},
+{k:'Degradation',sub:'Often inadvertent',c:'sig',b:'<p style="font-size:14px;line-height:1.55;max-width:1000px">The advertised model, served at reduced numerical precision or on a differently configured inference stack. Frequently a genuine engineering decision rather than deception — and the hardest of the four to detect.</p><div class="g g2" style="margin-top:14px"><div class="mod coral"><h3>Detection</h3><p class="sm2" style="margin-bottom:0"><strong>Hard.</strong> Text classifiers distinguish quantized from full-precision at roughly chance — Berkeley measured ≈50%. MMD power for smaller models sits &ldquo;consistently below 0.2.&rdquo; Yet CISPA measured up to 16.6pp of accuracy difference from stack alone.</p></div><div class="mod"><h3>And the complication</h3><p class="sm2" style="margin-bottom:0">Precision is a bad proxy for quality — fp4 hosts land mid-pack among fp8 hosts. A quantization-label rule would create false assurance. OpenRouter&rsquo;s provider field permits <span class="mono">unknown</span> as a valid quantization value.</p></div></div>'},
+{k:'Drift',sub:'Usually lawful',c:'violet',b:'<p style="font-size:14px;line-height:1.55;max-width:1000px">A stable public alias silently repointed to new weights. Almost always permitted by terms of service, and almost always undisclosed at the granularity that would matter.</p><div class="g g2" style="margin-top:14px"><div class="mod sig"><h3>Why lawful drift is still a policy problem</h3><p class="sm2" style="margin-bottom:0">Every prior evaluation of that alias silently expires. AIES-26 found one stable identifier covering <strong>ten releases over nineteen months</strong> — and 0 of 9 providers whose deployed models could be mapped to published safety evaluations.</p></div><div class="mod"><h3>Detection</h3><p class="sm2" style="margin-bottom:0">Requires a <em>baseline recorded before the change</em>. This is why continuous monitoring, not one-off audit, is the necessary shape — you cannot detect drift from a measurement you never took.</p></div></div>'},
+{k:'Dilution',sub:'Defeats spot checks',c:'ice',b:'<p style="font-size:14px;line-height:1.55;max-width:1000px">Only a fraction &epsilon; of requests reach the promised model; the rest are routed elsewhere. Named and formalised by the IRIS work in July 2026.</p><div class="g g2" style="margin-top:14px"><div class="mod coral"><h3>Why this is the regulator&rsquo;s problem specifically</h3><p class="sm2" style="margin-bottom:0"><strong>Dilution defeats sampling-based inspection by construction.</strong> At low &epsilon; any individual spot check most likely returns clean. An inspection regime built on periodic checks would systematically miss it — and would issue clean findings that are worse than no finding.</p></div><div class="mod"><h3>Detection</h3><p class="sm2" style="margin-bottom:0">IRIS reports 0.85 mean power at &epsilon;=0.3 with a 0.017 false-positive rate — achievable, but only with a deliberate query budget and a statistical design. Never incidentally, and never from a single observation.</p></div></div>'}
+],0,function(d){ return '<h3 style="font-size:20px;color:var(--'+d.c+')">'+d.k+' <span class="chip c-'+d.c+'" style="vertical-align:middle;margin-left:8px">'+d.sub+'</span></h3>'+d.b; });
+
+/* --- slide 14 Five Eyes --- */
+tabs('feT','feB',[
+{k:'Nov 2023 · Secure AI development',c:'ice',m:'NCSC-UK with CISA · <strong>23 agencies, 18 countries</strong>',
+ q:'&ldquo;You document the creation, operation, and life cycle management of any models, datasets and meta- or system-prompts. Your documentation includes security-relevant information such as the sources of training data&hellip; <strong>cryptographic hashes or signatures</strong>, retention time, suggested review frequency and potential failure modes.&rdquo;',
+ s:'The hash is a documentation artefact produced by the developer. Nothing binds it to a served response, nothing requires an operator to publish it, and nothing gives a consumer any means of checking that the endpoint corresponds to the hashed weights. &ldquo;External APIs&rdquo; appear only as a component <em>you procure</em>, never as a surface whose contents must be verifiable.'},
+{k:'Apr 2024 · Deploying AI Securely',c:'ice',m:'NSA AISC lead · 7 agencies, 5 countries — full Five Eyes',
+ q:'&ldquo;Use cryptographic methods, digital signatures, and checksums to <strong>confirm each artifact&rsquo;s origin and integrity</strong>&hellip; Do not run models right away in the enterprise environment. Carefully inspect models, especially imported pre-trained models, inside a secure development zone.&rdquo;',
+ s:'The strongest Five Eyes text on model integrity anywhere — and written entirely for the case where <strong>you hold the weights</strong>. &ldquo;Confirm each artifact&rsquo;s origin and integrity&rdquo; presupposes possession. There is no guidance for the far more common federal posture: consuming a model through a vendor&rsquo;s API, where the artifact is never in the customer&rsquo;s hands and the customer cannot compute a hash of anything.'},
+{k:'May 2025 · AI Data Security',c:'sig',m:'NSA AISC lead · 6 agencies, 4 countries — note CCCS absent',
+ q:'&ldquo;Incorporate a <strong>secure provenance database that is cryptographically signed and maintains an immutable, append-only ledger</strong> of data changes&hellip; Implement provenance tracking to enable the tracing of data origins, and log the path that data follows through an AI system.&rdquo;',
+ s:'&ldquo;Provenance&rdquo; throughout this document means <strong>data</strong> provenance. Note the rhetorical asymmetry: five Western signals-intelligence agencies jointly recommend a cryptographically signed, immutable, append-only provenance ledger — and apply it to training data only. <strong>The identical mechanism applied to routing decisions would close the runtime gap, and is proposed nowhere.</strong>'},
+{k:'Mar 2026 · AI/ML supply chain',c:'jade',m:'NSA AISC lead · <strong>8 agencies, 8 countries</strong> — first to add Japan, ROK and Singapore',
+ q:'&ldquo;If not securely managed, adopting AI or ML systems and using pre-trained models and third-party data sets can introduce unique supply chain risks and expose your organization to existing vulnerabilities and compromises.&rdquo; <span class="sm">Six components in scope: training data, models, software, infrastructure, hardware, and third-party services.</span>',
+ s:'Significant as the first AI-security joint seal to extend the Five Eyes core into the Indo-Pacific. On the available evidence, &ldquo;third-party services&rdquo; is treated as a category of procurement risk, not as a runtime attestation problem — no indication it addresses model substitution by a serving provider. <strong style="color:var(--signal)">Verification caveat: the PDF body could not be retrieved (media.defense.gov 403, cyber.gov.au robots-disallowed). Title, date and signatories confirmed against CCCS and NCSC-NZ.</strong>'},
+{k:'Apr 2026 · Agentic AI services',c:'coral',m:'ACSC lead · 6 agencies, 5 countries — full Five Eyes',
+ q:'&ldquo;Use supply chain risk management practices for third-party dependencies&hellip; Refer to frameworks, such as the NIST Secure Software Development Framework or SLSA&rsquo;s Safeguarding artifact integrity.&rdquo;',
+ s:'<strong>The most striking omission in the 2026 set.</strong> Despite being about consuming AI <em>services</em>, it contains no guidance on verifying which model an agentic service invokes, on provider-side model substitution, or on monitoring for silent changes to a served model. It addresses precisely the deployment pattern where runtime identity matters most, and does not raise the question.'}
+],4,function(d){
+  return '<div style="display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-bottom:11px"><span class="chip c-'+d.c+'">'+d.k+'</span><span class="sm">'+d.m+'</span></div>'+
+  '<blockquote style="margin-bottom:13px">'+d.q+'</blockquote>'+
+  '<p class="sm2" style="margin-bottom:0;max-width:1120px"><strong style="color:var(--coral)">Where it stops:</strong> '+d.s+'</p>';
+});
+
+/* --- slide 15 NIST --- */
+tabs('niT','niB',[
+{k:'SP 800-218A · PS.2.1',c:'jade',m:'SSDF Community Profile for Generative AI · July 2024',
+ q:'&ldquo;<strong>Generate and provide cryptographic hashes or digital signatures for an AI model</strong> and its components, artifacts, and documentation&hellip; <strong>Provide digital signatures for AI model changes.</strong>&rdquo;',
+ s:'The strongest model-provenance text NIST has produced — a producer obligation to sign the model <em>and its changes</em>, and to make verification information available to acquirers. But it is a <strong>voluntary community profile for model producers</strong>, and verification is performed on acquired artefacts &ldquo;before using them.&rdquo; A customer of a hosted endpoint acquires no artefact, so there is nothing to verify the signature against.'},
+{k:'AI 600-1 · GV-1.6-003',c:'ice',m:'Generative AI Profile · July 2024',
+ q:'GAI system inventory must record &ldquo;data provenance information (e.g., source, signatures, versioning, watermarks)&rdquo; and &ldquo;<strong>underlying foundation models, versions of underlying models, and access modes</strong>.&rdquo;',
+ s:'An <strong>inventory</strong> control — a static register maintained by the deploying organisation, populated from what the vendor asserts. Not a per-request disclosure; no verification method, no vendor obligation, no mechanism to detect that the recorded version is not the version being served. <strong style="color:var(--jade)">It is nonetheless the best hook in existing US guidance: the concept already exists in NIST language and needs only to be made per-request and verifiable.</strong>'},
+{k:'AI 100-2e2025',c:'coral',m:'Adversarial ML taxonomy · March 2025 · current edition',
+ q:'&ldquo;Model poisoning attacks are also possible in supply-chain scenarios in which models or components of the model provided by suppliers are poisoned with malicious code&hellip; Mitigating supply-chain attacks&hellip; remains challenging.&rdquo;',
+ s:'The threat model is an <em>adversary</em> corrupting a model. <strong>It has no category for a provider substituting a cheaper or different model as a commercial act</strong> — which is not an attack in this taxonomy and therefore has no entry, no terminology and no mitigation. The same structural absence as the MIT risk repository.'},
+{k:'COSAIS overlays',c:'sig',m:'SP 800-53 Control Overlays for Securing AI Systems',
+ q:'<strong>Status, 16 September 2026: no overlay has been published — not even an initial public draft.</strong> Concept paper 14 Aug 2025; annotated outline 8 Jan 2026; working sessions spring 2026. Five overlays planned, the first being &ldquo;Adapting and Using Generative AI.&rdquo;',
+ s:'Nothing has published, so nothing binds. <strong style="color:var(--jade)">Present this as an open intervention point rather than a closed gap</strong> — Overlay 1 is exactly where a runtime model-identity control would sit if one is ever written, and the drafting window is open now.'},
+{k:'CAISI evaluations',c:'violet',m:'Center for AI Standards and Innovation · renamed from US AISI, June 2025',
+ q:'CAISI&rsquo;s DeepSeek evaluation (Sep 2025) found the most secure model tested was &ldquo;12 times likelier than evaluated U.S. frontier models to follow malicious instructions&rdquo; and complied with &ldquo;94% of overtly malicious requests&rdquo; under jailbreak, against 8% for US models.',
+ s:'<strong>The load-bearing point:</strong> CAISI evaluates <em>named models</em>, on the implicit assumption that the endpoint it queries serves the model it claims to. The programme has no mechanism to confirm that assumption and publishes no serving-configuration metadata. Every CAISI finding is a statement about an endpoint&rsquo;s behaviour on a date — not a verified statement about a set of weights.'}
+],0,function(d){
+  return '<div style="display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-bottom:11px"><span class="chip c-'+d.c+'">'+d.k+'</span><span class="sm">'+d.m+'</span></div>'+
+  '<blockquote style="margin-bottom:13px">'+d.q+'</blockquote>'+
+  '<p class="sm2" style="margin-bottom:0;max-width:1120px"><strong style="color:var(--coral)">Where it stops:</strong> '+d.s+'</p>';
+});
+
+/* --- slide 18 attestation tiers --- */
+tabs('tierT','tierB',[
+{k:'Tier 0 · Enclave only',c:'coral',w:'The TEE is genuine, confidential-compute mode is on, firmware and driver versions are known.',p:'Nobody&rsquo;s model-identity question is answered. This is what every CPU and GPU attestation delivers on its own — NVIDIA&rsquo;s 31-claim schema, Intel&rsquo;s MRTD, AMD&rsquo;s launch digest.',who:'The baseline for all confidential computing. Marketed constantly as if it were Tier 2.'},
+{k:'Tier 1 · + boot image',c:'sig',w:'The above, plus the measured VM or container image digest.',p:'Proves <em>which serving stack</em>, not which weights. If the weights are baked into the image, the digest transitively commits to them — but multi-hundred-gigabyte models are normally pulled at runtime from object storage, and then they are not measured at all.',who:'Google Confidential Space, AWS Nitro Enclaves, Azure Confidential Computing, Edgeless, and most CSP offerings.'},
+{k:'Tier 2 · + weights commitment',c:'ice',w:'The above, plus a cryptographic commitment to the exact weight bytes, <strong>enforced at read time</strong>.',p:'Actually answers &ldquo;which weights.&rdquo; Requires the provider to publish a hash or Merkle root and to enforce it in the read path — dm-verity, or IMA extended into a TDX RTMR.',who:'Tinfoil (open-weight models). Fortanix offers the pattern for a model owner deploying into someone else&rsquo;s infrastructure — which answers &ldquo;was my model tampered with,&rdquo; not &ldquo;is this vendor serving me what I bought.&rdquo;'},
+{k:'Tier 3 · + per-response binding',c:'jade',w:'The above, plus a signature over <em>this specific request and response</em>, chained to the Tier-2 measurement.',p:'Answers &ldquo;which weights answered <em>this call</em>&rdquo; — the actual question. Achieved by binding the TLS session key into <span class="mono">report_data</span>, or by per-response signatures chaining to the measurement.',who:'Tinfoil binds TLS to the attested key. The only standards-track proposal is <span class="mono">draft-sharif-ai-model-lifecycle-attestation-01</span> — an <strong>unadopted individual IETF draft by a single author</strong>, proposing <span class="mono">X-Inference-Model-ID</span> and <span class="mono">X-Inference-Weight-Hash</span> headers. No working group, no implementation evidence.'}
+],1,function(d){
+  return '<h3 style="font-size:20px;color:var(--'+d.c+')">'+d.k+'</h3>'+
+  '<div class="g g3" style="margin-top:13px"><div class="mod flat"><div class="sm" style="color:var(--jade);font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Attested</div><p class="sm2" style="margin-bottom:0">'+d.w+'</p></div>'+
+  '<div class="mod flat"><div class="sm" style="color:var(--coral);font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">What it settles</div><p class="sm2" style="margin-bottom:0">'+d.p+'</p></div>'+
+  '<div class="mod flat"><div class="sm" style="color:var(--ice);font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Who is here</div><p class="sm2" style="margin-bottom:0">'+d.who+'</p></div></div>';
+});
+
+/* --- slide 21 probe layers --- */
+tabs('lyT','lyB',[
+{k:'1 · Network / jurisdiction',b:'<p style="font-size:14px;line-height:1.55">Registry-based <strong>RDAP</strong> lookup plus endpoint classification, deliberately in preference to IP geolocation — CDN-fronting makes IP-based location unreliable and easy to launder. Establishes who operates the inference and under whose legal compulsion they sit.</p><p class="sm2" style="margin-bottom:0">Feeds the <strong>jurisdiction</strong> verdict. Relevant to PRC PIPL, Data Security Law and Cybersecurity Law compellability, and to any procurement rule with a data-residency clause.</p>'},
+{k:'2 · Wire fingerprint',b:'<p style="font-size:14px;line-height:1.55">Vendor-specific response headers, error schemas and model-catalogue shapes. Serving stacks leak their identity in the parts of the response nobody normalises — the exact JSON shape of a rate-limit error, the ordering of a model list, the presence of a vendor header.</p><p class="sm2" style="margin-bottom:0">Cheap, fast, and effective at distinguishing a genuine first-party endpoint from a proxy or reseller wearing its branding — which is precisely the &ldquo;transfer station&rdquo; pattern named in AA26-251A.</p>'},
+{k:'3 · Tokenizer fingerprint',b:'<p style="font-size:14px;line-height:1.55"><strong style="color:var(--signal)">The strongest signal.</strong> Calibrated snippets are sent and the returned <span class="mono">prompt_tokens</span> count is compared, after template-overhead correction, against <strong>27 reference tokenizer families</strong> — 11 shipping as pre-built GGUF-derived vectors requiring no external access.</p><p class="sm2">Includes <strong>Han compression analysis</strong>: tokenizers trained with heavy Chinese coverage compress Han script far more efficiently, and that ratio is hard to disguise. Per the project, every family segments text &ldquo;slightly differently, like a fingerprint, and it&rsquo;s very hard to fake without breaking the service.&rdquo;</p><p class="sm2" style="color:var(--jade);margin-bottom:0">Works without an API key on endpoints that return usage metadata — which is most of them, because that metadata is how customers are billed.</p>'},
+{k:'4 · Behavioural / deception',b:'<p style="font-size:14px;line-height:1.55">Self-identification checks, alignment asymmetry, language leakage, and persona–jurisdiction alignment claims. Does the endpoint&rsquo;s refusal profile match the persona it presents? Does it leak the wrong script under load?</p><p class="sm2" style="margin-bottom:0"><strong style="color:var(--signal)">Ethically gated:</strong> behavioural probes transmit politically sensitive prompts and must be explicitly permitted. A deliberate design constraint, not an oversight.</p>'},
+{k:'5 · Latency',b:'<p style="font-size:14px;line-height:1.55">Response-time profiles across prompt sizes. Model size, batching regime and physical distance all leave signatures in the latency distribution.</p><p class="sm2" style="margin-bottom:0"><strong>Corroborating only.</strong> Latency varies with local network conditions and never decides a verdict alone — but it is useful for detecting <em>drift</em>, where the comparison is against the same endpoint&rsquo;s own history rather than an absolute reference.</p>'}
+],2,function(d){ return '<h3 style="font-size:18px;margin-bottom:11px">'+d.k+'</h3>'+d.b; });
+
+/* --- slide 22 tokenizer sim --- */
+(function(){
+var PROBES=[
+ {s:'The quick brown fox jumps over the lazy dog.',t:'ascii'},
+ {s:'antidisestablishmentarianism',t:'ascii'},
+ {s:'人工智能模型的来源与司法管辖区',t:'han'},
+ {s:'深度学习推理服务提供商',t:'han'},
+ {s:'def f(x): return [i**2 for i in range(x)]',t:'code'},
+ {s:'\u{1F701} ᚠ ﬁ ﬂ — ligature & rune probe',t:'unicode'}];
+var FAM={
+ 'Qwen2 (Alibaba · PRC)':[10,6,8,7,17,14],
+ 'GLM-4 (Zhipu · PRC)':[10,7,9,8,18,15],
+ 'DeepSeek-V3 (PRC)':[10,6,9,8,17,16],
+ 'Llama-3 (Meta · US)':[10,5,15,12,19,21],
+ 'o200k / GPT-4o (OpenAI · US)':[9,5,12,10,17,18],
+ 'Claude (Anthropic · US)':[10,6,16,13,20,22]};
+var TARGETS=[
+ {id:'ns',label:'northstar-secure-1 — "EU-hosted, sovereign" (worked example)',
+  claim:'model: <span style="color:var(--jade)">northstar-secure-1</span><br>vendor claim: <span style="color:var(--jade)">EU-hosted · sovereign · Western weights</span><br>docs: "trained from scratch, EU data residency"',
+  truth:'Qwen2 (Alibaba · PRC)', jur:'PRC-operated inference behind an EU-registered front', v:'CONFIRMED'},
+ {id:'gz',label:'chat-z-ai-webapp — presents as "Google Gemini" (MPA-2026-001)',
+  claim:'model: <span style="color:var(--jade)">gemini-2.x</span><br>vendor claim: <span style="color:var(--jade)">Google Gemini</span><br>note: identity switched <em>mid-session</em>',
+  truth:'GLM-4 (Zhipu · PRC)', jur:'PRC-operated', v:'CONFIRMED'},
+ {id:'ok',label:'first-party OpenAI endpoint — negative control',
+  claim:'model: <span style="color:var(--jade)">gpt-4o-mini</span><br>vendor claim: <span style="color:var(--jade)">OpenAI, first-party</span><br>expected family: o200k',
+  truth:'o200k / GPT-4o (OpenAI · US)', jur:'US first-party', v:'NO EVIDENCE'}];
+var sel=document.getElementById('simT');
+TARGETS.forEach(function(t,i){ sel.insertAdjacentHTML('beforeend','<option value="'+i+'">'+t.label+'</option>'); });
+function setClaim(){ document.getElementById('simC').innerHTML=TARGETS[+sel.value].claim; }
+function reset(){
+  document.getElementById('simTab').innerHTML='<p class="sm">Press <strong>Run tokenizer probe</strong>.</p>';
+  document.getElementById('simV').innerHTML='<p class="sm">Awaiting probe.</p>';
+  document.getElementById('simS').innerHTML='';
+}
+sel.addEventListener('change',function(){setClaim();reset();});
+setClaim(); reset();
+var STEPS=['Resolving endpoint · RDAP registry lookup','Sending 20 calibrated snippets','Reading usage.prompt_tokens','Correcting for chat-template overhead','Scoring against 27 reference families','Computing Han compression ratio','Combining layers by log-odds'];
+var busy=false;
+document.getElementById('simGo').addEventListener('click',function(){
+  if(busy)return; busy=true;
+  var T=TARGETS[+sel.value], truth=FAM[T.truth];
+  reset();
+  var st=document.getElementById('simS'), si=0;
+  var t1=setInterval(function(){
+    if(si<STEPS.length){ st.insertAdjacentHTML('beforeend','<div class="mono" style="font-size:11px;color:var(--jade);line-height:1.8">✓ '+STEPS[si]+'</div>'); si++; }
+    else clearInterval(t1);
+  },210);
+  var shown=[], pi=0, keys=Object.keys(FAM).slice(0,4);
+  var t2=setInterval(function(){
+    if(pi>=PROBES.length){ clearInterval(t2); finish(); return; }
+    shown.push(pi);
+    var h='<div class="tbl-wrap"><table style="min-width:420px"><thead><tr><th style="width:42%">Probe snippet</th><th style="text-align:right">Measured</th>'+
+      keys.map(function(f){return '<th style="text-align:right;font-size:8.5px">'+f.split(' ')[0]+'</th>';}).join('')+'</tr></thead><tbody>';
+    shown.forEach(function(i){
+      var m=truth[i], txt=PROBES[i].s.slice(0,30)+(PROBES[i].s.length>30?'…':'');
+      h+='<tr><td class="mono" style="font-size:10px">'+txt+(PROBES[i].t==='han'?' <span class="chip c-coral" style="font-size:8px;padding:1px 4px">HAN</span>':'')+'</td>'+
+         '<td style="text-align:right" class="mono"><strong style="color:var(--signal)">'+m+'</strong></td>';
+      keys.forEach(function(f){ var v=FAM[f][i], hit=v===m;
+        h+='<td style="text-align:right;color:'+(hit?'var(--jade)':'var(--ink3)')+'" class="mono">'+v+(hit?' ✓':'')+'</td>'; });
+      h+='</tr>';
+    });
+    document.getElementById('simTab').innerHTML=h+'</tbody></table></div>';
+    pi++;
+  },310);
+  function finish(){
+    var scores=Object.keys(FAM).map(function(f){
+      var hits=0; FAM[f].forEach(function(x,i){ if(x===truth[i])hits++; });
+      return {f:f,hits:hits};
+    }).sort(function(a,b){return b.hits-a.hits;});
+    var top=scores[0], exact=top.hits===PROBES.length, isPRC=/PRC/.test(top.f);
+    var han=(truth[2]/FAM['Llama-3 (Meta · US)'][2]).toFixed(2);
+    setTimeout(function(){
+      document.getElementById('simV').innerHTML=
+      '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px">'+
+      '<span class="chip c-'+(T.v==='CONFIRMED'?'coral':'jade')+'">Provenance: '+T.v+'</span>'+
+      '<span class="chip c-'+(isPRC?'coral':'jade')+'">Jurisdiction: '+(T.v==='CONFIRMED'?'LIKELY':'NO EVIDENCE')+'</span>'+
+      '<span class="chip c-ice">Confidence: full — usage metadata present</span></div>'+
+      '<p style="font-size:14.5px;line-height:1.55;margin:0 0 9px">Tokenizer fingerprint matches <strong style="color:var(--'+(T.v==='CONFIRMED'?'coral':'jade')+')">'+top.f+'</strong> — <span class="mono">'+top.hits+'/'+PROBES.length+' exact</span>'+(exact?', no competing family within 2 probes':'')+'. Han compression vs. Western baseline: <span class="mono s-sig">'+han+'×</span>'+(+han<0.8?' — consistent with heavy Chinese training coverage':'')+'.</p>'+
+      '<p class="sm2" style="margin-bottom:0">'+(T.v==='CONFIRMED'
+        ? 'Vendor claim and measurement <strong style="color:var(--coral)">do not agree</strong>. Assessed operator context: '+T.jur+'. Obtained with <strong>no API key and no vendor cooperation</strong> — and, per GhostPrint, defeasible by a provider willing to fine-tune for the fingerprint.'
+        : 'Vendor claim and measurement <strong style="color:var(--jade)">agree</strong>. No discrepancy to report — the instrument returns clean on an honest endpoint, which is what makes a positive finding meaningful.')+'</p>';
+      busy=false;
+    },250);
+  }
+});
+})();
+
+/* --- slide 24 observatory live --- */
+document.getElementById('obsR').addEventListener('click',function(){
+  var s=document.getElementById('obsS');
+  s.textContent='Fetching live…'; s.style.color='var(--ink2)';
+  fetch('https://lobster-shrimp.github.io/provenance-observatory/',{mode:'cors',cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
+    .then(function(t){
+      var m=t.match(/(\d{4}-\d{2}-\d{2})/);
+      s.style.color='var(--jade)';
+      s.textContent='Live read OK'+(m?' · site last updated '+m[1]:'')+' · figures on this slide reflect the published record';
+    })
+    .catch(function(){
+      s.style.color='var(--signal)';
+      s.textContent='Live read blocked by browser cross-origin policy — showing the verified snapshot of 2026-09-16. Open the live site ↗';
+    });
+});
+
+/* --- slide 26 asks --- */
+var ASKS=[
+{n:'1',t:'A per-request model-identity field',cost:'Lowest cost · highest leverage',c:'jade',b:
+ '<p style="font-size:14px;line-height:1.55">Require inference APIs to return, with every response, a structured record of <strong>resolved model identifier · weights version or hash · numerical precision · serving jurisdiction</strong>.</p>'+
+ '<div class="g g3" style="margin-top:13px"><div class="mod"><h3>Why it is cheap</h3><p class="sm2" style="margin-bottom:0">Providers already hold every one of these values internally — it is what they bill and route from. Making it a response field is a serialisation change, not an architectural one.</p></div>'+
+ '<div class="mod"><h3>Why it changes everything</h3><p class="sm2" style="margin-bottom:0">It converts an unverifiable assertion into a <em>record</em>: attributable, retainable, contradictable by measurement, admissible. Every other measure here gets cheaper once it exists.</p></div>'+
+ '<div class="mod jade"><h3>The existing hook</h3><p class="sm2" style="margin-bottom:0"><strong>NIST SP 800-218A PS.2.1 already requires producers to sign models and model changes.</strong> This binds that signature to a served response. NIST AI 600-1 GV-1.6-003 already names &ldquo;versions of underlying models, and access modes.&rdquo;</p></div></div>'},
+{n:'2',t:'A retention duty for routing decisions',cost:'Low cost',c:'ice',b:
+ '<p style="font-size:14px;line-height:1.55">Require providers and gateways to retain — twelve months is the obvious analogue to ordinary transaction records — the per-request model assignment, routing-classifier decision and precision metadata, and to produce them on regulatory request.</p>'+
+ '<p class="sm2" style="margin-top:11px">Today these logs have <strong>no standardised retention or disclosure requirement anywhere</strong>. In an investigation or a contractual dispute there is nothing to compel, because nothing is required to exist. That is not a gap in enforcement powers; it is a gap in the evidentiary substrate those powers act on.</p>'+
+ '<p class="sm2" style="margin-bottom:0"><strong style="color:var(--ice)">Note the precedent that already exists:</strong> Ramp&rsquo;s new Router retains model inputs, outputs and tool calls for one year <em>by default</em>. The commercial sector is already building the retention; nobody is required to keep the part that matters.</p>'},
+{n:'3',t:'Procurement clauses with an audit right',cost:'No legislation required · fastest lever',c:'violet',b:
+ '<p style="font-size:14px;line-height:1.55">Public bodies should require, as a condition of award: per-request model identity disclosure; notice of drift on any aliased model; declared serving jurisdiction and sub-processors; and <strong>an express right for the buyer or its agent to conduct independent verification of the endpoint</strong>.</p>'+
+ '<p class="sm2" style="margin-top:11px"><strong style="color:var(--violet)">The drafting already exists.</strong> Proposed GSAR 552.239-7001(i)(1)(i) requires 30 days&rsquo; notice of &ldquo;adding, replacing, or materially changing any LLMs, LLM&rsquo;s Developer(s), System.&rdquo; Fix its three defects: make the disclosure per-request rather than prospective, add an audit right, add retention. A request-level router currently walks straight through it.</p>'+
+ '<p class="sm2" style="margin-bottom:0">This is also the fastest lever available: it binds immediately, needs no statute, and the 11 Dec 2025 preemption Executive Order expressly preserves state authority over government procurement.</p>'},
+{n:'4',t:'A safe harbour for good-faith verification',cost:'Moderate — but load-bearing',c:'sig',b:
+ '<p style="font-size:14px;line-height:1.55">Protect independent researchers and auditors conducting good-faith measurement of publicly offered AI endpoints from terms-of-service and computer-misuse liability, on the model of established security-research safe harbours.</p>'+
+ '<p class="sm2" style="margin-top:11px"><strong>Why this is not optional:</strong> a disclosure duty with no independent auditors is decorative. Every measurement cited in this deck was produced by academics or independent projects operating without protection. AIES-26 found that only <strong>three of nine providers permit publishing benchmark results at all</strong> — the rest restrict it by terms of service, so independent verification is contractually constrained even where it is technically possible.</p>'+
+ '<p class="sm2" style="margin-bottom:0"><strong>Scope it carefully:</strong> cover measurement, not exfiltration; condition it on authorisation and disclosure norms — as the probe tooling already enforces through its <span class="mono">authorized</span> flag.</p>'},
+{n:'5',t:'Evaluations must name the serving configuration',cost:'Highest demand on industry',c:'coral',b:
+ '<p style="font-size:14px;line-height:1.55">Require that any safety or capability evaluation submitted for regulatory purposes specify the <strong>full serving configuration</strong> — inference engine and version, numerical precision, batching regime, sampling defaults — and not merely a model name.</p>'+
+ '<p class="sm2" style="margin-top:11px"><strong>The evidence that forces this:</strong> CISPA measured up to <strong>16.6 percentage points</strong> of benchmark accuracy difference, and <strong>8.9 points</strong> of adversarial-prompt vulnerability difference, from serving stack alone with identical weights. An evaluation that omits the stack is not reproducible and does not transfer.</p>'+
+ '<p class="sm2" style="margin-bottom:0"><strong>The consequence if not adopted:</strong> the GPAI evaluation regime — and CAISI&rsquo;s own model assessments — accumulate attestations about objects that are not well defined. A provider can satisfy the regime honestly while shipping something materially different.</p>'},
+{n:'6',t:'Make the counter-distillation carve-out explicit',cost:'New · resolves a live conflict',c:'coral',b:
+ '<p style="font-size:14px;line-height:1.55">AA26-251A (8 Sep 2026) recommends that providers <em>&ldquo;deploy targeted response changes that subtly alter responses to suspected malicious distillation attempts.&rdquo;</em> That is a federal advisory endorsing <strong>undisclosed per-account response differentiation</strong> — eight days after the EU asked thirty providers about transparency.</p>'+
+ '<p class="sm2" style="margin-top:11px">The two positions are in direct tension and neither agency has acknowledged it. If a per-request identity duty is written, the counter-distillation exception must be <strong>explicit, narrow, and internally logged</strong> — with the differentiated response recorded against the request even when it is not disclosed to the caller — rather than left implicit for every provider to interpret for itself.</p>'+
+ '<p class="sm2" style="margin-bottom:0"><strong style="color:var(--coral)">Raise this before industry does.</strong> An unresolved conflict between two government positions is the strongest available argument for doing nothing, and it is cheap to close.</p>'}];
+(function(){
+  var w=document.getElementById('asks');
+  w.innerHTML=ASKS.map(function(a,i){
+    return '<div class="mod '+a.c+' ak pick" data-i="'+i+'" tabindex="0" role="button" aria-expanded="false" style="margin-bottom:10px">'+
+    '<div style="display:flex;align-items:center;gap:13px;flex-wrap:wrap">'+
+    '<div class="mono" style="font-size:20px;font-weight:600;color:var(--'+a.c+');min-width:22px">'+a.n+'</div>'+
+    '<h3 style="margin:0;font-size:17px;flex:1;min-width:200px">'+a.t+'</h3>'+
+    '<span class="chip c-'+a.c+'">'+a.cost+'</span><span class="akx" style="color:var(--ink3);font-size:15px">▸</span></div>'+
+    '<div class="akb" hidden style="margin-top:13px;padding-top:13px;border-top:1px solid var(--rule)">'+a.b+'</div></div>';
+  }).join('');
+  [].forEach.call(document.querySelectorAll('.ak'),function(el){
+    function t(){ var b=el.querySelector('.akb'); b.hidden=!b.hidden; el.querySelector('.akx').textContent=b.hidden?'▸':'▾'; el.setAttribute('aria-expanded',String(!b.hidden)); }
+    el.addEventListener('click',t);
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();t();} });
+  });
+  document.querySelector('.ak').click();
+})();
+
+render();
+})();
+</script>
+
+</body>
+</html>
