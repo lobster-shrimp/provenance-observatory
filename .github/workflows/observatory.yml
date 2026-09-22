@@ -68,6 +68,14 @@ jobs:
           OBSERVATORY_ADVISORY_LIVE: ${{ vars.OBSERVATORY_ADVISORY_LIVE }}
           COSIGN_YES: "true"
           OBSERVATORY_PROBE_COMMERCIAL: "1"   # probe authorized commercial/web-app targets (z.ai). Controls run regardless.
+        # run.py also regenerates + signs the public catalogs from the pinned probe CLI:
+        #   - the MODEL catalog    (build_catalog.build_signed_catalog -> data/catalog/)
+        #   - the SERVICE catalog  (build_service_catalog.build_signed_service_catalog
+        #                           -> data/service-catalog/)
+        # Both are GUARDED/best-effort: if the pinned probe predates the CLI subcommand
+        # (`build-service-catalog` is not on a PyPI release yet), it's a clean no-op and
+        # the committed seed is published as-is — the run never fails on it. Bump the
+        # requirements.txt probe pin to start regenerating the service catalog.
         run: python runner/run.py --targets targets.yaml
       - name: Ingest session transcripts (mid-session model-switch detection)
         run: python runner/ingest_transcripts.py --data data --public control-deepseek-positive,control-openai-negative

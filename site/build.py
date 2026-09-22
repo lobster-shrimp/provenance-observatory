@@ -409,6 +409,8 @@ def _footer(base: str = "") -> str:
       <p>All evidence bundles are cryptographically signed.</p>
     </div>
     <div class="fcol"><h4>Resources</h4>
+      <a href="{base}catalog.html">Catalog (model map)</a>
+      <a href="{base}service-catalog.html">Service Catalog (service map)</a>
       <a href="{base}methodology.html">Methodology</a>
       <a href="{base}how-it-works.html">How It Works</a>
       <a href="{base}who-answered.html">Who Answered? (Briefing)</a>
@@ -667,11 +669,15 @@ def _catalog_page(catalog: dict | None, *, probe_url: str, api_url: str) -> str:
 <a href="https://models.dev">models.dev</a> (MIT) and joined with this project's
 provenance / jurisdiction attribution: <b>{total_providers} providers · {total_models}
 models</b> · corpus {html.escape(str(catalog.get("corpus_version") or ""))} · {sig_badge}.</p>
-<p>This is the <b>complete catalog</b> — every provider and model, including Chinese-origin
-(PRC) APIs, first-party US/EU vendors, and aggregators. Use the <b>jurisdiction</b> filter
-to isolate the Chinese-origin APIs this observatory exists to surface. The same data is at
-<a href="{html.escape(api_url)}">the API</a> (<code>/api/catalog</code>, signed) and fully
-searchable in the <a href="{html.escape(probe_url)}/catalog">probe tool</a>.</p>
+<p>This is the <b>complete catalog</b> — the <b>model map</b>: every provider and model,
+including Chinese-origin (PRC) APIs, first-party US/EU vendors, and aggregators. Use the
+<b>jurisdiction</b> filter to isolate the Chinese-origin APIs this observatory exists to
+surface. The same data is at <a href="{html.escape(api_url)}">the API</a>
+(<code>/api/catalog</code>, signed) and fully searchable in the
+<a href="{html.escape(probe_url)}/catalog">probe tool</a>.</p>
+<p class="note">Looking for the <b>apps and services</b> behind these models — who operates
+them and which backend each fronts? See the <a href="service-catalog.html">Service Catalog</a>
+(the companion <b>service map</b>).</p>
 <p class="muted small">Each row's provenance is a <b>sub-confirmed pointer</b> (who an API
 host is registered to), never a measured verdict — run the probe for that. Aggregators and
 first-party vendors resolve jurisdiction; only measurement resolves provenance.</p>
@@ -711,6 +717,204 @@ first-party vendors resolve jurisdiction; only measurement resolves provenance.<
 <script id="catalog-data" type="application/json">{payload}</script>
 <script>{_CATALOG_APP_JS}</script>"""
     return _page("LLM-API catalog", inner)
+
+
+# --- Service catalog page (apps/providers behind the models) ----------------
+# Renders the signed service-catalog artifact (data/service-catalog/service-catalog.json
+# — produced by the probe's `build-service-catalog`, refreshed + signed nightly, sibling
+# to the model catalog.json). Every row is a STATIC ATTRIBUTION POINTER (measured:false):
+# who a service/app is operated by and which backend model/provider it fronts, derived
+# from public/corpus data — NEVER a measured runtime verdict. The data is EXTERNAL
+# (corpus + client-source scans + a curated app list), so every field is html.escape()d
+# and the embedded JSON is \\uXXXX-escaped, exactly like the model catalog. We read the
+# published JSON only (never import probe internals — T7).
+
+def _load_service_catalog(data_dir: str) -> dict | None:
+    path = os.path.join(data_dir, "service-catalog", "service-catalog.json")
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except (OSError, ValueError):
+        return None
+    if not isinstance(doc, dict) or "services" not in doc:
+        return None
+    doc = dict(doc)
+    doc["signed"] = os.path.exists(path + ".cosign.bundle")
+    return doc
+
+
+def _service_rows(catalog: dict) -> list[dict]:
+    """Project the service-catalog artifact's own rows into compact render dicts.
+    External data — tolerate malformed shapes (non-dict members, non-list fronts)
+    without crashing the build; text fields are coerced to str."""
+    rows: list[dict] = []
+    svcs = catalog.get("services")
+    if not isinstance(svcs, list):
+        return rows
+    for s in svcs:
+        if not isinstance(s, dict):
+            continue
+        fronts_raw = s.get("fronts")
+        fronts = ([str(x) for x in fronts_raw if isinstance(x, (str, int, float)) and not isinstance(x, bool)]
+                  if isinstance(fronts_raw, list) else [])
+        rows.append({"svc": str(s.get("name") or ""), "url": str(s.get("url") or ""),
+                     "host": str(s.get("host") or ""), "kind": str(s.get("kind") or ""),
+                     "op": str(s.get("operator") or ""), "jur": str(s.get("jurisdiction") or ""),
+                     "fronts": fronts, "ev": str(s.get("evidence") or ""),
+                     "src": str(s.get("source") or "")})
+    return rows
+
+
+# Jurisdiction -> badge class. PRC / PRC-operator are warning colors (red / amber);
+# first-party resolves clean (green); aggregator is neutral; unresolved is muted.
+def _jur_badge_class(jur: str) -> str:
+    j = (jur or "").strip().lower()
+    if j == "prc":
+        return "badge cn"
+    if j == "prc-operator":
+        return "badge warn"
+    if j == "first-party":
+        return "badge ok"
+    if j == "aggregator":
+        return "badge"
+    return "badge muted"
+
+
+def _service_table_html(rows: list[dict]) -> str:
+    """Server-rendered fallback rows (no-JS / first paint). Every field html.escape()d;
+    the client JS clears this and re-renders filtered rows via textContent."""
+    out = []
+    for r in rows:
+        cls = _jur_badge_class(r["jur"])
+        fronts = ", ".join(r["fronts"]) if r["fronts"] else "—"
+        host = (f'<div class="mono small">{html.escape(r["host"])}</div>' if r["host"] else "")
+        out.append(
+            "<tr>"
+            f'<td>{html.escape(r["svc"] or "—")}{host}</td>'
+            f'<td>{html.escape(r["op"] or "—")}</td>'
+            f'<td><span class="{cls}">{html.escape(r["jur"] or "—")}</span></td>'
+            f'<td>{html.escape(r["kind"] or "—")}</td>'
+            f'<td>{html.escape(fronts)}</td>'
+            f'<td class="small">{html.escape(r["ev"] or "—")}</td></tr>')
+    return "".join(out)
+
+
+_SERVICE_APP_JS = """
+(function(){
+  var el=document.getElementById('service-data');
+  if(!el) return;
+  var rows; try{ rows=JSON.parse(el.textContent||'[]'); }catch(e){ return; }
+  if(!Array.isArray(rows)) return;
+  var q=document.getElementById('sq'), jsel=document.getElementById('sjur'),
+      ksel=document.getElementById('skind'),
+      tbody=document.getElementById('sbody'), info=document.getElementById('sinfo');
+  if(!tbody) return;
+  function badgeClass(j){ var J=(j||'').toLowerCase();
+    if(J==='prc') return 'badge cn';
+    if(J==='prc-operator') return 'badge warn';
+    if(J==='first-party') return 'badge ok';
+    if(J==='aggregator') return 'badge';
+    return 'badge muted'; }
+  function td(text){ var d=document.createElement('td'); d.textContent=text; return d; }
+  function filtered(){
+    var t=(q&&q.value||'').trim().toLowerCase(),
+        js=jsel?jsel.value:'any', ks=ksel?ksel.value:'any';
+    return rows.filter(function(r){
+      if(js!=='any' && (r.jur||'')!==js) return false;
+      if(ks!=='any' && (r.kind||'')!==ks) return false;
+      if(t){ var hay=((r.svc||'')+' '+(r.op||'')+' '+(r.host||'')+' '+((r.fronts||[]).join(' '))+' '+(r.ev||'')).toLowerCase();
+             if(hay.indexOf(t)<0) return false; }
+      return true;
+    });
+  }
+  function render(){
+    var f=filtered(), frag=document.createDocumentFragment();
+    f.forEach(function(r){
+      var tr=document.createElement('tr');
+      var std=document.createElement('td');
+      std.appendChild(document.createTextNode(r.svc||'—'));
+      if(r.host){ var hd=document.createElement('div'); hd.className='mono small'; hd.textContent=r.host; std.appendChild(hd); }
+      tr.appendChild(std);
+      tr.appendChild(td(r.op||'—'));
+      var jtd=document.createElement('td'), sp=document.createElement('span');
+      sp.className=badgeClass(r.jur); sp.textContent=r.jur||'—';
+      jtd.appendChild(sp); tr.appendChild(jtd);
+      tr.appendChild(td(r.kind||'—'));
+      tr.appendChild(td((Array.isArray(r.fronts)&&r.fronts.length)? r.fronts.join(', ') : '—'));
+      var etd=td(r.ev||'—'); etd.className='small'; tr.appendChild(etd);
+      frag.appendChild(tr);
+    });
+    tbody.textContent=''; tbody.appendChild(frag);
+    if(info) info.textContent=f.length+' of '+rows.length+' services';
+  }
+  [q,jsel,ksel].forEach(function(c){ if(!c) return;
+    c.addEventListener('input', function(){ render(); });
+    c.addEventListener('change', function(){ render(); }); });
+  render();
+})();
+"""
+
+
+def _service_catalog_page(catalog: dict | None, *, probe_url: str, api_url: str) -> str:
+    if catalog is None:
+        inner = ('<p>No service catalog has been published yet. The nightly runner '
+                 'regenerates it from public/corpus data via the probe\'s '
+                 '<code>build-service-catalog</code> and signs it. Looking for the models '
+                 'themselves? See the <a href="catalog.html">Model Catalog</a>.</p>')
+        return _page("Service Catalog", inner)
+    rows = _service_rows(catalog)
+    rows.sort(key=lambda r: (r["jur"].lower(), r["svc"].lower()))
+    total = html.escape(str(catalog.get("service_count", len(rows))))
+    signed = catalog.get("signed")
+    sig_badge = ('<span class="badge cn">signed</span>' if signed
+                 else '<span class="muted">snapshot (unsigned; nightly refresh signs it)</span>')
+    payload = _catalog_embed_json(rows)   # same XSS-safe \\uXXXX serializer as the model catalog
+    fallback = _service_table_html(rows)
+    inner = f"""
+<p class="lead">The <b>service map</b>: which apps and inference providers front which
+backend models — and who operates them. <b>{total} services</b> · corpus
+{html.escape(str(catalog.get("corpus_version") or ""))} · {sig_badge}.</p>
+<div class="callout"><b>Static attribution pointers, NOT measured verdicts.</b> Every row
+here is <code>measured:false</code> — a pointer assembled from public/corpus data (endpoint
+corpus, client-source scans, a curated app list) describing who a service is <i>operated
+by</i> and which backend it <i>appears to</i> front. None of it is a measured runtime
+verdict. To get a measured provenance/jurisdiction verdict for any endpoint, run the
+probe's <code>assess</code> / <code>soak</code> — see <a href="methodology.html">Methodology</a>.</p>
+<p>Looking for the models themselves? See the <a href="catalog.html">Model Catalog</a>
+(the <b>model map</b>) — every provider &times; model with jurisdiction attribution. This
+page is its companion <b>service map</b>: the apps and API fronts that sit in front of
+those models. The same data is at <a href="{html.escape(api_url)}">the API</a>
+(<code>/api/service-catalog</code>, signed when published).</p>
+<div class="controls">
+  <input id="sq" type="search" placeholder="Filter service / operator / host / backend / evidence…"
+   aria-label="Search the service catalog">
+  <select id="sjur" aria-label="Jurisdiction">
+    <option value="any">Any jurisdiction</option>
+    <option value="PRC">PRC</option>
+    <option value="PRC-operator">PRC-operator</option>
+    <option value="first-party">First-party</option>
+    <option value="aggregator">Aggregator</option>
+    <option value="unresolved">Unresolved</option>
+  </select>
+  <select id="skind" aria-label="Kind">
+    <option value="any">Any kind</option>
+    <option value="web-app">Web app</option>
+    <option value="api-service">API service</option>
+    <option value="aggregator">Aggregator</option>
+  </select>
+  <span id="sinfo" class="muted small"></span>
+</div>
+<noscript><p class="muted small">Filtering needs JavaScript. The full server-rendered
+table is shown below; the signed data is at
+<a href="{html.escape(api_url)}"><code>/api/service-catalog</code></a>.</p></noscript>
+<table id="stable"><thead><tr><th>Service</th><th>Operator</th><th>Jurisdiction</th>
+<th>Kind</th><th>Fronts (backends)</th><th>Evidence</th></tr></thead>
+<tbody id="sbody">{fallback}</tbody></table>
+<script id="service-data" type="application/json">{payload}</script>
+<script>{_SERVICE_APP_JS}</script>"""
+    return _page("Service Catalog", inner)
 
 
 # --- footer content pages (real, static) ------------------------------------
@@ -1306,6 +1510,8 @@ _CSS = """
   header p { color:var(--muted); margin:0 0 20px; }
   .note { border:1px solid var(--line); border-left:3px solid var(--accent);
     background:#fff; padding:10px 14px; margin:0 0 20px; color:#374151; }
+  .callout { border:1px solid #e6d08a; border-left:3px solid #8a6d1a;
+    background:#fffbeb; padding:10px 14px; margin:0 0 16px; color:#5a4a12; }
   .stats { display:flex; gap:32px; border:1px solid var(--line); background:#fff;
     padding:14px 18px; margin-bottom:20px; }
   .stat b { display:block; font-size:20px; } .stat span { color:var(--muted); font-size:12px; }
@@ -1460,6 +1666,7 @@ def _nav(api_url: str, probe_url: str) -> str:
             f'<span class="txt">nightly</span></span>'
             f'<a href="#" onclick="var e=document.getElementById(\'q\');if(e)e.focus();return false">Search</a>'
             f'<a href="catalog.html">Catalog</a>'
+            f'<a href="service-catalog.html">Service Catalog</a>'
             f'<a href="about.html">About</a>'
             f'<a href="{html.escape(api_url)}">API</a>'
             f'<a href="feed.xml">RSS</a>'
@@ -1647,6 +1854,7 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     transcripts = _load_transcripts(data_dir)
     agent_records = _records.load_agent_records(data_dir)
     catalog = _load_catalog(data_dir)
+    service_catalog = _load_service_catalog(data_dir)
     paused = _load_paused_targets(TARGETS_YAML)
     probe_url = os.environ.get("OBSERVATORY_PROBE_URL", DEFAULT_PROBE_URL)
     api_url = os.environ.get("OBSERVATORY_API_URL", DEFAULT_API_URL)
@@ -1662,6 +1870,8 @@ def build(data_dir: str = DATA_DIR, out_dir: str = OUT_DIR, *, now_iso: str | No
     # Footer + nav content pages (real links, not dead spans).
     for fname, doc in (
         ("catalog.html", _catalog_page(catalog, probe_url=probe_url, api_url=api_url)),
+        ("service-catalog.html",
+         _service_catalog_page(service_catalog, probe_url=probe_url, api_url=api_url)),
         ("methodology.html", _methodology_page()),
         ("disclosure.html", _disclosure_page()),
         ("verify.html", _verify_page()),
