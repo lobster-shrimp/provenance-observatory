@@ -642,6 +642,144 @@ def test_catalog_page_tolerates_malformed_and_escapes_counts(tmp_path):
     assert "&lt;b&gt;x&lt;/b&gt;" in cat
 
 
+# --- Service catalog page (apps/providers behind the models) ----------------
+
+def _write_service_catalog(data_dir, doc, *, signed=False):
+    d = os.path.join(data_dir, "service-catalog")
+    os.makedirs(d, exist_ok=True)
+    p = os.path.join(d, "service-catalog.json")
+    with open(p, "w") as f:
+        json.dump(doc, f)
+    if signed:
+        open(p + ".cosign.bundle", "w").close()
+    return p
+
+
+_SVC = {
+    "catalog_version": "2026.07.2", "corpus_version": "2026.07.2", "service_count": 5,
+    "generated_from": "corpus + clientsrc + curated",
+    "services": [
+        {"name": "DeepSeek (chat)", "url": "https://chat.deepseek.com",
+         "host": "chat.deepseek.com", "kind": "web-app", "operator": "DeepSeek",
+         "jurisdiction": "PRC", "fronts": ["DeepSeek"], "evidence": "curated: PRC app",
+         "source": "curated", "confidence": 0.95, "measured": False},
+        {"name": "SiliconFlow", "url": "", "host": "api.siliconflow.com",
+         "kind": "api-service", "operator": "SiliconFlow", "jurisdiction": "PRC-operator",
+         "fronts": [], "evidence": "corpus PRC_ENDPOINTS (0.9)", "source": "corpus",
+         "confidence": 0.9, "measured": False},
+        {"name": "OpenAI ChatGPT", "url": "https://chat.openai.com",
+         "host": "chat.openai.com", "kind": "web-app", "operator": "OpenAI",
+         "jurisdiction": "first-party", "fronts": ["OpenAI"], "evidence": "curated",
+         "source": "curated", "confidence": 0.95, "measured": False},
+        {"name": "AWS Bedrock", "url": "", "host": "bedrock-runtime", "kind": "aggregator",
+         "operator": "AWS Bedrock", "jurisdiction": "aggregator", "fronts": [],
+         "evidence": "corpus AGGREGATOR_ENDPOINTS (neutral)", "source": "corpus",
+         "confidence": None, "measured": False},
+        {"name": "Mystery relay", "url": "", "host": "relay.example", "kind": "api-service",
+         "operator": "unknown", "jurisdiction": "unresolved", "fronts": [],
+         "evidence": "unresolved", "source": "corpus", "confidence": 0.4, "measured": False},
+    ],
+}
+
+
+def _service_html(tmp_path, doc, *, signed=False):
+    data = tmp_path / "data"
+    _write_service_catalog(str(data), doc, signed=signed)
+    outp = build.build(str(data), str(tmp_path / "out"), now_iso="2026-07-21T12:00:00")
+    out_dir = os.path.dirname(outp)
+    svc = open(os.path.join(out_dir, "service-catalog.html")).read()
+    cat = open(os.path.join(out_dir, "catalog.html")).read()
+    return svc, cat, open(outp).read()
+
+
+def test_service_catalog_renders_rows_badges_and_disclaimer(tmp_path):
+    svc, _, index = _service_html(tmp_path, _SVC)
+    # rows + operators present
+    assert "DeepSeek (chat)" in svc and "SiliconFlow" in svc and "OpenAI ChatGPT" in svc
+    assert "chat.deepseek.com" in svc                          # host shown
+    assert "DeepSeek" in svc                                   # front/backend shown
+    # jurisdiction badges: PRC=cn (red), PRC-operator=warn, first-party=ok, aggregator
+    # neutral, unresolved=muted
+    assert 'class="badge cn">PRC<' in svc
+    assert 'class="badge warn">PRC-operator<' in svc
+    assert 'class="badge ok">first-party<' in svc
+    assert 'class="badge muted">unresolved<' in svc
+    # measured=false disclaimer carried prominently (mirror the model catalog language)
+    assert "measured:false" in svc
+    assert "NOT measured verdicts" in svc
+    assert "static" in svc.lower()
+    # nav + footer link present on the site
+    assert 'service-catalog.html">Service Catalog' in index
+    assert "Service Catalog (service map)" in index
+
+
+def test_service_catalog_cross_links_both_directions(tmp_path):
+    svc, cat, _ = _service_html(tmp_path, _SVC)
+    # service map -> model map
+    assert 'href="catalog.html"' in svc
+    assert "Model Catalog" in svc
+    # model map -> service map (reciprocal)
+    assert 'href="service-catalog.html"' in cat
+    assert "Service Catalog" in cat
+    # framed as model map + service map
+    assert "service map" in svc and "model map" in cat
+
+
+def test_service_catalog_has_filters_and_data_script(tmp_path):
+    svc, _, _ = _service_html(tmp_path, _SVC)
+    assert '<script id="service-data" type="application/json">' in svc
+    assert 'id="sbody"' in svc                                 # filtered body target
+    assert 'id="sjur"' in svc and 'id="skind"' in svc         # jurisdiction + kind filters
+    assert 'id="sq"' in svc                                    # free-text search
+    assert "Fronts (backends)" in svc                          # required column header
+
+
+def test_service_catalog_signed_badge(tmp_path):
+    svc, _, _ = _service_html(tmp_path, _SVC, signed=True)
+    assert ">signed<" in svc
+
+
+def test_service_catalog_empty_state_links_to_model_catalog(tmp_path):
+    data = tmp_path / "data"
+    os.makedirs(str(data), exist_ok=True)
+    outp = build.build(str(data), str(tmp_path / "out"), now_iso="2026-07-21T12:00:00")
+    svc = open(os.path.join(os.path.dirname(outp), "service-catalog.html")).read()
+    assert "No service catalog has been published yet" in svc
+    assert 'href="catalog.html"' in svc                        # reciprocal link even when empty
+
+
+def test_service_catalog_xss_escapes_hostile_external_data(tmp_path):
+    hostile = "</script><img src=x onerror=alert(1)>"
+    doc = {
+        "catalog_version": "1", "corpus_version": "x", "service_count": 1,
+        "services": [
+            {"name": hostile, "url": "", "host": hostile, "kind": "web-app",
+             "operator": hostile, "jurisdiction": "PRC", "fronts": [hostile],
+             "evidence": hostile, "source": "corpus", "confidence": 1, "measured": False},
+        ],
+    }
+    svc, _, _ = _service_html(tmp_path, doc)
+    assert hostile not in svc                                  # never raw live markup
+    assert "<img src=x onerror=alert(1)>" not in svc
+    assert "</script><img" not in svc
+    assert "\\u003c/script\\u003e\\u003cimg" in svc            # embed JSON \\uXXXX-escaped
+    assert "&lt;/script&gt;&lt;img" in svc                     # fallback row html-escaped
+
+
+def test_service_catalog_tolerates_malformed_rows(tmp_path):
+    bad = {
+        "catalog_version": "1", "corpus_version": "x", "service_count": 2,
+        "services": [
+            "not-a-dict",                                       # skipped, no crash
+            {"name": 123, "host": 456, "kind": "api-service", "operator": "OkOp",
+             "jurisdiction": "PRC", "fronts": "not-a-list", "evidence": None,
+             "measured": False},                               # coerced; bad fronts -> []
+        ],
+    }
+    svc, _, _ = _service_html(tmp_path, bad)                   # must not raise
+    assert "OkOp" in svc and "123" in svc
+
+
 # --- paused-target banner (a paused finding must not read as active) ---------
 
 _PAUSED_YAML = """\

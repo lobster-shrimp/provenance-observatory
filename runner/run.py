@@ -36,6 +36,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from lib import verdict, signing, staging_sync, publish_policy  # noqa: E402
 import advisory  # noqa: E402  (runner/ is on sys.path via __file__ dir)
 import build_catalog  # noqa: E402
+import build_service_catalog  # noqa: E402
 import build_registry  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -577,6 +578,13 @@ def main() -> int:
     cat = build_catalog.build_signed_catalog(DATA_DIR)
     print(f"[catalog] built={cat.get('built')} verified={cat.get('verified')} "
           f"signed={cat.get('signed')}: {cat['reason']}")
+    # Refresh + sign the public SERVICE catalog (service/app -> operator + jurisdiction +
+    # backend, via the probe CLI). Guarded/best-effort: on a pinned probe that predates
+    # `build-service-catalog` (not on a PyPI release yet) this is a clean no-op and the
+    # committed seed (data/service-catalog/service-catalog.json) is published as-is.
+    svc = build_service_catalog.build_signed_service_catalog(DATA_DIR)
+    print(f"[service-catalog] built={svc.get('built')} verified={svc.get('verified')} "
+          f"signed={svc.get('signed')}: {svc['reason']}")
     # Push the updated drift state (baseline/state/drafts/counter) back to the
     # private staging repo so the next run diffs against it. Only when the clone
     # succeeded — never push a local-only/reseeded staging over the private repo.
