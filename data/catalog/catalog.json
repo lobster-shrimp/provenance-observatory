@@ -4,7 +4,7 @@
   "source_note": "generated from models.dev (MIT, github.com/sst/models.dev), joined with corpus.py",
   "corpus_version": "2026.07.2",
   "provider_count": 223,
-  "model_count": 8114,
+  "model_count": 8130,
   "providers": [
     {
       "provider_id": "302ai",
@@ -39369,7 +39369,7 @@
           ],
           "open_weights": true,
           "reasoning": true,
-          "tool_call": false,
+          "tool_call": true,
           "release_date": "2026-07-31",
           "knowledge": "2025-05",
           "last_updated": "2026-07-31"
@@ -39391,7 +39391,7 @@
           ],
           "open_weights": true,
           "reasoning": true,
-          "tool_call": false,
+          "tool_call": true,
           "release_date": "2026-08-10",
           "knowledge": "2026-01-04",
           "last_updated": "2026-08-10"
@@ -39413,7 +39413,7 @@
           ],
           "open_weights": true,
           "reasoning": true,
-          "tool_call": false,
+          "tool_call": true,
           "release_date": "2026-05-29",
           "knowledge": "2026-03-01",
           "last_updated": "2026-05-29"
@@ -39434,7 +39434,7 @@
           ],
           "open_weights": true,
           "reasoning": true,
-          "tool_call": false,
+          "tool_call": true,
           "release_date": "2025-08-05",
           "knowledge": "",
           "last_updated": "2025-08-05"
@@ -39455,7 +39455,7 @@
           ],
           "open_weights": true,
           "reasoning": true,
-          "tool_call": false,
+          "tool_call": true,
           "release_date": "2025-08-05",
           "knowledge": "",
           "last_updated": "2025-08-05"
@@ -39969,8 +39969,8 @@
           "family": "ministral",
           "context": 100000,
           "max_output": 262144,
-          "cost_input": 0.34389,
-          "cost_output": 0.45852,
+          "cost_input": 0.34233,
+          "cost_output": 0.45644,
           "modalities_in": [
             "text"
           ],
@@ -39990,8 +39990,8 @@
           "family": "llama",
           "context": 128000,
           "max_output": 4096,
-          "cost_input": 0.745095,
-          "cost_output": 0.745095,
+          "cost_input": 0.741715,
+          "cost_output": 0.741715,
           "modalities_in": [
             "text"
           ],
@@ -40011,8 +40011,8 @@
           "family": "gpt-oss",
           "context": 131072,
           "max_output": 32768,
-          "cost_input": 0.171945,
-          "cost_output": 0.745095,
+          "cost_input": 0.171165,
+          "cost_output": 0.741715,
           "modalities_in": [
             "text"
           ],
@@ -42203,8 +42203,8 @@
           "family": "deepseek-flash",
           "context": 256000,
           "max_output": 384000,
-          "cost_input": 0.45852,
-          "cost_output": 0.91704,
+          "cost_input": 0.45644,
+          "cost_output": 0.91288,
           "modalities_in": [
             "text"
           ],
@@ -42246,8 +42246,8 @@
           "family": "gpt-oss",
           "context": 128000,
           "max_output": 32768,
-          "cost_input": 0.171945,
-          "cost_output": 0.68778,
+          "cost_input": 0.171165,
+          "cost_output": 0.68466,
           "modalities_in": [
             "text"
           ],
@@ -42267,8 +42267,8 @@
           "family": "llama",
           "context": 128000,
           "max_output": 4096,
-          "cost_input": 1.03167,
-          "cost_output": 1.03167,
+          "cost_input": 1.02699,
+          "cost_output": 1.02699,
           "modalities_in": [
             "text"
           ],
@@ -64980,6 +64980,48 @@
           "last_updated": "2026-07-07"
         },
         {
+          "id": "aion-labs/aion-3.5",
+          "name": "AionLabs: Aion 3.5",
+          "family": "",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 3,
+          "cost_output": 6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
+          "id": "aion-labs/aion-3.5-mini",
+          "name": "AionLabs: Aion 3.5 Mini",
+          "family": "",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.7,
+          "cost_output": 1.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
           "id": "aion-labs/aion-rp-llama-3.1-8b",
           "name": "AionLabs: Aion-RP 1.0 (8B)",
           "family": "llama",
@@ -66106,7 +66148,7 @@
           "id": "deepseek/deepseek-v4-pro-0813",
           "name": "DeepSeek V4 Pro 0813",
           "family": "deepseek-thinking",
-          "context": 1048576,
+          "context": 1024000,
           "max_output": 384000,
           "cost_input": 1.32,
           "cost_output": 3.96,
@@ -67034,31 +67076,8 @@
           "family": "ling",
           "context": 131072,
           "max_output": 32768,
-          "cost_input": 0.06,
-          "cost_output": 0.18,
-          "modalities_in": [
-            "text",
-            "image",
-            "video"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-09-10",
-          "knowledge": "",
-          "last_updated": "2026-09-10"
-        },
-        {
-          "id": "inclusionai/ling-3.0-flash-vl:free",
-          "name": "inclusionAI: Ling 3.0 Flash VL (free)",
-          "family": "ling",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0,
-          "cost_output": 0,
+          "cost_input": 0.075,
+          "cost_output": 0.22,
           "modalities_in": [
             "text",
             "image",
@@ -67165,7 +67184,7 @@
           "name": "Auto Free",
           "family": "auto",
           "context": 256000,
-          "max_output": 10000,
+          "max_output": 32768,
           "cost_input": 0,
           "cost_output": 0,
           "modalities_in": [
@@ -67865,28 +67884,6 @@
           "last_updated": "2025-08-01"
         },
         {
-          "id": "mistralai/devstral-2512",
-          "name": "Devstral 2",
-          "family": "devstral",
-          "context": 262144,
-          "max_output": 209715,
-          "cost_input": 0.4,
-          "cost_output": 2,
-          "modalities_in": [
-            "text",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2025-12-09",
-          "knowledge": "2025-12",
-          "last_updated": "2025-12-09"
-        },
-        {
           "id": "mistralai/ministral-14b-2512",
           "name": "Mistral: Ministral 3 14B 2512",
           "family": "ministral",
@@ -68331,8 +68328,8 @@
           "family": "kimi-k2",
           "context": 262144,
           "max_output": 235929,
-          "cost_input": 0.8,
-          "cost_output": 3.4,
+          "cost_input": 0.95,
+          "cost_output": 4,
           "modalities_in": [
             "text",
             "image"
@@ -68353,8 +68350,8 @@
           "family": "kimi-k2",
           "context": 262144,
           "max_output": 235929,
-          "cost_input": 0.95,
-          "cost_output": 4,
+          "cost_input": 0.7062,
+          "cost_output": 3.3,
           "modalities_in": [
             "text",
             "image"
@@ -68763,7 +68760,7 @@
           "name": "Nemotron 3.5 Lightning 30B A3B",
           "family": "nemotron",
           "context": 262144,
-          "max_output": 235929,
+          "max_output": 131072,
           "cost_input": 0.065,
           "cost_output": 0.18,
           "modalities_in": [
@@ -72083,6 +72080,29 @@
           "last_updated": "2025-08-26"
         },
         {
+          "id": "stealth/space-bunny-alpha",
+          "name": "Space Bunny Alpha",
+          "family": "alpha",
+          "context": 1000000,
+          "max_output": 524288,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
           "id": "stepfun/step-3.5-flash",
           "name": "Step 3.5 Flash",
           "family": "",
@@ -72238,8 +72258,8 @@
           "family": "Hy",
           "context": 262144,
           "max_output": 128000,
-          "cost_input": 0.13,
-          "cost_output": 0.53,
+          "cost_input": 0.0825,
+          "cost_output": 0.33,
           "modalities_in": [
             "text"
           ],
@@ -72469,6 +72489,27 @@
           "release_date": "2023-07-22",
           "knowledge": "",
           "last_updated": "2023-07-22"
+        },
+        {
+          "id": "upstage/solar-mini4",
+          "name": "Upstage: Solar Mini 4",
+          "family": "solar",
+          "context": 524288,
+          "max_output": 131072,
+          "cost_input": 0.1,
+          "cost_output": 0.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
         },
         {
           "id": "upstage/solar-pro-3",
@@ -73275,9 +73316,9 @@
           "name": "DeepSeek: DeepSeek Pro Latest",
           "family": "deepseek",
           "context": 1048576,
-          "max_output": 384000,
-          "cost_input": 0.4,
-          "cost_output": 4.3,
+          "max_output": 393216,
+          "cost_input": 0.39996,
+          "cost_output": 1.19988,
           "modalities_in": [
             "text"
           ],
@@ -73552,8 +73593,8 @@
           "family": "glm",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 0.5625,
-          "cost_output": 2.5,
+          "cost_input": 0.5614,
+          "cost_output": 1.7644,
           "modalities_in": [
             "text"
           ],
@@ -75578,8 +75619,8 @@
           "family": "glm-flash",
           "context": 1048576,
           "max_output": 131072,
-          "cost_input": 0.07,
-          "cost_output": 0.19,
+          "cost_input": 0.088,
+          "cost_output": 0.25,
           "modalities_in": [
             "text",
             "image",
@@ -81055,6 +81096,52 @@
           "last_updated": "2026-09-04"
         },
         {
+          "id": "azure/gpt-6-luna",
+          "name": "GPT-6 Luna (Azure)",
+          "family": "gpt-luna",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 0.1,
+          "cost_output": 0.5,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-05-18",
+          "last_updated": "2026-09-22"
+        },
+        {
+          "id": "azure/gpt-6-sol",
+          "name": "GPT-6 Sol (Azure)",
+          "family": "gpt-sol",
+          "context": 1050000,
+          "max_output": 128000,
+          "cost_input": 2,
+          "cost_output": 10,
+          "modalities_in": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-22",
+          "knowledge": "2026-04-20",
+          "last_updated": "2026-09-22"
+        },
+        {
           "id": "azure/gpt-oss-120b",
           "name": "GPT OSS 120B (Azure)",
           "family": "gpt-oss",
@@ -82742,8 +82829,8 @@
           "family": "deepseek-flash",
           "context": 390000,
           "max_output": 16384,
-          "cost_input": 0.051,
-          "cost_output": 0.104,
+          "cost_input": 0.065,
+          "cost_output": 0.116,
           "modalities_in": [
             "text"
           ],
@@ -82763,8 +82850,8 @@
           "family": "glm-flash",
           "context": 200000,
           "max_output": 16384,
-          "cost_input": 0.07,
-          "cost_output": 0.19,
+          "cost_input": 0.15,
+          "cost_output": 0.3,
           "modalities_in": [
             "text"
           ],
@@ -99099,6 +99186,48 @@
           "last_updated": "2026-07-07"
         },
         {
+          "id": "aion-labs/aion-3.5",
+          "name": "AionLabs: Aion 3.5",
+          "family": "",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 3,
+          "cost_output": 6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
+          "id": "aion-labs/aion-3.5-mini",
+          "name": "AionLabs: Aion 3.5 Mini",
+          "family": "",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.7,
+          "cost_output": 1.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
           "id": "aion-labs/aion-rp-llama-3.1-8b",
           "name": "Llama 3.1 8b (uncensored)",
           "family": "llama",
@@ -101094,8 +101223,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.44,
-          "cost_output": 1.32,
+          "cost_input": 0.22,
+          "cost_output": 0.66,
           "modalities_in": [
             "text",
             "image"
@@ -108848,6 +108977,48 @@
           "release_date": "2024-01-01",
           "knowledge": "",
           "last_updated": "2025-03-10"
+        },
+        {
+          "id": "upstage/solar-mini4",
+          "name": "Solar Mini 4",
+          "family": "solar",
+          "context": 524288,
+          "max_output": 131072,
+          "cost_input": 0.05,
+          "cost_output": 0.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": false,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
+          "id": "upstage/solar-mini4:thinking",
+          "name": "Solar Mini 4 Thinking",
+          "family": "solar",
+          "context": 524288,
+          "max_output": 131072,
+          "cost_input": 0.05,
+          "cost_output": 0.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
         },
         {
           "id": "upstage/solar-pro-3",
@@ -125307,6 +125478,29 @@
           "last_updated": "2026-05-08"
         },
         {
+          "id": "space-bunny-free",
+          "name": "Space Bunny Free",
+          "family": "",
+          "context": 1048576,
+          "max_output": 524288,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
           "id": "trinity-large-preview-free",
           "name": "Trinity Large Preview",
           "family": "trinity",
@@ -126235,6 +126429,29 @@
           "release_date": "2026-08-03",
           "knowledge": "",
           "last_updated": "2026-08-03"
+        },
+        {
+          "id": "space-bunny-free",
+          "name": "Space Bunny Free",
+          "family": "",
+          "context": 1048576,
+          "max_output": 524288,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
         }
       ]
     },
@@ -126395,6 +126612,48 @@
           "release_date": "2026-07-07",
           "knowledge": "",
           "last_updated": "2026-07-07"
+        },
+        {
+          "id": "aion-labs/aion-3.5",
+          "name": "Aion 3.5",
+          "family": "",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 3,
+          "cost_output": 6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
+          "id": "aion-labs/aion-3.5-mini",
+          "name": "Aion 3.5 Mini",
+          "family": "",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.7,
+          "cost_output": 1.4,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
         },
         {
           "id": "aion-labs/aion-rp-llama-3.1-8b",
@@ -127439,8 +127698,8 @@
           "family": "deepseek-flash",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.088606,
-          "cost_output": 0.177212,
+          "cost_input": 0.08246,
+          "cost_output": 0.16492,
           "modalities_in": [
             "text"
           ],
@@ -127503,8 +127762,8 @@
           "family": "deepseek-thinking",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 0.95526,
-          "cost_output": 1.91052,
+          "cost_input": 0.948126,
+          "cost_output": 1.896252,
           "modalities_in": [
             "text"
           ],
@@ -127524,8 +127783,8 @@
           "family": "deepseek-thinking",
           "context": 1048576,
           "max_output": 384000,
-          "cost_input": 1.32,
-          "cost_output": 3.96,
+          "cost_input": 0.462,
+          "cost_output": 1.386,
           "modalities_in": [
             "text"
           ],
@@ -128488,33 +128747,10 @@
           "id": "inclusionai/ling-3.0-flash-vl",
           "name": "Ling 3.0 Flash VL",
           "family": "ling",
-          "context": 131072,
+          "context": 262144,
           "max_output": 32768,
           "cost_input": 0.06,
           "cost_output": 0.18,
-          "modalities_in": [
-            "text",
-            "image",
-            "video"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-09-10",
-          "knowledge": "",
-          "last_updated": "2026-09-10"
-        },
-        {
-          "id": "inclusionai/ling-3.0-flash-vl:free",
-          "name": "Ling 3.0 Flash VL (free)",
-          "family": "ling",
-          "context": 262144,
-          "max_output": 32768,
-          "cost_input": 0,
-          "cost_output": 0,
           "modalities_in": [
             "text",
             "image",
@@ -129208,28 +129444,6 @@
           "release_date": "2025-08-01",
           "knowledge": "2025-03-31",
           "last_updated": "2025-08-01"
-        },
-        {
-          "id": "mistralai/devstral-2512",
-          "name": "Devstral 2",
-          "family": "devstral",
-          "context": 262144,
-          "max_output": 209715,
-          "cost_input": 0.4,
-          "cost_output": 2,
-          "modalities_in": [
-            "text",
-            "pdf"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": true,
-          "reasoning": false,
-          "tool_call": true,
-          "release_date": "2025-12-09",
-          "knowledge": "2025-12",
-          "last_updated": "2025-12-09"
         },
         {
           "id": "mistralai/ministral-14b-2512",
@@ -130108,8 +130322,8 @@
           "name": "Nemotron 3.5 Lightning 30B A3B",
           "family": "nemotron",
           "context": 262144,
-          "max_output": 235929,
-          "cost_input": 0.07,
+          "max_output": 131072,
+          "cost_input": 0.08,
           "cost_output": 0.2,
           "modalities_in": [
             "text"
@@ -133323,6 +133537,29 @@
           "last_updated": "2024-12-18"
         },
         {
+          "id": "stealth/space-bunny-alpha",
+          "name": "Space Bunny Alpha",
+          "family": "alpha",
+          "context": 1000000,
+          "max_output": 524288,
+          "cost_input": 0,
+          "cost_output": 0,
+          "modalities_in": [
+            "text",
+            "image",
+            "video"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
           "id": "stepfun/step-3.5-flash",
           "name": "Step 3.5 Flash",
           "family": "",
@@ -133456,8 +133693,8 @@
           "family": "Hy",
           "context": 262144,
           "max_output": 128000,
-          "cost_input": 0.132,
-          "cost_output": 0.528,
+          "cost_input": 0.0825,
+          "cost_output": 0.33,
           "modalities_in": [
             "text"
           ],
@@ -133710,6 +133947,27 @@
           "release_date": "2023-07-22",
           "knowledge": "2023-06-30",
           "last_updated": "2023-07-22"
+        },
+        {
+          "id": "upstage/solar-mini4",
+          "name": "Solar Mini 4",
+          "family": "solar",
+          "context": 524288,
+          "max_output": 131072,
+          "cost_input": 0.05,
+          "cost_output": 0.2,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
         },
         {
           "id": "upstage/solar-pro-3",
@@ -134516,9 +134774,9 @@
           "name": "DeepSeek Pro Latest",
           "family": "deepseek",
           "context": 1048576,
-          "max_output": 384000,
-          "cost_input": 0.4,
-          "cost_output": 4.3,
+          "max_output": 393216,
+          "cost_input": 0.39996,
+          "cost_output": 1.19988,
           "modalities_in": [
             "text"
           ],
@@ -134793,8 +135051,8 @@
           "family": "glm",
           "context": 1310720,
           "max_output": 131072,
-          "cost_input": 0.5625,
-          "cost_output": 2.5,
+          "cost_input": 0.5614,
+          "cost_output": 1.7644,
           "modalities_in": [
             "text"
           ],
@@ -163754,6 +164012,48 @@
           "last_updated": "2026-07-08"
         },
         {
+          "id": "aion-labs-aion-3-5",
+          "name": "Aion 3.5",
+          "family": "",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 3.75,
+          "cost_output": 7.5,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
+          "id": "aion-labs-aion-3-5-mini",
+          "name": "Aion 3.5 Mini",
+          "family": "",
+          "context": 262144,
+          "max_output": 32768,
+          "cost_input": 0.875,
+          "cost_output": 1.75,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "text"
+          ],
+          "open_weights": false,
+          "reasoning": true,
+          "tool_call": true,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
           "id": "claude-fable-5",
           "name": "Claude Fable 5",
           "family": "claude-fable",
@@ -168989,6 +169289,48 @@
           "last_updated": "2026-09-02"
         },
         {
+          "id": "google/gemini-3.8-flash-lite-tts",
+          "name": "Gemini 3.8 Flash-Lite TTS",
+          "family": "gemini",
+          "context": 0,
+          "max_output": 0,
+          "cost_input": 0.5,
+          "cost_output": 6,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "audio"
+          ],
+          "open_weights": false,
+          "reasoning": false,
+          "tool_call": false,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
+          "id": "google/gemini-3.8-flash-tts",
+          "name": "Gemini 3.8 Flash TTS",
+          "family": "gemini",
+          "context": 0,
+          "max_output": 0,
+          "cost_input": 0.5,
+          "cost_output": 9,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "audio"
+          ],
+          "open_weights": false,
+          "reasoning": false,
+          "tool_call": false,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
+        },
+        {
           "id": "google/gemini-3.8-live",
           "name": "Gemini 3.8 Live",
           "family": "gemini",
@@ -169466,30 +169808,8 @@
           "family": "ling",
           "context": 256000,
           "max_output": 32000,
-          "cost_input": 0,
-          "cost_output": 0,
-          "modalities_in": [
-            "text",
-            "image"
-          ],
-          "modalities_out": [
-            "text"
-          ],
-          "open_weights": false,
-          "reasoning": true,
-          "tool_call": true,
-          "release_date": "2026-09-08",
-          "knowledge": "",
-          "last_updated": "2026-09-08"
-        },
-        {
-          "id": "inclusionai/ling-3.0-flash-vl-free",
-          "name": "Ling 3.0 Flash VL (Free)",
-          "family": "ling",
-          "context": 256000,
-          "max_output": 32000,
-          "cost_input": 0,
-          "cost_output": 0,
+          "cost_input": 0.075,
+          "cost_output": 0.015,
           "modalities_in": [
             "text",
             "image"
@@ -172176,7 +172496,7 @@
           "reasoning": true,
           "tool_call": true,
           "release_date": "2025-08-05",
-          "knowledge": "2024-10",
+          "knowledge": "",
           "last_updated": "2025-08-05"
         },
         {
@@ -172981,6 +173301,27 @@
           "release_date": "2026-05-14",
           "knowledge": "",
           "last_updated": "2026-05-14"
+        },
+        {
+          "id": "recraft/recraft-v4.1-flash",
+          "name": "Recraft V4.1 Flash",
+          "family": "recraft",
+          "context": 0,
+          "max_output": 0,
+          "cost_input": null,
+          "cost_output": null,
+          "modalities_in": [
+            "text"
+          ],
+          "modalities_out": [
+            "image"
+          ],
+          "open_weights": false,
+          "reasoning": false,
+          "tool_call": false,
+          "release_date": "2026-09-23",
+          "knowledge": "",
+          "last_updated": "2026-09-23"
         },
         {
           "id": "recraft/recraft-v4.1-pro",
