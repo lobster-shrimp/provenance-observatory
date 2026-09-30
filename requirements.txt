@@ -1,13 +1,16 @@
 # Probe version for reproducible installs. The nightly workflow installs the probe
 # from THIS pin (`pip install -r requirements.txt`, see observatory.yml), so bumping
 # the version here is what adopts a new probe release into the nightly + the catalog
-# regen. 0.40.0 adds `build-service-catalog` (the nightly now regenerates + signs the
-# SERVICE catalog instead of serving the committed seed), plus the WS1 hard-evidence
-# scoring floor, the WS2 plain-English verdict + flow, the monitor switch-grading fix
-# (a switch is graded by the tokenizer shape, so CDN/wire noise no longer trips a false
-# CONFIRMED drift), and the jurisdiction-to-PRC alert. Retains the catalog first-party
-# provenance join the nightly catalog/registry regen depends on.
-llm-provenance-probe==0.40.0
+# regen. 0.41.0 adds the z.ai request-signing adapter (the signer CODE; z.ai active
+# probing stays OFF until an operator supplies a fresh session key/cookie and flips the
+# target authorized — see the probe's docs/zai-reactivation.md) and the 0.40.1 assess
+# config-vs-transparency fix, on top of 0.40.0's `build-service-catalog` (nightly regen +
+# signing of the SERVICE catalog), the WS1 hard-evidence floor, the WS2 plain-English
+# verdict + flow, the monitor switch-grading fix (a switch is graded by the tokenizer
+# shape, so CDN/wire noise no longer trips a false CONFIRMED drift), and the
+# jurisdiction-to-PRC alert. Retains the catalog first-party provenance join the nightly
+# catalog/registry regen depends on.
+llm-provenance-probe==0.41.0
 pyyaml>=6.0
 # Live JSON API (api/). uvicorn to serve; httpx pulled in for TestClient.
 fastapi>=0.110
